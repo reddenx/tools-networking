@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:Views="clr-namespace:TcpFileMover.Views"
-        Title="MainWindow"
+        Title="ByteHose"
         Width="300" Height="200">
     <DockPanel>
         <TabControl>

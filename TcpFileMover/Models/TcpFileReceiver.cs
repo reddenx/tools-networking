@@ -10,31 +10,14 @@ using System.Threading.Tasks;
 
 namespace TcpFileMover.Models
 {
-    public class TcpFileReceiver
+    public class TcpFileReceiver : TcpFileTransferBase
     {
-        private Action<string> MessageHandler;
-        private Action<TcpFileNetworkState> StatusChangeHandler;
         private Func<string, FileInfo> HandleFileReceived;
 
-        private Thread NetworkingAndReceivingThread;
-
-        private TcpFileNetworkState _currentState;
-        private TcpFileNetworkState CurrentState
-        {
-            get { return _currentState; }
-            set
-            {
-                _currentState = value;
-                StatusChangeHandler(_currentState);
-            }
-        }
-
-
-        public TcpFileReceiver(Action<string> messageHandler, Action<TcpFileNetworkState> statusChangeHandler, Func<string, FileInfo> handleFileReceived)
+        public TcpFileReceiver(Action<string> messageHandler, Action<TcpFileNetworkState> statusChangeHandler, Action<TransferState> transferInfoUpdateHandler, Func<string, FileInfo> handleFileReceived)
+            : base(messageHandler, statusChangeHandler, transferInfoUpdateHandler)
         {
             _currentState = TcpFileNetworkState.Ready;
-            MessageHandler = messageHandler;
-            StatusChangeHandler = statusChangeHandler;
             HandleFileReceived = handleFileReceived;
         }
 
@@ -44,51 +27,55 @@ namespace TcpFileMover.Models
             {
                 CurrentState = TcpFileNetworkState.Receiving;
 
-                NetworkingAndReceivingThread = new Thread(new ParameterizedThreadStart(ProcessAndReceiveFile));
-                NetworkingAndReceivingThread.IsBackground = true;
-                NetworkingAndReceivingThread.Start(port);
+                NetworkingPipeThread = new Thread(new ParameterizedThreadStart(ProcessAndReceiveFile));
+                NetworkingPipeThread.IsBackground = true;
+                NetworkingPipeThread.Start(port);
             }
         }
 
         private void ProcessAndReceiveFile(object portBlob)
         {
-            var port = (int)portBlob;
-            var listener = new TcpListener(IPAddress.Any, port);
-            listener.Start();
-            MessageHandler("Waiting for connection");
+            try
+            {
+                var port = (int)portBlob;
+                var listener = new TcpListener(IPAddress.Any, port);
+                listener.Start();
+                MessageHandler("Waiting for connection");
 
-            var client = listener.AcceptTcpClient();
-            listener.Stop();
-            MessageHandler("Client connected");
+                var client = listener.AcceptTcpClient();
+                listener.Stop();
+                MessageHandler("Client connected");
 
-            var netStream = client.GetStream();
-
-            var fileStream = Handshake(netStream);
-            ReceiveFile(fileStream, netStream);
-
-            fileStream.Close();
-
-            client.Close();
+                using (var netStream = client.GetStream())
+                {
+                    var handShakeInfo = Handshake(netStream);
+                    using (var fileStream = handShakeInfo.FileStream)
+                    {
+                        var fileSize = handShakeInfo.FileSize;
+                        TransferStreamUntilExhausted(netStream, fileStream, fileSize);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageHandler("Error:" + e.Message);
+            }
 
             CurrentState = TcpFileNetworkState.Ready;
         }
 
-        private void ReceiveFile(FileStream fileStream, NetworkStream netStream)
-        {
-            MessageHandler("ReceivingFile");
-
-            var fileBytes = new byte[1024];
-            var bytesRead = 0;
-
-            while ((bytesRead = netStream.Read(fileBytes, 0, 1024)) > 0)
-            {
-                fileStream.Write(fileBytes, 0, bytesRead);
-            }
-
-            MessageHandler("File Received");
-        }
-
-        private FileStream Handshake(NetworkStream netStream)
+        /* Handshake overview
+         * HELLO ->
+         * <- NAME
+         * [FILENAME] ->
+         * <- SIZE
+         * [FILESIZE] ->
+         * <- READY
+         * [FILEDATA] ->
+         * 
+         *   -CLOSE-
+         */
+        private HandshakeResponse Handshake(NetworkStream netStream)
         {
             MessageHandler("Handshaking");
 
@@ -98,32 +85,38 @@ namespace TcpFileMover.Models
                 throw new IOException("Invalid protocol response:" + firstMessage);
             }
 
-            SendMessage("ACK", netStream);
+            SendMessage("NAME", netStream);
             var fileName = GetResponse(netStream);
             var fileInfo = HandleFileReceived(fileName);
-
             if (fileInfo == null || fileInfo.Exists)
             {
                 SendMessage("NOGO", netStream);
-                throw new IOException("Cannot send that");
+                throw new IOException("cannot overwrite a file");
             }
 
+            SendMessage("SIZE", netStream);
+            var fileSizeMsg = GetResponse(netStream);
+            long fileSize;
+            if (!long.TryParse(fileSizeMsg, out fileSize))
+            {
+                SendMessage("NOGO", netStream);
+                throw new IOException("cannot overwrite a file");
+            }
+
+            var fileStream = fileInfo.Create();
             SendMessage("READY", netStream);
-            return fileInfo.Create();
+
+            return new HandshakeResponse()
+            {
+                FileSize = fileSize,
+                FileStream = fileStream,
+            };
         }
 
-        private string GetResponse(NetworkStream stream)
+        private class HandshakeResponse
         {
-            var responseBytes = new byte[1024];
-            var responseLength = stream.Read(responseBytes, 0, 1024);
-            return ASCIIEncoding.ASCII.GetString(responseBytes, 0, responseLength);
+            public FileStream FileStream { get; set; }
+            public long FileSize { get; set; }
         }
-
-        private void SendMessage(string message, NetworkStream stream)
-        {
-            var msgBytes = ASCIIEncoding.ASCII.GetBytes(message);
-            stream.Write(msgBytes, 0, msgBytes.Length);
-        }
-
     }
 }

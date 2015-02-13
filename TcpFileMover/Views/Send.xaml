@@ -18,6 +18,12 @@
             <TextBox Text="{Binding PortString}" MinWidth="50"></TextBox>
         </StackPanel>
         <Button DockPanel.Dock="Top" Click="SendFile">Send</Button>
-        <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding EventText}"></TextBlock>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Visibility="{Binding ProgressVisibility}">
+            <ProgressBar Height="10" Minimum="0" Maximum="1" Value="{Binding TransferProgress}" Width="200"></ProgressBar>
+            <Label Content="{Binding TransferRate}"></Label>
+        </StackPanel>
+        <ScrollViewer>
+            <TextBlock  Background="LightGray" TextWrapping="WrapWithOverflow" Text="{Binding EventText}"></TextBlock>
+        </ScrollViewer>
     </DockPanel>
 </UserControl>

@@ -10,39 +10,21 @@ using System.Threading.Tasks;
 
 namespace TcpFileMover.Models
 {
-    public class TcpFileSender
+    public class TcpFileSender : TcpFileTransferBase
     {
-        private Action<string> MessageHandler;
-        private Action<TcpFileNetworkState> StatusChangeHandler;
-
-        private Thread NetworkingAndSendingThread;
-
-        private TcpFileNetworkState _currentState;
-        private TcpFileNetworkState CurrentState
-        {
-            get { return _currentState; }
-            set
-            {
-                _currentState = value;
-                StatusChangeHandler(_currentState);
-            }
-        }
-
-        public TcpFileSender(Action<string> messageHandler, Action<TcpFileNetworkState> statusChangeHandler)
-        {
-            MessageHandler = messageHandler;
-            StatusChangeHandler = statusChangeHandler;
-            CurrentState = TcpFileNetworkState.Ready;
-        }
+        public TcpFileSender(Action<string> messageHandler, Action<TcpFileNetworkState> statusChangeHandler, Action<TransferState> transferInfoUpdateHandler)
+            : base(messageHandler, statusChangeHandler, transferInfoUpdateHandler)
+        { }
 
         public void SendFile(FileInfo fileInformation, string host, int port)
         {
             if (CurrentState == TcpFileNetworkState.Ready)
             {
                 CurrentState = TcpFileNetworkState.Sending;
-                NetworkingAndSendingThread = new Thread(new ParameterizedThreadStart(ProcessAndSendFile));
-                NetworkingAndSendingThread.IsBackground = true;
-                NetworkingAndSendingThread.Start(new SenderContext()
+
+                NetworkingPipeThread = new Thread(new ParameterizedThreadStart(ProcessAndSendFile));
+                NetworkingPipeThread.IsBackground = true;
+                NetworkingPipeThread.Start(new SenderContext()
                 {
                     FileInformation = fileInformation,
                     Host = host,
@@ -57,11 +39,13 @@ namespace TcpFileMover.Models
             {
                 var context = (SenderContext)contextBlob;
 
-                var client = new TcpClient();
-                var stream = ShakeHands(context.Host, context.Port, client, context.FileInformation);
-                SendFile(context.FileInformation, stream);
-
-                stream.Close();
+                using (var netStream = ShakeHands(context.Host, context.Port, context.FileInformation))
+                {
+                    using (var fileStream = context.FileInformation.OpenRead())
+                    {
+                        base.TransferStreamUntilExhausted(fileStream, netStream, context.FileInformation.Length);
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -71,55 +55,48 @@ namespace TcpFileMover.Models
             CurrentState = TcpFileNetworkState.Ready;
         }
 
-        private void SendFile(FileInfo fileInfo, NetworkStream netStream)
-        {
-
-            MessageHandler("SendingFile");
-
-            var fileStream = fileInfo.OpenRead();
-            var fileBytes = new byte[1024];
-            var bytesRead = 0;
-
-            while ((bytesRead = fileStream.Read(fileBytes, 0, 1024)) > 0)
-            {
-                netStream.Write(fileBytes, 0, bytesRead);
-            }
-
-            MessageHandler("FileSent");
-
-        }
-
-        private NetworkStream ShakeHands(string host, int port, TcpClient client, FileInfo fileInformation)
+        /* Handshake overview
+        *    HELLO      ->
+        * <- NAME
+        *    [FILENAME] ->
+        * <- SIZE
+        *    [FILESIZE] ->
+        * <- READY
+        *    [FILEDATA] ->
+        * 
+        *     -CLOSE-
+        */
+        private NetworkStream ShakeHands(string host, int port, FileInfo fileInformation)
         {
             MessageHandler("Connecting");
+            var client = new TcpClient();
             client.Connect(host, port);
 
             MessageHandler("Handshaking");
             var stream = client.GetStream();
 
-            var helloResponse = SendWithResponse("HELLO", stream);
-            if (helloResponse != "ACK")
+            base.SendMessage("HELLO", stream);
+            var helloResponse = base.GetResponse(stream);
+            if (helloResponse != "NAME")
             {
                 throw new IOException("Invalid protocol response:" + helloResponse);
             }
 
-            var nameResponse = SendWithResponse(fileInformation.Name, stream);
-            if (nameResponse != "READY")
+            base.SendMessage(fileInformation.Name, stream);
+            var nameResponse = base.GetResponse(stream);
+            if (nameResponse != "SIZE")
             {
                 throw new IOException("Invalid protocol response:" + helloResponse);
+            }
+
+            base.SendMessage(fileInformation.Length.ToString(), stream);
+            var sizeResponse = base.GetResponse(stream);
+            if (sizeResponse != "READY")
+            {
+                throw new IOException("Invalid protocol response:" + sizeResponse);
             }
 
             return stream;
-        }
-
-        private string SendWithResponse(string message, NetworkStream stream)
-        {
-            var msgBytes = ASCIIEncoding.ASCII.GetBytes(message);
-            stream.Write(msgBytes, 0, msgBytes.Length);
-
-            var responseBytes = new byte[1024];
-            var responseLength = stream.Read(responseBytes, 0, 1024);
-            return ASCIIEncoding.ASCII.GetString(responseBytes, 0, responseLength);
         }
 
         private class SenderContext
