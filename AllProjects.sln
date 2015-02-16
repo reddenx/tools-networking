@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpFileMover", "TcpFileMover\TcpFileMover.csproj", "{D6E67794-AEC3-40A2-967C-85D3E79C07D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpFileMover", "App.TcpFileMover\TcpFileMover.csproj", "{D6E67794-AEC3-40A2-967C-85D3E79C07D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
