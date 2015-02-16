@@ -1,4 +1,5 @@
 ﻿using SMT.Networking.Interfaces;
+using SMT.Networking.Interfaces.SimpleMessaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;

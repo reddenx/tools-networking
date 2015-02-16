@@ -14,6 +14,7 @@ namespace App.NetworkTester
     {
         public Form1()
         {
+            throw new NotImplementedException();
             InitializeComponent();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using SMT.Networking.Interfaces;
+using SMT.Networking.Interfaces.SimpleMessaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -97,7 +98,23 @@ namespace SMT.Networking.Tcp
             catch
             {
             }
+            finally
+            {
+                Cleanup();
+            }
             InProgress = false;
+        }
+
+        private void Cleanup()
+        {
+            //the no fucks given cleanup
+            try
+            {
+                Client.Close();
+            }
+            catch { }
+
+            Client = null;
         }
     }
 }

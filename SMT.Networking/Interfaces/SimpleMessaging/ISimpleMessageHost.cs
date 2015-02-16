@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SMT.Networking.Interfaces
+namespace SMT.Networking.Interfaces.SimpleMessaging
 {
     public interface ISimpleMessageHost<TMessage>
     {

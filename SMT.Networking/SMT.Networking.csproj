@@ -39,16 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\ISimpleDataSender.cs" />
-    <Compile Include="Interfaces\ISimpleMessageHost.cs" />
-    <Compile Include="Interfaces\ISimpleMessenger.cs" />
-    <Compile Include="Interfaces\TransferInfo.cs" />
+    <Compile Include="Interfaces\SimpleMessaging\ISimpleDataSender.cs" />
+    <Compile Include="Interfaces\SimpleMessaging\ISimpleMessageHost.cs" />
+    <Compile Include="Interfaces\SimpleMessaging\ISimpleMessenger.cs" />
+    <Compile Include="Interfaces\SimpleMessaging\TransferInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\SimpleTcpDataSender.cs" />
     <Compile Include="Tcp\SimpleTcpMessageHost.cs" />
     <Compile Include="Tcp\SimpleTcpMessenger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Interfaces\Http\" />
     <Folder Include="Udp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
