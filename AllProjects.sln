@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpFileMover", "App.TcpFileMover\TcpFileMover.csproj", "{D6E67794-AEC3-40A2-967C-85D3E79C07D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.TcpFileMover", "App.TcpFileMover\App.TcpFileMover.csproj", "{D6E67794-AEC3-40A2-967C-85D3E79C07D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Networking", "SMT.Networking\SMT.Networking.csproj", "{B2322749-B23B-46F0-98DD-D29C03EBFBBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.NetworkTester", "App.NetworkTester\App.NetworkTester.csproj", "{47A36EB2-AECD-418D-92DA-B92EBAEE8A7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,14 @@ Global
 		{D6E67794-AEC3-40A2-967C-85D3E79C07D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6E67794-AEC3-40A2-967C-85D3E79C07D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6E67794-AEC3-40A2-967C-85D3E79C07D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2322749-B23B-46F0-98DD-D29C03EBFBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2322749-B23B-46F0-98DD-D29C03EBFBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2322749-B23B-46F0-98DD-D29C03EBFBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2322749-B23B-46F0-98DD-D29C03EBFBBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A36EB2-AECD-418D-92DA-B92EBAEE8A7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A36EB2-AECD-418D-92DA-B92EBAEE8A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A36EB2-AECD-418D-92DA-B92EBAEE8A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A36EB2-AECD-418D-92DA-B92EBAEE8A7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
