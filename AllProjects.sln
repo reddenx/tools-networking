@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.NetworkTester", "App.Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.TaskTracker", "Web.TaskTracker\Web.TaskTracker.csproj", "{136B4ACE-F297-4ADA-BDA6-193049611CBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.Sql", "SMT.Utilities.Sql\SMT.Utilities.Sql.csproj", "{897B5EC0-2FDE-46DF-9D62-C4A92661D18A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{136B4ACE-F297-4ADA-BDA6-193049611CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{136B4ACE-F297-4ADA-BDA6-193049611CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{136B4ACE-F297-4ADA-BDA6-193049611CBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{897B5EC0-2FDE-46DF-9D62-C4A92661D18A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{897B5EC0-2FDE-46DF-9D62-C4A92661D18A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{897B5EC0-2FDE-46DF-9D62-C4A92661D18A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{897B5EC0-2FDE-46DF-9D62-C4A92661D18A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

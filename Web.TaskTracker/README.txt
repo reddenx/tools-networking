@@ -12,7 +12,8 @@ TASK NAME[edit]
 
 needs global input disable while ajax is processing(could be local per vm item)
 
- 
+SqlCe
+
 schema notes
 
 Task:

@@ -108,6 +108,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Bol\TaskItem.cs" />
+    <Compile Include="Models\Bol\TaskStatus.cs" />
+    <Compile Include="Models\Dal\DataConfiguration.cs" />
+    <Compile Include="Models\Dal\TaskRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,7 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -138,6 +141,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SMT.Utilities.Sql\SMT.Utilities.Sql.csproj">
+      <Project>{897b5ec0-2fde-46df-9d62-c4a92661d18a}</Project>
+      <Name>SMT.Utilities.Sql</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
