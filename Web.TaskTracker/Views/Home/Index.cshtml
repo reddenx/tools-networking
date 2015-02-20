@@ -1,0 +1,132 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts
+{
+    <style>
+        ul
+        {
+            list-style: none;
+        }
+
+        .taskName
+        {
+            font-family: Tahoma;
+        }
+
+            .taskName.active
+            {
+                color: #002f06;
+            }
+
+            .taskName.cancelled
+            {
+                color: #6a6a6a;
+            }
+
+            .taskName.complete
+            {
+                color: #6a6a6a;
+                text-decoration: line-through;
+            }
+    </style>
+
+    <script>
+        var ViewModel = new function () {
+            var self = this;
+
+            self.SampleTaskCollapse = ko.observable(false);
+            self.SampleCompleteCollapse = ko.observable(false);
+            self.LoadMoreCompleteTasks = ko.observable(false);
+        }();
+
+        function GetCorrectCollapseSymbol(isCollapsed) {
+            if (isCollapsed) {
+                return '+';
+            }
+            else {
+                return '-';
+            }
+        }
+
+        $(document).ready(function () {
+            ko.applyBindings(ViewModel);
+        });
+    </script>
+}
+
+<h2>Task list mock</h2>
+
+
+
+<ul>
+    <li><span class="taskName active">Task1</span>
+        <button data-bind="text: GetCorrectCollapseSymbol(SampleTaskCollapse()), click: function() { SampleTaskCollapse(!SampleTaskCollapse()) }"></button>
+        <ul data-bind="visible: !SampleTaskCollapse()">
+            <li><span class="taskName active">Subtask1 for task1</span></li>
+            <li><span class="taskName cancelled">Subtask2 for task1</span></li>
+            <li><span class="taskName complete">Subtask3 for task1</span></li>
+        </ul>
+    </li>
+    <li class="taskName active">test2</li>
+    <li class="taskName active">Edit Mode <button type="button">Edit</button>
+        <ul>
+            <li>
+                <button>active</button><button>cancelled</button><button>complete</button>
+                <input type="text" /><button type="button">Save</button></li>
+            <li>
+                <button>active</button><button>cancelled</button><button>complete</button>
+                <input type="text" /><button type="button">Save</button></li>
+            <li>Saved Task <button type="button">Edit</button></li>
+        </ul>
+    </li>
+</ul>
+
+<button data-bind="visible: !SampleCompleteCollapse(),click: function() { SampleCompleteCollapse(!SampleCompleteCollapse()); }">Completed Tasks</button>
+
+<div data-bind="visible: SampleCompleteCollapse">
+    <ul class="taskName complete">
+        <li>completed task</li>
+        <li>completed task
+        <ul>
+            <li>subtask</li>
+            <li>subtask</li>
+            <li>subtask</li>
+        </ul>
+        </li>
+        <li>completed task</li>
+        <li>completed task
+        <ul>
+            <li>subtask</li>
+            <li>subtask</li>
+        </ul>
+        </li>
+        <li>completed task</li>
+        <li>completed task</li>
+    </ul>
+
+    <div data-bind="visible: LoadMoreCompleteTasks">
+        <ul class="taskName complete">
+            <li>completed task</li>
+            <li>completed task
+        <ul>
+            <li>subtask</li>
+            <li>subtask</li>
+            <li>subtask</li>
+        </ul>
+            </li>
+            <li>completed task</li>
+            <li>completed task
+        <ul>
+            <li>subtask</li>
+            <li>subtask</li>
+        </ul>
+            </li>
+            <li>completed task</li>
+            <li>completed task</li>
+        </ul>
+    </div>
+
+    <button data-bind="visible: !LoadMoreCompleteTasks(), click: function() { LoadMoreCompleteTasks(!LoadMoreCompleteTasks()); }">More...</button>
+</div>
