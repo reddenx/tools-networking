@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 namespace SMT.Utilities.InputEvents.HardwareEvents
 {
+    //TODO-SM move event logic to injectable actions, listener shouldn't be doing key replacements and index tracking
     public class KeyboardEventListener : IDisposable
     {
         private HookHandlerDelegate proc;
