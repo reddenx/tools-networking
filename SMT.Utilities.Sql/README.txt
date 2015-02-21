@@ -1,0 +1,1 @@
+﻿Purpose: aid in sql queries
