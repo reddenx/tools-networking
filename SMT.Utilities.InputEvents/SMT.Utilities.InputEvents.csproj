@@ -40,7 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HardwareEvents\KeyboardEventArgs.cs" />
     <Compile Include="HardwareEvents\KeyboardEventListener.cs" />
+    <Compile Include="HardwareEvents\KeyboardEventResult.cs" />
+    <Compile Include="HardwareEvents\KeyboardEventRunner.cs" />
+    <Compile Include="HardwareEvents\KeyboardHardwareEventData.cs" />
+    <Compile Include="Interfaces\IKeyboardEventListener.cs" />
+    <Compile Include="Interfaces\IKeyboardEventRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

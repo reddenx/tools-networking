@@ -23,7 +23,7 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
 
         private Action<string> HandleEvent;
 
-        private delegate IntPtr HookHandlerDelegate(int nCode, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam);
+        private delegate IntPtr HookHandlerDelegate(int nCode, IntPtr wParam, IntPtr lParam);
 
         public KeyboardEventListener()
         {
@@ -71,49 +71,55 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
         //}
 
         //replacement keys
-        private IntPtr HookCallback(int nCode, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam)
+        private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
+            var lParamObj = (KeyboardHardwareEventData)Marshal.PtrToStructure(lParam, typeof(KeyboardHardwareEventData));
+            HandleEvent(((Keys)lParamObj.vkCode).ToString() + " v" + lParamObj.vkCode + " s" + lParamObj.scanCode + " " + wParam.ToString() + " " + lParamObj.dwExtraInfo);
+
+
+
+            //TODO-SM uncomment properly
             //if ((uint)wParam != 256)
             //HandleEvent(((Keys)lParam.wVk).ToString() + " v" + lParam.wVk + " s" + lParam.wScan + " " + wParam.ToString() + " " + lParam.dwExtraInfo);
 
-            if (nCode >= 0 && HandleEvent != null && lParam.dwExtraInfo == (IntPtr)0)
-            {
-                if (ReplaceDefinitions.Replacements.ContainsKey((Keys)lParam.wVk))
-                {
-                    //if it's an incoming key that has a replacement, we've already handled the up portion
-                    if ((uint)wParam != 256)
-                    {
-                        return (System.IntPtr)1;
-                    }
+            //if (nCode >= 0 && HandleEvent != null && lParam.dwExtraInfo == (IntPtr)0)
+            //{
+            //    if (ReplaceDefinitions.Replacements.ContainsKey((Keys)lParam.wVk))
+            //    {
+            //        //if it's an incoming key that has a replacement, we've already handled the up portion
+            //        if ((uint)wParam != 256)
+            //        {
+            //            return (System.IntPtr)1;
+            //        }
 
-                    //keybd_event(90, 44, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 1); //EXAMPLE
-                    //uint flag = (uint)wParam == 256 ? KEYEVENTF_EXTENDEDKEY : KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP;
-                    var data = ReplaceDefinitions.Replacements[((Keys)lParam.wVk)];
+            //        //keybd_event(90, 44, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 1); //EXAMPLE
+            //        //uint flag = (uint)wParam == 256 ? KEYEVENTF_EXTENDEDKEY : KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP;
+            //        var data = ReplaceDefinitions.Replacements[((Keys)lParam.wVk)];
 
-                    foreach (var key in data)
-                    {
-                        if (key.shift)
-                        {
-                            keybd_event(160, 42, KEYEVENTF_EXTENDEDKEY, 1);
-                        }
+            //        foreach (var key in data)
+            //        {
+            //            if (key.shift)
+            //            {
+            //                keybd_event(160, 42, KEYEVENTF_EXTENDEDKEY, 1);
+            //            }
 
-                        keybd_event(key.vk, key.sk, KEYEVENTF_EXTENDEDKEY, 1);
-                        keybd_event(key.vk, key.sk, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 1);
+            //            keybd_event(key.vk, key.sk, KEYEVENTF_EXTENDEDKEY, 1);
+            //            keybd_event(key.vk, key.sk, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 1);
 
-                        if (key.shift)
-                        {
-                            keybd_event(160, 42, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 1);
-                        }
-                    }
-
-
-                    HandleEvent(((Keys)lParam.wVk).ToString() + " -> " + (data[0].Key).ToString());
-                    return (System.IntPtr)1;
-                }
-            }
+            //            if (key.shift)
+            //            {
+            //                keybd_event(160, 42, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 1);
+            //            }
+            //        }
 
 
-            return CallNextHookEx(hookID, nCode, wParam, ref lParam);
+            //        HandleEvent(((Keys)lParam.wVk).ToString() + " -> " + (data[0].Key).ToString());
+            //        return (System.IntPtr)1;
+            //    }
+            //}
+
+
+            return CallNextHookEx(hookID, nCode, wParam, lParam);
         }
 
 
@@ -127,7 +133,7 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
         private static extern IntPtr SetWindowsHookEx(int idHook, HookHandlerDelegate lpfn, IntPtr hMod, uint dwThreadId);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam);
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
