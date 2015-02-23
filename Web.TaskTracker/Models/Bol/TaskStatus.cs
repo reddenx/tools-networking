@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Web.TaskTracker.Models.Bol
 {
-    public enum TaskStatus
+    public enum TaskStatus : int
     {
         Active = 0,
         Complete = 1,

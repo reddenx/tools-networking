@@ -29,8 +29,19 @@
             return self;
         }
 
+        var KVP = function (name, id) {
+            this.Key = name;
+            this.Id = id;
+        }
+
         var ViewModel = new function (serverModel) {
             var self = this;
+
+            self.TaskStatuses = ko.observableArray([
+                new KVP('Active', 0),
+                new KVP('Complete', 1),
+                new KVP('Cancelled', 2),
+            ]);
 
             self.Root = ko.observableArray();
 
@@ -51,35 +62,20 @@
 </ul>
 
 <script type="text/html" id="child-template">
+    <div class="taskContainer">
+        <div data-bind="visible: IsEditing">
+            <select data-bind="options: ViewModel.TaskStatuses, optionsText: 'Key', value: CurrentStatus, optionsValue: 'Id'"></select>
+            <input type="text" data-bind="value: Name" />
+            <button type="button" data-bind="click: function(){ IsEditing(false); }">Save</button>
+        </div>
 
-    <div data-bind="visible: IsEditing">
-        <button type="button" data-bind="click: function(){ IsEditing(false); }">Save</button>
-        <select>
-            <option value="0">Active</option>
-            <option value="1">Complete</option>
-            <option value="2">Disabled</option>
-        </select>
-        <input type="text" data-bind="value: Name"/>
+        <div data-bind="visible: !IsEditing()">
+            <button type="button" data-bind="click: function(){ IsEditing(true); }">Edit</button>
+            <span class="taskName" data-bind="text: Name, css: { 'active' : CurrentStatus() == 0, 'complete': CurrentStatus() == 1, 'cancelled': CurrentStatus() == 2 }"></span>
+        </div>
+
+        <ul data-bind="foreach: Children">
+            <li data-bind="template: { name: 'child-template', data: $data }"></li>
+        </ul>
     </div>
-
-    <div data-bind="visible: !IsEditing()">
-        <button type="button" data-bind="click: function(){ IsEditing(true); }">Edit</button>
-        <span data-bind="text: Name"></span>
-    </div>
-
-    <ul data-bind="foreach: Children">
-        <li data-bind="template: { name: 'child-template', data: $data }"></li>
-    </ul>
 </script>
-
-
-<div>
-    <button type="button">-</button><span>itemName</span>
-    <button type="button">Edit</button>
-</div>
-
-
-<div>
-    <button type="button">+</button><select options="test"></select><input type="text" value="itemName" />
-    <button type="button">Save</button>
-</div>
