@@ -8,5 +8,11 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
 {
     public class KeyboardEventResult
     {
+        public bool WasHandled { get; private set; }
+
+        public KeyboardEventResult(bool wasHandled)
+        {
+            this.WasHandled = wasHandled;
+        }
     }
 }

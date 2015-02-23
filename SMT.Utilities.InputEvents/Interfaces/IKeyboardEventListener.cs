@@ -11,9 +11,7 @@ namespace SMT.Utilities.InputEvents.Interfaces
 
     public interface IKeyboardEventListener : IDisposable
     {
-        void StartListening();
+        void StartListening(KeyboardEventHandler handler);
         void StopListening();
-
-        void SetEventHandler(KeyboardEventHandler handler);
     }
 }
