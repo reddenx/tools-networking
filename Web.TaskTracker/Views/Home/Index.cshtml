@@ -2,36 +2,9 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @section Scripts
 {
-    <style>
-        ul
-        {
-            list-style: none;
-        }
-
-        .taskName
-        {
-            font-family: Tahoma;
-        }
-
-            .taskName.active
-            {
-                color: #002f06;
-            }
-
-            .taskName.cancelled
-            {
-                color: #6a6a6a;
-            }
-
-            .taskName.complete
-            {
-                color: #6a6a6a;
-                text-decoration: line-through;
-            }
-    </style>
-
     <script>
         var ViewModel = new function () {
             var self = this;
@@ -39,6 +12,8 @@
             self.SampleTaskCollapse = ko.observable(false);
             self.SampleCompleteCollapse = ko.observable(false);
             self.LoadMoreCompleteTasks = ko.observable(false);
+
+            self.SelectOptions = ['active', 'complete', 'disabled'];
         }();
 
         function GetCorrectCollapseSymbol(isCollapsed) {
@@ -56,13 +31,22 @@
     </script>
 }
 
+<div>
+    <button type="button">-</button><span>itemName</span><button type="button">Edit</button>
+</div>
+
+<br /><br />
+<div>
+    <button type="button">+</button><select data-bind="options: SelectOptions" ></select><input type="text" value="itemName"/><button type="button">Save</button>
+</div>
+
+
+
 <h2>Task list mock</h2>
-
-
 
 <ul>
     <li><span class="taskName active">Task1</span>
-        <button data-bind="text: GetCorrectCollapseSymbol(SampleTaskCollapse()), click: function() { SampleTaskCollapse(!SampleTaskCollapse()) }"></button>
+        <button class="butt" data-bind="text: GetCorrectCollapseSymbol(SampleTaskCollapse()), click: function() { SampleTaskCollapse(!SampleTaskCollapse()) }"></button>
         <ul data-bind="visible: !SampleTaskCollapse()">
             <li><span class="taskName active">Subtask1 for task1</span></li>
             <li><span class="taskName cancelled">Subtask2 for task1</span></li>

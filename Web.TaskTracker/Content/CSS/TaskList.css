@@ -1,0 +1,16 @@
+﻿.taskName {
+    font-family: Tahoma;
+}
+
+    .taskName.active {
+        color: #002f06;
+    }
+
+    .taskName.cancelled {
+        color: #6a6a6a;
+    }
+
+    .taskName.complete {
+        color: #6a6a6a;
+        text-decoration: line-through;
+    }

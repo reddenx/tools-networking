@@ -1,0 +1,85 @@
+﻿@model Web.TaskTracker.Models.ViewModels.TaskList.TaskListViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{
+    <script>
+        function TreeItem(serverItem) {
+            var self = this;
+
+            self.TaskId = serverItem.Item.TaskId;
+            self.Name = ko.observable(serverItem.Item.Name);
+            self.CurrentStatus = ko.observable(serverItem.Item.CurrentStatus);
+            self.DateCreated = ko.observable(serverItem.Item.DateCreated);
+            self.DateCompleted = ko.observable(serverItem.Item.DateCompleted);
+
+            self.IsEditing = ko.observable(false);
+            self.Waiting = ko.observable(false);
+
+
+            self.Children = ko.observableArray();
+            $.each(serverItem.Children, function (index, item) {
+                self.Children.push(new TreeItem(item));
+            });
+
+
+            return self;
+        }
+
+        var ViewModel = new function (serverModel) {
+            var self = this;
+
+            self.Root = ko.observableArray();
+
+            $.each(serverModel.RootItems, function (index, item) {
+                self.Root.push(new TreeItem(item));
+            });
+        }(@Html.Raw(Json.Encode(Model)));
+
+        $(document).ready(function () {
+            ko.applyBindings(ViewModel);
+        });
+    </script>
+}
+
+
+<ul data-bind="foreach: Root">
+    <li data-bind="template: { name: 'child-template', data: $data }"></li>
+</ul>
+
+<script type="text/html" id="child-template">
+
+    <div data-bind="visible: IsEditing">
+        <button type="button" data-bind="click: function(){ IsEditing(false); }">Save</button>
+        <select>
+            <option value="0">Active</option>
+            <option value="1">Complete</option>
+            <option value="2">Disabled</option>
+        </select>
+        <input type="text" data-bind="value: Name"/>
+    </div>
+
+    <div data-bind="visible: !IsEditing()">
+        <button type="button" data-bind="click: function(){ IsEditing(true); }">Edit</button>
+        <span data-bind="text: Name"></span>
+    </div>
+
+    <ul data-bind="foreach: Children">
+        <li data-bind="template: { name: 'child-template', data: $data }"></li>
+    </ul>
+</script>
+
+
+<div>
+    <button type="button">-</button><span>itemName</span>
+    <button type="button">Edit</button>
+</div>
+
+
+<div>
+    <button type="button">+</button><select options="test"></select><input type="text" value="itemName" />
+    <button type="button">Save</button>
+</div>
