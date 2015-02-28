@@ -7,11 +7,11 @@ using Web.TaskTracker.Models.Dal;
 
 namespace Web.TaskTracker.Models.Bll
 {
-    public class TaskTreeBuilder
+    public class TaskManager
     {
         private readonly TaskRepository TaskRepo;
 
-        public TaskTreeBuilder(TaskRepository taskRepository = null)
+        public TaskManager(TaskRepository taskRepository = null)
         {
             TaskRepo = taskRepository ?? new TaskRepository();
         }
@@ -24,6 +24,17 @@ namespace Web.TaskTracker.Models.Bll
             BuildTree(root, tasks.ToArray());
 
             return root.Children;
+        }
+
+        public TaskItem CreateTask(string taskName, int accountId, int? parentTaskId)
+        {
+            var taskId = TaskRepo.CreateTask(taskName, accountId, parentTaskId);
+            return TaskRepo.GetTaskById(taskId);
+        }
+
+        public void UpdateTask(int taskId, string taskName, TaskStatus currentStatus)
+        {
+            TaskRepo.UpdateTask(taskId, taskName, currentStatus);
         }
 
         private TaskItem[] BuildTree(TaskTreeItem parent, TaskItem[] items)
@@ -52,6 +63,11 @@ namespace Web.TaskTracker.Models.Bll
                 postChildrenLeftovers.AddRange(BuildTree(child, leftovers.ToArray()));
             }
             return postChildrenLeftovers.ToArray();
+        }
+
+        public TaskItem GetTask(int taskId)
+        {
+            return TaskRepo.GetTaskById(taskId);
         }
     }
 }

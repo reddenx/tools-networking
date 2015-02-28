@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Web.TaskTracker.Models.Bll;
 using Web.TaskTracker.Models.Bol;
+using Web.TaskTracker.Models.ViewModels;
 using Web.TaskTracker.Models.ViewModels.TaskList;
 
 namespace Web.TaskTracker.Controllers
@@ -13,14 +14,47 @@ namespace Web.TaskTracker.Controllers
     {
         //
         // GET: /TaskList/
+        private TaskManager _taskMgr;
+        private TaskManager TaskMgr
+        {
+            get { return _taskMgr ?? (_taskMgr = new TaskManager()); }
+        }
 
         public ActionResult Summary()
         {
-            var builder = new TaskTreeBuilder();
+            var builder = new TaskManager();
             var items = builder.GetTaskTreeForAccount(1);
             var model = new TaskListViewModel() { RootItems = items };
 
             return View(model);
+        }
+
+        public JsonResult SaveTask(SaveTaskInput input)
+        {
+            TaskItem task;
+
+            try
+            {
+                if (!input.TaskId.HasValue)
+                {
+                    task = TaskMgr.CreateTask(input.TaskName, 1, input.ParentTaskId); //TODO-SM hardCoded id
+                }
+                else
+                {
+                    TaskMgr.UpdateTask(input.TaskId.Value, input.TaskName, input.CurrentStatus);
+                    task = TaskMgr.GetTask(input.TaskId.Value);
+                }
+            }
+            catch(Exception e)
+            {
+                return Json(new AjaxResult(
+                    success: false,
+                    error: e.Message), JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new AjaxResult(
+                success: true,
+                data: task), JsonRequestBehavior.AllowGet);
         }
     }
 }

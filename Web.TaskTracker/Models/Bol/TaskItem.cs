@@ -15,7 +15,14 @@ namespace Web.TaskTracker.Models.Bol
         public DateTime DateCreated { get; private set; }
         public DateTime? DateCompleted { get; private set; }
 
-        public TaskItem(int taskId, int accountId, int? parentTask, string name, TaskStatus currentStatus, DateTime dateCreated, DateTime? dateCompleted)
+        public TaskItem(
+            int taskId,
+            int accountId,
+            int? parentTask,
+            string name,
+            TaskStatus currentStatus,
+            DateTime dateCreated,
+            DateTime? dateCompleted)
         {
             this.TaskId = taskId;
             this.AccountId = accountId;

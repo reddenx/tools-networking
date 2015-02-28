@@ -25,6 +25,9 @@ namespace SMT.Utilities.Sql.SqlCe
 
         public T[] ExecuteReader<T>(BuildObjectFromReader<T> getObjectFromRecord, string sql, IDbDataParameter[] parameters)
         {
+            var data = new List<T>();
+
+
             using (var connection = new SqlCeConnection(ConnectionString))
             {
                 var command = BuildCommand(sql, parameters, connection);
@@ -33,16 +36,16 @@ namespace SMT.Utilities.Sql.SqlCe
 
                 using (var reader = command.ExecuteReader())
                 {
-                    var data = new List<T>();
-
                     while (reader.Read())
                     {
                         data.Add(getObjectFromRecord(reader));
                     }
-
-                    return data.ToArray();
                 }
+
+                connection.Close();
             }
+
+            return data.ToArray();
         }
 
         public int InsertAndGetIdentity(string sql, IDbDataParameter[] parameters)
@@ -78,7 +81,7 @@ namespace SMT.Utilities.Sql.SqlCe
 
             foreach (var parameter in parameters)
             {
-                command.Parameters.Add(parameter.ParameterName, (SqlDbType)parameter.DbType, parameter.Size);
+                command.Parameters.Add(parameter as SqlCeParameter);
             }
 
             return command;
@@ -95,7 +98,7 @@ namespace SMT.Utilities.Sql.SqlCe
         public IDbDataParameter CreateParameter(string name, SqlDbType type, object value)
         {
             var param = new SqlCeParameter(name, type);
-            param.Value = value;
+            param.Value = value ?? DBNull.Value;
 
             return param;
         }
