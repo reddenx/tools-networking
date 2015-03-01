@@ -6,32 +6,171 @@
 @section Scripts
 {
     <script>
-        var ViewModel = new function () {
+        //var ViewModel = new function () {
+        //    var self = this;
+
+        //    self.SampleTaskCollapse = ko.observable(false);
+        //    self.SampleCompleteCollapse = ko.observable(false);
+        //    self.LoadMoreCompleteTasks = ko.observable(false);
+
+        //    self.SelectOptions = ['active', 'complete', 'disabled'];
+        //}();
+
+        //function GetCorrectCollapseSymbol(isCollapsed) {
+        //    if (isCollapsed) {
+        //        return '+';
+        //    }
+        //    else {
+        //        return '-';
+        //    }
+        //}
+
+        //$(document).ready(function () {
+        //    ko.applyBindings(ViewModel);
+        //});
+
+
+        viewModel = new function () {
             var self = this;
 
-            self.SampleTaskCollapse = ko.observable(false);
-            self.SampleCompleteCollapse = ko.observable(false);
-            self.LoadMoreCompleteTasks = ko.observable(false);
+            self.Name = ko.observable('Name');
+            //self.Status = ko.observable();
 
-            self.SelectOptions = ['active', 'complete', 'disabled'];
+            self.ShowChildren = ko.observable();
+            self.ShowDescription = ko.observable();
+            self.IsEditing = ko.observable(false);
+
+            self.Edit = function () {
+                self.IsEditing(true);
+            }
+
+            self.Save = function () {
+                self.IsEditing(false);
+
+                //TODO-SM AJAX
+            }
         }();
 
-        function GetCorrectCollapseSymbol(isCollapsed) {
-            if (isCollapsed) {
-                return '+';
-            }
-            else {
-                return '-';
-            }
-        }
-
         $(document).ready(function () {
-            ko.applyBindings(ViewModel);
+            ko.applyBindings(viewModel);
         });
     </script>
 }
 
-<div>
+<div class="TaskContainer">
+    <button type="button" class="TinyButton TaskChildExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Collapsed': ShowChildren, 'Expanded': !ShowChildren()}"></button>
+
+    @* saved *@
+    <div data-bind="visible: !IsEditing()">
+        <div class="TaskBody Active">
+            <span class="TaskName" data-bind="click: function() {IsEditing(true);}">Grocery List</span>
+            <span class="TaskCompletionPercentage">10%</span>
+        </div>
+        <div class="TaskDescription" data-bind="visible: ShowDescription">
+            <p>Some extra info on this particular task</p>
+            <button type="button" class="TinyButton TaskDescriptionCollapserButton" data-bind="click: function() { ShowDescription(!ShowDescription()); }, css: { 'Collapsed': ShowDescription, 'Expanded': !ShowDescription()}"></button>
+        </div>
+    </div>
+
+    @* Editing *@
+    <div data-bind="visible: IsEditing">
+        <div class="TaskBody Editing">
+            <input class="TaskNameInput" type="text" value="A thing with desc." />
+            <select class="TaskStatusSelect">
+                <option>Active</option>
+                <option>Inactive</option>
+                <option>Cancelled</option>
+            </select>
+            <button type="button" class="MediumButton"><span class="ButtonIcon IconCancel"></span></button>
+            <button type="button" class="MediumButton" data-bind="click: Save"><span class="ButtonIcon IconSave"></span></button>
+        </div>
+        <div class="TaskDescription Editing">
+            <textarea class="TaskDescriptionInput">test</textarea>
+        </div>
+    </div>
+
+</div>
+
+@*
+<div class="TaskContainer">
+    <button type="button" class="TinyButton TaskChildExpanderButton Collapsed"></button>
+    <div class="TaskBody Active">
+        <span class="TaskName">Grocery List</span>
+        <span class="TaskCompletionPercentage">10%</span>
+    </div>
+</div>
+
+<div class="TaskContainer">
+    <button type="button" class="TinyButton TaskChildExpanderButton Collapsed"></button>
+    <div class="TaskBody Inactive">
+        <span class="TaskName">Clean Apartment</span>
+        <span class="TaskCompletionPercentage">50%</span>
+    </div>
+</div>
+
+<div class="TaskContainer">
+    <button type="button" class="TinyButton TaskChildExpanderButton Expanded"></button>
+    <div class="TaskBody Complete">
+        <span class="TaskName">Something I Did</span>
+        <span class="TaskCompletionPercentage"></span>
+    </div>
+
+    <div class="TaskChildContainer">
+        <div class="TaskContainer">
+            <button type="button" class="TinyButton TaskChildExpanderButton Expanded"></button>
+            <div class="TaskBody Editing">
+                <input class="TaskNameInput" type="text" value="A thing with desc." />
+                <select class="TaskStatusSelect">
+                    <option>Active</option>
+                    <option>Inactive</option>
+                    <option>Cancelled</option>
+                </select>
+                <button type="button" class="MediumButton"><span class="ButtonIcon IconCancel"></span></button>
+                <button type="button" class="MediumButton"><span class="ButtonIcon IconSave"></span></button>
+            </div>
+            <div class="TaskDescription Editing">
+                <textarea class="TaskDescriptionInput">test</textarea>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="TaskContainer">
+    <button type="button" class="TinyButton TaskChildExpanderButton Expanded"></button>
+    <div class="TaskBody Complete">
+        <span class="TaskName">Something I Did</span>
+        <span class="TaskCompletionPercentage"></span>
+    </div>
+    <div class="TaskChildContainer">
+        <div class="TaskContainer">
+            <button type="button" class="TinyButton TaskChildExpanderButton Expanded"></button>
+            <div class="TaskBody Active">
+                <span class="TaskName">A thing with desc.</span>
+                <span class="TaskCompletionPercentage"></span>
+            </div>
+            <div class="TaskDescription">
+                <p>Some extra info on this particular task</p>
+                <button type="button" class="TinyButton TaskDescriptionCollapserButton Expanded"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="TaskContainer">
+    <button type="button" class="TinyButton TaskChildExpanderButton Expanded"></button>
+    <div class="TaskBody Active">
+        <span class="TaskName">A thing with desc.</span>
+        <span class="TaskCompletionPercentage"></span>
+    </div>
+    <div class="TaskDescription">
+        <p>Some extra info on this particular task</p>
+        <button type="button" class="TinyButton TaskDescriptionCollapserButton Expanded"></button>
+    </div>
+</div>*@
+
+
+@*<div>
     <button type="button">-</button><span>itemName</span><button type="button">Edit</button>
 </div>
 
@@ -113,4 +252,4 @@
     </div>
 
     <button data-bind="visible: !LoadMoreCompleteTasks(), click: function() { LoadMoreCompleteTasks(!LoadMoreCompleteTasks()); }">More...</button>
-</div>
+</div>*@

@@ -1,18 +1,160 @@
-﻿
-
-.taskName {
-    font-family: Tahoma;
+﻿body {
+    background-color: #f6f6f6;
 }
 
-    .taskName.active {
-        color: #002f06;
+.TaskContainer {
+    margin-left: 20px;
+    margin-top: 2px;
+    width: 200px;
+    position: relative;
+}
+
+.TaskBody {
+    border: 1px solid #999;
+    padding: 3px 15px;
+    border-radius: 3px;
+    position: relative;
+}
+
+    .TaskBody.Active {
+        background-color: #BCFFBC;
     }
 
-    .taskName.cancelled {
-        color: #6a6a6a;
+    .TaskBody.Inactive {
+        background-color: #ddd;
     }
 
-    .taskName.complete {
-        color: #6a6a6a;
+    .TaskBody.Complete {
         text-decoration: line-through;
+        background-color: #ddd;
     }
+
+
+
+.TaskCompletionPercentage {
+    float: right;
+}
+
+.TaskDescription {
+    border: 1px solid #999;
+    border-top: none;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    margin-left: 10px;
+    margin-right: 3px;
+    padding: 5px;
+    padding-right: 20px;
+    position: relative;
+}
+
+    .TaskDescription p {
+        padding: 0px;
+        margin: 0px;
+    }
+
+
+input {
+    padding-left: 5px;
+}
+
+.IconCancel::before {
+    content: '\2715';
+    position: absolute;
+    font-size: 24px;
+    left: -1px;
+    top: -2px;
+    color: black;
+}
+
+.MediumButton {
+    top: 3px;
+    height: 24px;
+    width: 24px;
+    position: relative;
+}
+
+.IconSave {
+    content: '';
+    position: absolute;
+    border-bottom: 3px solid black;
+    border-right: 3px solid black;
+    height: 14px;
+    width: 7px;
+    transform: rotate(45deg);
+    top: 0px;
+    left: 6px;
+}
+
+
+textarea {
+    height: inherit;
+}
+
+
+
+
+.Editing {
+    background-color: #FFB800;
+    border-color: #000;
+}
+
+.TaskDescriptionInput {
+    width: 100%;
+
+    box-sizing: content-box;
+}
+
+
+
+button:active {
+    background-color: #aaffaa;
+}
+
+
+input, select, button, .MediumButton, textarea {
+    Height: 24px;
+    padding: 3px 0px;
+    border: 1px solid #000;
+    border-radius: 2px;
+    display: inline-block;
+    background-color: #FFF;
+    box-sizing: border-box;
+    margin: 0px 0px;
+}
+
+.TinyButton {
+    padding: 0px;
+    font-family: arial;
+    border: 1px solid #999999;
+    border-radius: 2px;
+    margin: 0px;
+    height: 13px;
+    width: 13px;
+    font-size: 12px;
+    text-align: center;
+    display: inline-block;
+    box-sizing: content-box;
+}
+
+.TaskChildExpanderButton {
+    position: absolute;
+    top: 5px;
+    left: -18px;
+    color: #666;
+}
+
+    .TinyButton.Collapsed::before {
+        content: "+";
+    }
+
+    .TinyButton.Expanded::before {
+        content: "-";
+        font-size: 8px;
+    }
+
+.TaskDescriptionCollapserButton{
+    content: "-";
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
