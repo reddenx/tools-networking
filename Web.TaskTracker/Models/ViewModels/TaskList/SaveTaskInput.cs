@@ -11,6 +11,7 @@ namespace Web.TaskTracker.Models.ViewModels.TaskList
         public int? TaskId { get; set; }
         public int? ParentTaskId { get; set; }
         public string TaskName { get; set; }
+        public string Description { get; set; }
         public TaskStatus CurrentStatus { get; set; }
     }
 }

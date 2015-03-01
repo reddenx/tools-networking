@@ -73,7 +73,7 @@ input {
     position: relative;
 }
 
-.IconSave {
+.IconSave::before {
     content: '';
     position: absolute;
     border-bottom: 3px solid black;
@@ -148,13 +148,27 @@ input, select, button, .MediumButton, textarea {
     }
 
     .TinyButton.Expanded::before {
-        content: "-";
+        content: "_";
         font-size: 8px;
-    }
+    
+        position: absolute;
+        top: -2px;
+        left: 4px;
+}
 
-.TaskDescriptionCollapserButton{
-    content: "-";
+.TaskChildContainer {
+    border-left: 1px solid #DDD;
+    border-left-style: dashed;
+}
+
+.TaskStatusSelect {
+    width: 71px;
+}
+
+.IconAdd::before {
+    content: '+';
+    font-size: 30px;
     position: absolute;
-    top: 3px;
-    right: 3px;
+    top: -5px;
+    left: 2px;
 }

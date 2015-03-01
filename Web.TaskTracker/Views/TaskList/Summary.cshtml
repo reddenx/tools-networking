@@ -10,21 +10,73 @@
         function TreeItem(serverItem) {
             var self = this;
 
+            //Data
             self.TaskId = serverItem.Item.TaskId;
+
             self.Name = ko.observable(serverItem.Item.Name);
+            self.Description = ko.observable(serverItem.Item.Description);
             self.CurrentStatus = ko.observable(serverItem.Item.CurrentStatus);
             self.DateCreated = ko.observable(serverItem.Item.DateCreated);
             self.DateCompleted = ko.observable(serverItem.Item.DateCompleted);
 
-            self.IsEditing = ko.observable(false);
-            self.Waiting = ko.observable(false);
-
-
             self.Children = ko.observableArray();
+
+
+            //visual 
+            self.IsEditing = ko.observable(false);
+            self.IsBusy = ko.observable(false);
+            self.ShowChildren = ko.observable(false);
+            self.ShowExpander = ko.computed(function () {
+                return self.Children().length > 0
+                    || !!self.Description();
+            });
+
+            //methods
+            self.ResetValues = function (model) {
+                self.Name(model.Name);
+                self.Description(model.Description);
+                self.CurrentStatus(model.CurrentStatus);
+                self.DateCreated(model.DateCreated);
+                self.DateCompleted(model.DateCreated);
+            }
+
+            self.AddChild = function () {
+                var child = new TreeItem({ Item: {}, Children: [] })
+                child.IsEditing(true);
+                self.ShowChildren(true);
+                self.Children.push(child);
+
+            }
+
+            self.Save = function () {
+                self.IsBusy(true);
+
+                //TODO-SM save ajax call
+                self.IsBusy(false);
+                self.IsEditing(false);
+            }
+
+            self.CancelEdits = function () {
+                self.ResetValues(self.Backup);
+                self.IsEditing(false);
+            }
+
+            self.Backup = {};
+
+            self.SetBackup = function (model) {
+                self.Backup.Name = model.Name;
+                self.Backup.Description = model.Description;
+                self.Backup.CurrentStatus = model.CurrentStatus;
+                self.Backup.DateCreated = model.DateCreated;
+                self.Backup.DateCompleted = model.DateCompleted;
+            }
+
+            //build children
             $.each(serverItem.Children, function (index, item) {
                 self.Children.push(new TreeItem(item));
             });
 
+            self.SetBackup(serverItem.Item);
 
             return self;
         }
@@ -37,11 +89,11 @@
         var ViewModel = new function (serverModel) {
             var self = this;
 
-            self.TaskStatuses = ko.observableArray([
+            self.TaskStatuses = [
                 new KVP('Active', 0),
                 new KVP('Complete', 1),
                 new KVP('Cancelled', 2),
-            ]);
+            ];
 
             self.Root = ko.observableArray();
 
@@ -57,11 +109,53 @@
 }
 
 
-<ul data-bind="foreach: Root">
-    <li data-bind="template: { name: 'child-template', data: $data }"></li>
-</ul>
+<!-- ko foreach: Root -->
+<div data-bind="template: { name: 'child-template', data: $data }"></div>
+<!-- /ko -->
 
 <script type="text/html" id="child-template">
+    <div class="TaskContainer">
+        <button type="button" class="TinyButton TaskChildExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}, visible: ShowExpander"></button>
+
+        @* saved *@
+        <div data-bind="visible: !IsEditing()">
+            <div class="TaskBody Active">
+                <span class="TaskName" data-bind="click: function() {IsEditing(true);}, text: Name"></span>
+                @*<span class="TaskCompletionPercentage">10%</span> would be nice *@
+            </div>
+            <div class="TaskDescription" data-bind="visible: ShowChildren() && Description()">
+                <p data-bind="text: Description"></p>
+            </div>
+        </div>
+
+        @* Editing *@
+        <div data-bind="visible: IsEditing">
+            <div class="TaskBody Editing">
+                <input class="TaskNameInput" type="text" data-bind="value: Name" />
+                <select class="TaskStatusSelect" data-bind="value: CurrentStatus, options: ViewModel.TaskStatuses, optionsText: 'Key', optionsValue: 'Id'">
+                </select>
+                <button data-bind="click: CancelEdits" type="button" class="MediumButton ButtonIcon IconCancel"></button>
+                <button data-bind="click: Save" type="button" class="MediumButton ButtonIcon IconSave"></button>
+                <button data-bind="click: AddChild" type="button" class="MediumButton ButtonIcon IconAdd"></button>
+            </div>
+            <div class="TaskDescription Editing">
+                <textarea class="TaskDescriptionInput" data-bind="value: Description"></textarea>
+            </div>
+        </div>
+
+        <div class="TaskChildContainer" data-bind="foreach: Children, visible: ShowChildren">
+            <div data-bind="template: { name: 'child-template', data: $data }"></div>
+        </div>
+
+    </div>
+
+
+
+    @*
+
+
+
+
     <div class="taskContainer">
         <div data-bind="visible: IsEditing">
             <select data-bind="options: ViewModel.TaskStatuses, optionsText: 'Key', value: CurrentStatus, optionsValue: 'Id'"></select>
@@ -77,5 +171,5 @@
         <ul data-bind="foreach: Children">
             <li data-bind="template: { name: 'child-template', data: $data }"></li>
         </ul>
-    </div>
+    </div>*@
 </script>

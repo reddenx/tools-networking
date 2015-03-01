@@ -33,8 +33,11 @@
         viewModel = new function () {
             var self = this;
 
+            self.IsBusy = ko.observable(false);
+
             self.Name = ko.observable('Name');
-            //self.Status = ko.observable();
+            self.Status = ko.observable();
+            self.Description = ko.observable();
 
             self.ShowChildren = ko.observable();
             self.ShowDescription = ko.observable();
@@ -45,9 +48,19 @@
             }
 
             self.Save = function () {
-                self.IsEditing(false);
+                self.IsEditing(true);
 
-                //TODO-SM AJAX
+                $.ajax({
+                    url:'Save',
+                    dataType:'json',
+                    data: self.GetSaveData(),
+                    success:,
+                    error:,
+                    complete: function(){
+                        self.IsEditing(false);
+                    }
+                });
+
             }
         }();
 
