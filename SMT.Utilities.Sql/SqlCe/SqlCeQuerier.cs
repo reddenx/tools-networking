@@ -61,18 +61,28 @@ namespace SMT.Utilities.Sql.SqlCe
                 command.ExecuteNonQuery();
 
                 var identity = command2.ExecuteScalar();
+
+                connection.Close();
+
                 return Convert.ToInt32(identity);
             }
         }
 
         public int ExecuteNonQuery(string sql, IDbDataParameter[] parameters)
         {
+            int linesModified = -1;
             using (var connection = new SqlCeConnection(ConnectionString))
             {
                 var command = BuildCommand(sql, parameters, connection);
 
-                return command.ExecuteNonQuery();
+                connection.Open();
+
+                linesModified = command.ExecuteNonQuery();
+
+                connection.Close();
             }
+
+            return linesModified;
         }
 
         private SqlCeCommand BuildCommand(string sql, IDbDataParameter[] parameters, SqlCeConnection connection)

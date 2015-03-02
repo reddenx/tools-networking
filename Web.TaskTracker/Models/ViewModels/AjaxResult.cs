@@ -7,13 +7,13 @@ namespace Web.TaskTracker.Models.ViewModels
 {
     public class AjaxResult
     {
-        public bool succes { get; set; }
+        public bool success { get; set; }
         public string error { get; set; }
         public object data { get; set; }
 
         public AjaxResult(bool success = false, string error = null, object data = null)
         {
-            this.succes = succes;
+            this.success = success;
             this.error = error;
             this.data = data;
         }

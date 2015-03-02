@@ -37,12 +37,11 @@ namespace Web.TaskTracker.Controllers
             {
                 if (!input.TaskId.HasValue)
                 {
-                    task = TaskMgr.CreateTask(input.TaskName, 1, input.ParentTaskId); //TODO-SM hardCoded id
+                    task = TaskMgr.CreateTask(input.TaskName, 1, input.ParentTaskId, input.Description); //TODO-SM hardCoded id
                 }
                 else
                 {
-                    TaskMgr.UpdateTask(input.TaskId.Value, input.TaskName, input.CurrentStatus);
-                    task = TaskMgr.GetTask(input.TaskId.Value);
+                    task = TaskMgr.UpdateTask(input.TaskId.Value, input.TaskName, input.CurrentStatus, input.Description);
                 }
             }
             catch(Exception e)
@@ -52,9 +51,11 @@ namespace Web.TaskTracker.Controllers
                     error: e.Message), JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new AjaxResult(
+            var result = new AjaxResult(
                 success: true,
-                data: task), JsonRequestBehavior.AllowGet);
+                data: task);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

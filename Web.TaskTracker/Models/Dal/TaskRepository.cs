@@ -34,11 +34,11 @@ where t.AccountId = @AccountId";
             return Querier.ExecuteReader(BuildTaskFromReader, sql, parameters);
         }
 
-        public int CreateTask(string taskName, int accountId, int? parentTaskId)
+        public int CreateTask(string taskName, int accountId, int? parentTaskId, string desciption)
         {
             var sql =
-@"insert into Task (AccountId, ParentTaskId, TaskName, CurrentStatusId, DateCreated, DateCompleted)
-values (@AccountId,@ParentTaskId,@TaskName,@CurrentTaskId,GETDATE(),null)";
+@"insert into Task (AccountId, ParentTaskId, TaskName, CurrentStatusId, DateCreated, DateCompleted, Description)
+values (@AccountId,@ParentTaskId,@TaskName,@CurrentTaskId,GETDATE(),null, @Description)";
 
             var parameters = new IDbDataParameter[]
             {
@@ -46,6 +46,7 @@ values (@AccountId,@ParentTaskId,@TaskName,@CurrentTaskId,GETDATE(),null)";
                 Querier.CreateParameter("@ParentTaskId", SqlDbType.Int, parentTaskId),
                 Querier.CreateParameter("@TaskName", SqlDbType.NVarChar, 255, taskName),
                 Querier.CreateParameter("@CurrentTaskId", SqlDbType.Int, TaskStatus.Active),
+                Querier.CreateParameter("@Description", SqlDbType.NVarChar, 1000, desciption ?? string.Empty)
             };
 
             return Querier.InsertAndGetIdentity(sql, parameters);
@@ -66,11 +67,11 @@ where t.TaskId = @TaskId";
             return Querier.ExecuteReader(BuildTaskFromReader, sql, parameters).Single();
         }
 
-        public void UpdateTask(int taskId, string taskName, TaskStatus currentStatus)
+        public void UpdateTask(int taskId, string taskName, TaskStatus currentStatus, string description)
         {
             var sql =
 @"update Task
-set TaskName = @TaskName, CurrentStatusId = @CurrentStatusId
+set TaskName = @TaskName, CurrentStatusId = @CurrentStatusId, Description = @Description
 where TaskId = @TaskId";
 
             var parameters = new IDbDataParameter[] 
@@ -78,6 +79,7 @@ where TaskId = @TaskId";
                 Querier.CreateParameter("@TaskId", SqlDbType.Int, taskId),
                 Querier.CreateParameter("@TaskName", SqlDbType.NVarChar, 255, taskName),
                 Querier.CreateParameter("@CurrentStatusId", SqlDbType.Int, currentStatus),
+                Querier.CreateParameter("@Description", SqlDbType.NVarChar, description ?? string.Empty),
             };
 
             Querier.ExecuteNonQuery(sql, parameters);
@@ -90,6 +92,7 @@ where TaskId = @TaskId";
                     Convert.ToInt32(reader["AccountId"]),
                     reader["ParentTaskId"] == DBNull.Value ? null : new Nullable<int>(Convert.ToInt32(reader["ParentTaskId"])),
                     Convert.ToString(reader["TaskName"]),
+                    Convert.ToString(reader["Description"]),
                     (TaskStatus)Convert.ToInt32(reader["CurrentStatusId"]),
                     Convert.ToDateTime(reader["DateCreated"]),
                     reader["DateCompleted"] == DBNull.Value ? null : new Nullable<DateTime>(Convert.ToDateTime(reader["DateCompleted"])));

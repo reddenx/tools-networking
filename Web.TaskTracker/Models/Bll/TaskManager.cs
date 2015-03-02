@@ -26,15 +26,16 @@ namespace Web.TaskTracker.Models.Bll
             return root.Children;
         }
 
-        public TaskItem CreateTask(string taskName, int accountId, int? parentTaskId)
+        public TaskItem CreateTask(string taskName, int accountId, int? parentTaskId, string description)
         {
-            var taskId = TaskRepo.CreateTask(taskName, accountId, parentTaskId);
+            var taskId = TaskRepo.CreateTask(taskName, accountId, parentTaskId, description);
             return TaskRepo.GetTaskById(taskId);
         }
 
-        public void UpdateTask(int taskId, string taskName, TaskStatus currentStatus)
+        public TaskItem UpdateTask(int taskId, string taskName, TaskStatus currentStatus, string description)
         {
-            TaskRepo.UpdateTask(taskId, taskName, currentStatus);
+            TaskRepo.UpdateTask(taskId, taskName, currentStatus, description);
+            return TaskRepo.GetTaskById(taskId);
         }
 
         private TaskItem[] BuildTree(TaskTreeItem parent, TaskItem[] items)

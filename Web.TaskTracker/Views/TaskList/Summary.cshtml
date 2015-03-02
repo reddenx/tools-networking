@@ -7,11 +7,12 @@
 @section Scripts
 {
     <script>
-        function TreeItem(serverItem) {
+        function TreeItem(serverItem, parentViewModel) {
             var self = this;
 
             //Data
             self.TaskId = serverItem.Item.TaskId;
+            self.ParentTaskId = serverItem.Item.ParentTaskId;
 
             self.Name = ko.observable(serverItem.Item.Name);
             self.Description = ko.observable(serverItem.Item.Description);
@@ -19,12 +20,14 @@
             self.DateCreated = ko.observable(serverItem.Item.DateCreated);
             self.DateCompleted = ko.observable(serverItem.Item.DateCompleted);
 
+            self.Parent = parentViewModel;
             self.Children = ko.observableArray();
 
 
             //visual 
             self.IsEditing = ko.observable(false);
             self.IsBusy = ko.observable(false);
+            self.Error = ko.observable('');
             self.ShowChildren = ko.observable(false);
             self.ShowExpander = ko.computed(function () {
                 return self.Children().length > 0
@@ -43,6 +46,9 @@
             self.AddChild = function () {
                 var child = new TreeItem({ Item: {}, Children: [] })
                 child.IsEditing(true);
+                child.ParentTaskId = self.TaskId;
+                child.Parent = self;
+
                 self.ShowChildren(true);
                 self.Children.push(child);
 
@@ -50,10 +56,40 @@
 
             self.Save = function () {
                 self.IsBusy(true);
+                self.Error('');
 
-                //TODO-SM save ajax call
-                self.IsBusy(false);
-                self.IsEditing(false);
+                $.ajax({
+                    url: 'SaveTask',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: self.GetSaveData(),
+                    success: function (result) {
+                        if (result.success) {
+                            self.IsEditing(false);
+                            self.ResetValues(result.data);
+                            self.SetBackup(result.data);
+                        }
+                        else {
+                            self.Error(result.error);
+                        }
+                    },
+                    error: function () {
+                        self.Error('Could not save');
+                    },
+                    complete: function () {
+                        self.IsBusy(false);
+                    }
+                });
+            }
+
+            self.GetSaveData = function () {
+                return {
+                    'TaskId': self.TaskId,
+                    'ParentTaskId': self.ParentTaskId,
+                    'TaskName': self.Name(),
+                    'Description': self.Description(),
+                    'CurrentStatus': self.CurrentStatus(),
+                }
             }
 
             self.CancelEdits = function () {
@@ -73,7 +109,7 @@
 
             //build children
             $.each(serverItem.Children, function (index, item) {
-                self.Children.push(new TreeItem(item));
+                self.Children.push(new TreeItem(item, self));
             });
 
             self.SetBackup(serverItem.Item);
@@ -140,6 +176,7 @@
             </div>
             <div class="TaskDescription Editing">
                 <textarea class="TaskDescriptionInput" data-bind="value: Description"></textarea>
+                <div data-bind="visible: Error.length > 0, text: Error"></div>
             </div>
         </div>
 

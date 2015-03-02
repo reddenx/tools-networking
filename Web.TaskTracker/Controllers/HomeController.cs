@@ -10,7 +10,7 @@ namespace Web.TaskTracker.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Summary", "TaskList");
         }
     }
 }
