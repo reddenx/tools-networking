@@ -3,8 +3,9 @@ a task tracking web app
 meant to be an advanced todo list, with subtasks and a completion record
 
 Main usabilty features:
- - touch friendly UI, mainly meant for my surface and phone
+ - touch friendly UI, for use by tablets and phones
  - responsive interface with reactive UI
+ - simple clean 1 page app
 
 
 TASK NAME[edit]
