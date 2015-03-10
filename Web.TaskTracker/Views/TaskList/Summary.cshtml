@@ -151,7 +151,7 @@
 
 <script type="text/html" id="child-template">
     <div class="TaskContainer">
-        <button type="button" class="TinyButton TaskChildExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}, visible: ShowExpander"></button>
+        <button type="button" class="CollapsingButton TaskChildExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}, visible: ShowExpander"></button>
 
         @* saved *@
         <div data-bind="visible: !IsEditing()">

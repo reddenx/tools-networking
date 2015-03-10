@@ -12,5 +12,10 @@ namespace Web.TaskTracker.Controllers
         {
             return RedirectToAction("Summary", "TaskList");
         }
+
+        public ActionResult Mock()
+        {
+            return View();
+        }
     }
 }

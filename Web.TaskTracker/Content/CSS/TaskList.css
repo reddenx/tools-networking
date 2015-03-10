@@ -4,7 +4,7 @@
 }
 
 .TaskContainer {
-    margin-left: 20px;
+    margin-left: 24px;
     margin-top: 2px;
     width: 200px;
     position: relative;
@@ -26,8 +26,8 @@
     }
 
     .TaskBody.Complete {
-        text-decoration: line-through;
-        background-color: #ddd;
+        color: #888;
+        background-color: #EEE;
     }
 
 
@@ -101,7 +101,6 @@ textarea {
 
 .TaskDescriptionInput {
     width: 100%;
-
     box-sizing: content-box;
 }
 
@@ -135,6 +134,7 @@ input, select, button, .MediumButton, textarea {
     text-align: center;
     display: inline-block;
     box-sizing: content-box;
+    position: relative;
 }
 
 .TaskChildExpanderButton {
@@ -144,22 +144,20 @@ input, select, button, .MediumButton, textarea {
     color: #666;
 }
 
-    .CollapsingButton.Collapsed::before {
-        content: "+";
-    
-        Font-Size: 25px;
-        left: 3px;
-        top: -3px;
-        position: absolute;
+.CollapsingButton.Collapsed::before {
+    content: "+";
+    Font-Size: 25px;
+    left: 3px;
+    top: -3px;
+    position: absolute;
 }
 
-    .CollapsingButton.Expanded::before {
-        content: "_";
-        font-size: 18px;
-    
-        position: absolute;
-        top: -8px;
-        left: 5px;
+.CollapsingButton.Expanded::before {
+    content: "_";
+    font-size: 18px;
+    position: absolute;
+    top: -8px;
+    left: 5px;
 }
 
 .TaskChildContainer {
@@ -168,7 +166,8 @@ input, select, button, .MediumButton, textarea {
 }
 
 .TaskStatusSelect {
-    width: 71px;
+    width: 85px;
+    margin-top: 2px;
 }
 
 .IconAdd::before {
@@ -177,4 +176,32 @@ input, select, button, .MediumButton, textarea {
     position: absolute;
     top: -5px;
     left: 2px;
+}
+
+.TaskChildOptions {
+    margin-left: 30px;
+}
+
+    .TaskChildOptions a {
+        margin-right: 12px;
+    }
+
+.DescriptionExpanderButton {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+}
+
+.ChildActionLink {
+    color: #666;
+    font-size: 12px;
+}
+
+.EditActionLink {
+    color: #414141;
+    font-size: 12px;
+    margin-left: 3px;
+}
+
+.CompleteActiveBar {
 }

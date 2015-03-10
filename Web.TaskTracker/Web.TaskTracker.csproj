@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
+    <Content Include="Views\Home\Mock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
