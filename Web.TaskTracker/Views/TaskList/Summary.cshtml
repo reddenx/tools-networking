@@ -23,7 +23,6 @@
             self.Parent = parentViewModel;
             self.Children = ko.observableArray();
 
-
             //visual 
             self.IsEditing = ko.observable(false);
             self.IsBusy = ko.observable(false);
@@ -36,6 +35,7 @@
 
             //methods
             self.ResetValues = function (model) {
+                self.TaskId = model.TaskId;
                 self.Name(model.Name);
                 self.Description(model.Description);
                 self.CurrentStatus(model.CurrentStatus);
@@ -150,63 +150,42 @@
 <!-- /ko -->
 
 <script type="text/html" id="child-template">
-    <div class="TaskContainer">
-        <button type="button" class="CollapsingButton TaskChildExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}, visible: ShowExpander"></button>
+    <div class="TaskBox" data-bind="css: { 'Active': CurrentStatus() === 0, 'Inactive': CurrentStatus() === 1, 'Cancelled': CurrentStatus() === 2}">
 
-        @* saved *@
-        <div data-bind="visible: !IsEditing()">
-            <div class="TaskBody Active">
+        <div class="Box BoxLeft">
+            <button type="button" class="ExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}"></button>
+        </div>
+
+        <div class="Box BoxCenter" data-bind="visible: !IsEditing()">
+            <div class="TaskTitle">
                 <span class="TaskName" data-bind="click: function() {IsEditing(true);}, text: Name"></span>
-                @*<span class="TaskCompletionPercentage">10%</span> would be nice *@
-            </div>
-            <div class="TaskDescription" data-bind="visible: ShowChildren() && Description()">
-                <p data-bind="text: Description"></p>
             </div>
         </div>
 
-        @* Editing *@
-        <div data-bind="visible: IsEditing">
-            <div class="TaskBody Editing">
-                <input class="TaskNameInput" type="text" data-bind="value: Name" />
-                <select class="TaskStatusSelect" data-bind="value: CurrentStatus, options: ViewModel.TaskStatuses, optionsText: 'Key', optionsValue: 'Id'">
-                </select>
-                <button data-bind="click: CancelEdits" type="button" class="MediumButton ButtonIcon IconCancel"></button>
-                <button data-bind="click: Save" type="button" class="MediumButton ButtonIcon IconSave"></button>
-                <button data-bind="click: AddChild" type="button" class="MediumButton ButtonIcon IconAdd"></button>
-            </div>
-            <div class="TaskDescription Editing">
-                <textarea class="TaskDescriptionInput" data-bind="value: Description"></textarea>
-                <div data-bind="visible: Error.length > 0, text: Error"></div>
+        <div class="Box BoxRight" data-bind="visible: !IsEditing()">
+            <div class="TaskCount">
+                <span data-bind="text: Children().length"></span>
             </div>
         </div>
 
-        <div class="TaskChildContainer" data-bind="foreach: Children, visible: ShowChildren">
-            <div data-bind="template: { name: 'child-template', data: $data }"></div>
-        </div>
+        <div class="Box BoxRight" style="border-left: none" data-bind="visible: IsEditing">
+            <button class="ConfirmButton Save" data-bind="click: Save"></button>
+            <button class="ConfirmButton Cancel" data-bind="click: CancelEdits"></button>
 
+            <input type="text" class="TaskTitleInput" data-bind="value: Name" />
+
+            <button class="StatusButton CancelledStatus" data-bind="click: function() { CurrentStatus(2) }, css: { 'active': CurrentStatus() === 2 }"></button>
+            <button class="StatusButton InactiveStatus" data-bind="click: function() { CurrentStatus(1) }, css: { 'active': CurrentStatus() === 1 }"></button>
+            <button class="StatusButton ActiveStatus" data-bind="click: function() { CurrentStatus(0) }, css: { 'active': CurrentStatus() === 0 }"></button>
+        </div>
     </div>
 
-
-
-    @*
-
-
-
-
-    <div class="taskContainer">
-        <div data-bind="visible: IsEditing">
-            <select data-bind="options: ViewModel.TaskStatuses, optionsText: 'Key', value: CurrentStatus, optionsValue: 'Id'"></select>
-            <input type="text" data-bind="value: Name" />
-            <button type="button" data-bind="click: function(){ IsEditing(false); }">Save</button>
-        </div>
-
-        <div data-bind="visible: !IsEditing()">
-            <button type="button" data-bind="click: function(){ IsEditing(true); }">Edit</button>
-            <span class="taskName" data-bind="text: Name, css: { 'active' : CurrentStatus() == 0, 'complete': CurrentStatus() == 1, 'cancelled': CurrentStatus() == 2 }"></span>
-        </div>
-
-        <ul data-bind="foreach: Children">
-            <li data-bind="template: { name: 'child-template', data: $data }"></li>
-        </ul>
-    </div>*@
+    <div class="TaskChildContainer" data-bind="foreach: Children, visible: ShowChildren() && Children().length>0">
+        <div data-bind="template: { name: 'child-template', data: $data }"></div>
+    </div>
+    <div class="TaskChildOptions" data-bind="visible: ShowChildren()">
+        <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
+        <a href="#" class="ChildActionLink">Show completed</a>
+    </div>
+    
 </script>

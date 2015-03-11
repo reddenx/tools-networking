@@ -1,195 +1,128 @@
 ﻿body {
-    background-color: #f6f6f6;
-    font-family: tahoma, lucida console, arial;
+    font-family: tahoma, arial;
 }
 
-.TaskContainer {
-    margin-left: 24px;
-    margin-top: 2px;
-    width: 200px;
-    position: relative;
-}
-
-.TaskBody {
-    border: 1px solid #999;
-    padding: 3px 15px;
-    border-radius: 3px;
-    position: relative;
-}
-
-    .TaskBody.Active {
-        background-color: #BCFFBC;
-    }
-
-    .TaskBody.Inactive {
-        background-color: #ddd;
-    }
-
-    .TaskBody.Complete {
-        color: #888;
-        background-color: #EEE;
-    }
-
-
-
-.TaskCompletionPercentage {
-    float: right;
-}
-
-.TaskDescription {
-    border: 1px solid #999;
-    border-top: none;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-    margin-left: 10px;
-    margin-right: 3px;
-    padding: 5px;
-    padding-right: 20px;
-    position: relative;
-}
-
-    .TaskDescription p {
-        padding: 0px;
-        margin: 0px;
-    }
-
-
-input {
-    padding-left: 5px;
-}
-
-.IconCancel::before {
-    content: '\2715';
-    position: absolute;
-    font-size: 24px;
-    left: -1px;
-    top: -2px;
-    color: black;
-}
-
-.MediumButton {
-    top: 3px;
+.TaskBox {
+    border-width: 1px;
+    border-color: #999;
+    border-style: solid;
+    min-width: 200px;
     height: 24px;
-    width: 24px;
     position: relative;
-}
-
-.IconSave::before {
-    content: '';
-    position: absolute;
-    border-bottom: 3px solid black;
-    border-right: 3px solid black;
-    height: 14px;
-    width: 7px;
-    transform: rotate(45deg);
-    top: 0px;
-    left: 6px;
-}
-
-
-textarea {
-    height: inherit;
-}
-
-
-
-
-.Editing {
-    background-color: #FFB800;
-    border-color: #000;
-}
-
-.TaskDescriptionInput {
-    width: 100%;
-    box-sizing: content-box;
-}
-
-
-
-button:active {
-    background-color: #aaffaa;
-}
-
-
-input, select, button, .MediumButton, textarea {
-    Height: 24px;
-    padding: 3px 0px;
-    border: 1px solid #000;
-    border-radius: 2px;
-    display: inline-block;
-    background-color: #FFF;
-    box-sizing: border-box;
-    margin: 0px 0px;
-}
-
-.CollapsingButton {
-    padding: 0px;
-    font-family: arial;
-    border: 1px solid #999999;
-    border-radius: 2px;
     margin: 0px;
-    height: 20px;
-    width: 20px;
-    font-size: 12px;
-    text-align: center;
     display: inline-block;
-    box-sizing: content-box;
+}
+
+.Box {
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    min-width: 24px;
+    float: left;
+}
+
+.BoxLeft {
+    border-right: 1px solid #aaa;
+}
+
+div {
+    /* border: 1px dotted #aaa; */
+}
+
+.BoxCenter {
+}
+
+.BoxRight {
+    border-left: 1px solid #aaa;
+    float: right;
+    background-color: #FFF;
+}
+
+.TaskCount {
+    min-width: 24px;
+    padding-top: 4px;
+    font-family: courier;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ExpanderButton {
+    border: 0px;
+    background-color: #E8E8E8;
+    width: 24px;
+    height: 24px;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
     position: relative;
 }
 
-.TaskChildExpanderButton {
-    position: absolute;
-    top: 2px;
-    left: -23px;
-    color: #666;
-}
-
-.CollapsingButton.Collapsed::before {
-    content: "+";
-    Font-Size: 25px;
-    left: 3px;
-    top: -3px;
-    position: absolute;
-}
-
-.CollapsingButton.Expanded::before {
-    content: "_";
-    font-size: 18px;
-    position: absolute;
-    top: -8px;
-    left: 5px;
+.ExpanderButton:active, .ExpanderButton.active {
+    background-color: #FFF;
 }
 
 .TaskChildContainer {
-    border-left: 1px solid #DDD;
-    border-left-style: dashed;
+    padding: 3px;
+    padding-left: 12px;
+    margin: 0px;
+    margin-left: 13px;
+    border-left: 1px dotted #aaa;
 }
 
-.TaskStatusSelect {
-    width: 85px;
-    margin-top: 2px;
+.TaskTitle {
+    padding-top: 3px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-family: Tahome, arial;
+    font-size: 17px;
 }
 
-.IconAdd::before {
-    content: '+';
-    font-size: 30px;
+.Collapsed::before {
+    content: "+";
+    font-size: 24px;
+    color: #666;
     position: absolute;
-    top: -5px;
-    left: 2px;
+    top: -1px;
+    right: 5px;
+}
+
+.Expanded::before {
+    content: "_";  
+    font-size: 23px;  color: #666;  position: absolute;  
+    top: -12px;  
+    right: 5px;
+}
+
+.TaskDescription {
+    position: relative;
+    border: 1px solid #999;
+    border-top: none;
+    margin: 0px;
+    padding: 0px;
+    margin-left: 25px;
+    position: relative;
+}
+
+.Active {
+    background-color: #B6FFB6;
+}
+
+.TaskContainer {
+}
+
+.Inactive {
+    background-color: #F7F7F7;
+}
+
+.Cancelled {
+    background-color: #E8E8E8;
+    color: #838383;
 }
 
 .TaskChildOptions {
-    margin-left: 30px;
-}
-
-    .TaskChildOptions a {
-        margin-right: 12px;
-    }
-
-.DescriptionExpanderButton {
-    position: absolute;
-    right: 3px;
-    top: 3px;
+    margin-left: 28px;
+    margin: -2px 0px 4px 28px;
 }
 
 .ChildActionLink {
@@ -197,11 +130,138 @@ input, select, button, .MediumButton, textarea {
     font-size: 12px;
 }
 
-.EditActionLink {
-    color: #414141;
-    font-size: 12px;
-    margin-left: 3px;
+.TaskTitleInput {
+    height: 100%;
+    box-sizing: border-box;
+    border: none;
+    padding-left: 6px;
+    background-color: white;
 }
 
-.CompleteActiveBar {
+.ConfirmButton {
+    float: left;
+    width: 25px;
+    height: 100%;
+    border: none;
+    border-right: 1px solid #999;
+    background-color: #F0F;
+    position: relative;
+}
+
+.ConfirmButton.Save {
+    background-color: #C9CCFF;
+}
+
+.ConfirmButton.Cancel {
+    background-color: #E8E8E8;
+}
+
+.ConfirmButton:active, .ConfirmButton.active {
+    background-color: #fff;
+}
+
+
+.ConfirmButton.Cancel::before {
+    content: "\2715";
+    font-size: 19px;
+    color: #7C7C7C;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}
+
+.StatusButton {
+    background-color: #F0F;
+    border: none;
+    border-left: 1px solid #999;
+    height: 100%;
+    width: 25px;
+    float: right;
+    position: relative;
+    color: #666;
+}
+
+.StatusButton.ActiveStatus {
+    background-color: #B6FFB6;
+}
+
+.StatusButton.ActiveStatus:active, .StatusButton.ActiveStatus.active {
+    color: #000000;
+    background-color: #0F0;
+    font-weight: bold;
+}
+
+.StatusButton.InactiveStatus {
+    background-color: #e8e8e8;
+}
+
+button.StatusButton.InactiveStatus:active, button.StatusButton.InactiveStatus.active {
+    background-color: #000000;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.StatusButton.InactiveStatus::before {
+    content: "I";
+    font-family: tahoma;
+    font-size: 20px;
+    position: absolute;
+    top: 0px;
+    right: 8px;
+}
+
+.StatusButton.CancelledStatus {
+    background-color: #FFBEBE;
+}
+
+.StatusButton.CancelledStatus:active, .StatusButton.CancelledStatus.active {
+    background-color: #F00;
+    color: #000;
+    font-weight: bold;
+}
+
+.StatusButton.ActiveStatus::before {
+    content: "A";
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    font-family: arial;
+    font-size: 20px;
+}
+
+.ConfirmButton.Save::before {
+    content: '';
+    position: absolute;
+    border-bottom: 2px solid #666;
+    border-right: 2px solid #666;
+    transform: rotate(45deg);
+    height: 14px;
+    width: 7px;
+    top: 2px;
+    right: 6px;
+}
+
+.StatusButton.CancelledStatus::before {
+    content: "C";
+    font-family: tahoma;
+    font-size: 21px;
+    position: absolute;
+    top: -1px;
+    right: 6px;
+}
+
+:focus {
+    outline: none;
+}
+
+.Active .TaskTitleInput {
+    background-color: #B6FFB6;
+}
+
+.Inactive .TaskTitleInput {
+    background-color: #F7F7F7;
+}
+
+.Cancelled .TaskTitleInput {
+    background-color: #FFBEBE;
 }

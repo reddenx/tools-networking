@@ -126,6 +126,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="App_Data\TaskDatabase.sdf" />
+    <Content Include="Content\CSS\TaskList_bak.css" />
     <Content Include="Content\CSS\TaskList.css" />
     <Content Include="Content\Scripts\jQuery.js" />
     <Content Include="Content\Scripts\Knockout.js" />
@@ -142,6 +143,7 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <Content Include="Views\Home\Mock.cshtml" />
+    <Content Include="Views\Home\Mock2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

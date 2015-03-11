@@ -24,7 +24,8 @@ namespace Web.TaskTracker.Models.Dal
             var sql = 
 @"select t.*
 from Task t
-where t.AccountId = @AccountId";
+where t.AccountId = @AccountId
+    and t.CurrentStatusId <> 2";
 
             var parameters = new IDbDataParameter[] 
             {

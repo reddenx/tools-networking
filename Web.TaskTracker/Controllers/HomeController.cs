@@ -17,5 +17,10 @@ namespace Web.TaskTracker.Controllers
         {
             return View();
         }
+
+        public ActionResult Mock2()
+        {
+            return View();
+        }
     }
 }
