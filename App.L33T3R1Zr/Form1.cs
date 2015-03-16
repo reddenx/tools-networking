@@ -16,11 +16,21 @@ namespace App.L33T3R1Zr
     {
         private IKeyboardEventListener KeyboardListener;
         private IKeyboardEventRunner KeyboardRunner;
+        private bool IsConverting;
+        
+        private bool ShiftDown;
+        private bool AltDown;
+        private bool CtrlDown;
 
         public Form1(IKeyboardEventListener keyboardListener)
         {
             KeyboardListener = keyboardListener;
             KeyboardRunner = new KeyboardEventRunner();
+            IsConverting = false;
+
+            ShiftDown = false;
+            AltDown = false;
+            CtrlDown = false;
 
             InitializeComponent();
 
@@ -48,27 +58,55 @@ namespace App.L33T3R1Zr
                 " v" + e.VirtualKey,
                 " s" + e.ScanKey.ToString(),
                 (e.Pressed ? " D" : " U")));
-            if (LeetReplacementDefinition.Replacements.ContainsKey(e.Key))
+
+            HandleHotKeys(e);
+
+            if (IsConverting && CanConvert() && LeetReplacementDefinition.Replacements.ContainsKey(e.Key))
             {
                 if (e.Pressed)
                 {
-                    var newKey = LeetReplacementDefinition.Replacements[e.Key];
-                    if (newKey[0].shift)
+                    foreach (var newKey in LeetReplacementDefinition.Replacements[e.Key])
                     {
-                        KeyboardRunner.DoEvent(KeyboardEventArgs.Shift(true));
-                    }
+                        if (newKey.shift)
+                        {
+                            KeyboardRunner.DoEvent(KeyboardEventArgs.Shift(true));
+                        }
 
-                    KeyboardRunner.DoEvent(new KeyboardEventArgs(newKey[0].vk, newKey[0].sk, true));
-                    KeyboardRunner.DoEvent(new KeyboardEventArgs(newKey[0].vk, newKey[0].sk, false));
+                        KeyboardRunner.DoEvent(new KeyboardEventArgs(newKey.vk, newKey.sk, true));
+                        KeyboardRunner.DoEvent(new KeyboardEventArgs(newKey.vk, newKey.sk, false));
 
-                    if (newKey[0].shift)
-                    {
-                        KeyboardRunner.DoEvent(KeyboardEventArgs.Shift(false));
+                        if (newKey.shift)
+                        {
+                            KeyboardRunner.DoEvent(KeyboardEventArgs.Shift(false));
+                        }
                     }
                 }
                 return new KeyboardEventResult(true);
             }
             return new KeyboardEventResult(false);
+        }
+
+        private void HandleHotKeys(KeyboardEventArgs e)
+        {
+            if (e.Key == Keys.LControlKey)
+                CtrlDown = e.Pressed;
+
+            if (e.Key == Keys.LMenu)
+                AltDown = e.Pressed;
+
+            if (e.Key == Keys.LShiftKey)
+                ShiftDown = e.Pressed;
+
+            if (CtrlDown && AltDown && ShiftDown)
+            {
+                IsConverting = !IsConverting;
+                textBox1.BackColor = IsConverting ? Color.Red : DefaultBackColor;
+            }
+        }
+
+        private bool CanConvert()
+        {
+            return !(CtrlDown || AltDown || ShiftDown);
         }
 
         private void TestingClick(object sender, EventArgs e)
