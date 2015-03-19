@@ -33,6 +33,7 @@
                 return self.Children().length > 0
                     || !!self.Description();
             });
+            self.ShowDescription = ko.observable(false);
 
             //methods
             self.ResetValues = function (model) {
@@ -42,6 +43,7 @@
                 self.CurrentStatus(model.CurrentStatus);
                 self.DateCreated(model.DateCreated);
                 self.DateCompleted(model.DateCreated);
+                self.Description(model.Description);
             }
 
             self.AddChild = function () {
@@ -107,6 +109,7 @@
                 self.Backup.CurrentStatus = model.CurrentStatus;
                 self.Backup.DateCreated = model.DateCreated;
                 self.Backup.DateCompleted = model.DateCompleted;
+                self.Backup.Description = model.Description;
             }
 
             self.ShowCompletedChildren = function () {
@@ -153,6 +156,12 @@
             return self;
         }
 
+        function AutoGrow(sender) {
+            if (sender.scrollHeight > sender.clientHeight) {
+                sender.style.height = sender.scrollHeight + "px";
+            }
+        }
+
         var KVP = function (name, id) {
             this.Key = name;
             this.Id = id;
@@ -186,44 +195,56 @@
     <!-- /ko -->
 
     <script type="text/html" id="child-template">
-        <div class="TaskBox" data-bind="css: { 'Active': CurrentStatus() === 0, 'Inactive': CurrentStatus() === 1, 'Cancelled': CurrentStatus() === 2}">
+        <div class="TaskContainer">
+            <div class="TaskBox" data-bind="css: { 'Active': CurrentStatus() === 0, 'Inactive': CurrentStatus() === 1, 'Cancelled': CurrentStatus() === 2}">
 
-            <div class="Box BoxLeft">
-                <button type="button" class="ExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}"></button>
-            </div>
+                <div class="Box BoxLeft">
+                    <button type="button" class="ExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}"></button>
+                </div>
 
-            <div class="Box BoxCenter" data-bind="visible: !IsEditing()">
-                <div class="TaskTitle">
-                    <span class="TaskName" data-bind="click: function() {IsEditing(true);}, text: Name"></span>
+                <div class="Box BoxCenter" data-bind="visible: !IsEditing()">
+                    <div class="TaskTitle">
+                        <span class="TaskName" data-bind="click: function() {IsEditing(true);}, text: Name"></span>
+                    </div>
+                </div>
+
+                <div class="Box BoxRight" data-bind="visible: !IsEditing()">
+                    <div class="TaskCount">
+                        <span data-bind="text: Children().length"></span>
+                    </div>
+                </div>
+
+                <div class="Box BoxRight" data-bind="visible: !IsEditing() && Description().length > 0">
+                    <button type="button" class="ExpanderButton" data-bind="click: function() { ShowDescription(!ShowDescription()); }">...</button>
+                </div>
+
+                <div class="Box BoxRight" style="border-left: none" data-bind="visible: IsEditing">
+                    <button class="ConfirmButton Save" data-bind="click: Save"></button>
+                    <button class="ConfirmButton Cancel" data-bind="click: CancelEdits"></button>
+
+                    <input type="text" class="TaskTitleInput" data-bind="value: Name" />
+
+                    <button class="StatusButton CancelledStatus" data-bind="click: function() { CurrentStatus(2) }, css: { 'active': CurrentStatus() === 2 }"></button>
+                    <button class="StatusButton InactiveStatus" data-bind="click: function() { CurrentStatus(1) }, css: { 'active': CurrentStatus() === 1 }"></button>
+                    <button class="StatusButton ActiveStatus" data-bind="click: function() { CurrentStatus(0) }, css: { 'active': CurrentStatus() === 0 }"></button>
                 </div>
             </div>
 
-            <div class="Box BoxRight" data-bind="visible: !IsEditing()">
-                <div class="TaskCount">
-                    <span data-bind="text: Children().length"></span>
-                </div>
+            <div class="TaskDescriptionContainer" data-bind="visible: ShowDescription() || IsEditing()">
+                <p class="TaskDescription" data-bind="text: Description, visible: !IsEditing()"></p>
+                
+                <textarea class="AutoSizing" onkeyup="AutoGrow(this);" data-bind="value: Description, visible: IsEditing()"></textarea>
+
             </div>
 
-            <div class="Box BoxRight" style="border-left: none" data-bind="visible: IsEditing">
-                <button class="ConfirmButton Save" data-bind="click: Save"></button>
-                <button class="ConfirmButton Cancel" data-bind="click: CancelEdits"></button>
-
-                <input type="text" class="TaskTitleInput" data-bind="value: Name" />
-
-                <button class="StatusButton CancelledStatus" data-bind="click: function() { CurrentStatus(2) }, css: { 'active': CurrentStatus() === 2 }"></button>
-                <button class="StatusButton InactiveStatus" data-bind="click: function() { CurrentStatus(1) }, css: { 'active': CurrentStatus() === 1 }"></button>
-                <button class="StatusButton ActiveStatus" data-bind="click: function() { CurrentStatus(0) }, css: { 'active': CurrentStatus() === 0 }"></button>
+            <div class="TaskChildContainer" data-bind="foreach: Children, visible: ShowChildren() && Children().length>0">
+                <div data-bind="template: { name: 'child-template', data: $data }"></div>
+            </div>
+            <div class="TaskChildOptions" data-bind="visible: ShowChildren()">
+                <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
+                <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompletChildren()">Show completed</a>
             </div>
         </div>
-
-        <div class="TaskChildContainer" data-bind="foreach: Children, visible: ShowChildren() && Children().length>0">
-            <div data-bind="template: { name: 'child-template', data: $data }"></div>
-        </div>
-        <div class="TaskChildOptions" data-bind="visible: ShowChildren()">
-            <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
-            <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompletChildren()">Show completed</a>
-        </div>
-
     </script>
 
 </div>

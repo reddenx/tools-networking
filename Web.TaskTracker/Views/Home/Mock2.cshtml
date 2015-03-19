@@ -2,39 +2,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="TaskContainer">
-    <div class="TaskBox Active">
-        <div class="Box BoxLeft">
-            <button type="button" class="ExpanderButton Expanded"></button>
-        </div>
-        <div class="Box BoxCenter">
-            <div class="TaskTitle">Title</div>
-        </div>
-        <div class="Box BoxRight">
-            <div class="TaskCount">3</div>
-        </div>
-    </div>
+<script>
+    function autoGrow(oField) {
+        if (oField.scrollHeight > oField.clientHeight) {
+            oField.style.height = oField.scrollHeight + "px";
+        }
+    }
+</script>
 
-    <div class="TaskChildContainer">
+<div style="min-width: 1280px;">
 
-        <div class="TaskContainer">
-            <div class="TaskBox Active">
-                <div class="Box BoxLeft">
-                    <button type="button" class="ExpanderButton Expanded"></button>
-                </div>
-                <div class="Box BoxRight" style="border-left:none">
-                    <button class="ConfirmButton Save"></button>
-                    <button class="ConfirmButton Cancel"></button>
-                    
-                    <input type="text" class="TaskTitleInput" value="taskname" />
 
-                    <button class="StatusButton CancelledStatus"></button>
-                    <button class="StatusButton InactiveStatus"></button>
-                    <button class="StatusButton ActiveStatus"></button>
-                </div>
-            </div>
-        </div>
-
+    <div>
         <div class="TaskContainer">
             <div class="TaskBox Active">
                 <div class="Box BoxLeft">
@@ -48,35 +27,103 @@
                 </div>
             </div>
         </div>
-        <div class="TaskContainer">
-            <div class="TaskBox Inactive">
-                <div class="Box BoxLeft">
-                    <button type="button" class="ExpanderButton Expanded"></button>
-                </div>
-                <div class="Box BoxCenter">
-                    <div class="TaskTitle">Title</div>
-                </div>
-                <div class="Box BoxRight">
-                    <div class="TaskCount">3</div>
+        <div class="TaskChildContainer">
+            <div>
+                <div class="TaskContainer">
+                    <div class="TaskBox Active">
+                        <div class="Box BoxLeft">
+                            <button type="button" class="ExpanderButton Expanded"></button>
+                        </div>
+                        <div class="Box BoxRight" style="border-left: none">
+                            <button class="ConfirmButton Save"></button>
+                            <button class="ConfirmButton Cancel"></button>
+
+                            <input type="text" class="TaskTitleInput" value="taskname" />
+
+                            <button class="StatusButton CancelledStatus"></button>
+                            <button class="StatusButton InactiveStatus"></button>
+                            <button class="StatusButton ActiveStatus"></button>
+                        </div>
+                    </div>
+                    <div class="TaskDescriptionContainer">
+                        <textarea class="AutoSizing" onkeyup="autoGrow(this);">this is a test fo the textarea</textarea>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="TaskChildOptions">
-            <a href="#" class="ChildActionLink">Add Task</a>
-            <a href="#" class="ChildActionLink">Show completed</a>
-        </div>
-
-        <div class="TaskContainer">
-            <div class="TaskBox Cancelled">
-                <div class="Box BoxLeft">
-                    <button type="button" class="ExpanderButton Disabled"></button>
+            <div>
+                <div class="TaskContainer">
+                    <div class="TaskBox Active">
+                        <div class="Box BoxLeft">
+                            <button type="button" class="ExpanderButton Expanded"></button>
+                        </div>
+                        <div class="Box BoxCenter">
+                            <div class="TaskTitle">Title</div>
+                        </div>
+                        <div class="Box BoxRight">
+                            <div class="TaskCount">3</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="Box BoxCenter">
-                    <div class="TaskTitle">Title</div>
+            </div>
+            <div>
+                <div class="TaskContainer">
+                    <div class="TaskBox Inactive">
+                        <div class="Box BoxLeft">
+                            <button type="button" class="ExpanderButton Expanded"></button>
+                        </div>
+                        <div class="Box BoxCenter">
+                            <div class="TaskTitle">Title</div>
+                        </div>
+                        <div class="Box BoxRight">
+                            <div class="TaskCount">4</div>
+                        </div>
+                        <div class="Box BoxRight">
+                            <button type="button" class="ExpanderButton">...</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="Box BoxRight">
-                    <div class="TaskCount">3</div>
+            </div>
+            <div>
+                <div class="TaskContainer">
+                    <div class="TaskBox Inactive">
+                        <div class="Box BoxLeft">
+                            <button type="button" class="ExpanderButton Expanded"></button>
+                        </div>
+                        <div class="Box BoxCenter">
+                            <div class="TaskTitle">Title</div>
+                        </div>
+                        <div class="Box BoxRight">
+                            <div class="TaskCount">5</div>
+                        </div>
+                        <div class="Box BoxRight">
+                            <button type="button" class="ExpanderButton">...</button>
+                        </div>
+                    </div>
+                    <div class="TaskDescriptionContainer">
+                        <p class="TaskDescription">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum neque nec tellus interdum iaculis. Integer rhoncus justo justo, id volutpat orci fringilla sit amet. Cras erat velit, viverra sed feugiat vel, lobortis eu elit. Proin euismod nulla quis dui luctus tincidunt. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce vulputate facilisis tellus, a pharetra quam efficitur vel. Phasellus felis est, lacinia quis elementum a, condimentum et ipsum. In hac habitasse platea dictumst. Praesent elementum et eros ac semper. Donec mattis mauris dolor, non faucibus lacus congue finibus. Praesent rhoncus nibh a massa laoreet sodales. Nullam commodo quam tellus, id congue ex tincidunt vitae.
+
+Proin nec enim turpis. Praesent pellentesque elit non tincidunt dignissim. Cras laoreet nisi varius orci sagittis aliquam. Fusce in volutpat lacus. In sollicitudin dictum nulla, non commodo nibh euismod eget. Sed vestibulum commodo nisl. Vestibulum nec molestie enim. Pellentesque quam justo, egestas a scelerisque at, cursus et nunc. Donec in maximus neque, vitae facilisis elit. Pellentesque molestie cursus porta. Vivamus dignissim tortor ipsum, at varius odio ullamcorper a. Aliquam erat volutpat. Vivamus ac vulputate ante.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="TaskChildOptions">
+                <a href="#" class="ChildActionLink">Add Task</a>
+                <a href="#" class="ChildActionLink">Show completed</a>
+            </div>
+
+            <div class="TaskContainer">
+                <div class="TaskBox Cancelled">
+                    <div class="Box BoxLeft">
+                        <button type="button" class="ExpanderButton Disabled"></button>
+                    </div>
+                    <div class="Box BoxCenter">
+                        <div class="TaskTitle">Title</div>
+                    </div>
+                    <div class="Box BoxRight">
+                        <div class="TaskCount">3</div>
+                    </div>
                 </div>
             </div>
         </div>

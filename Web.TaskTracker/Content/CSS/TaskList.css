@@ -1,4 +1,13 @@
-﻿body {
+﻿textarea.AutoSizing {
+  overflow: hidden;
+  height: 21px;
+  width:100%;
+  border:none;
+  box-sizing:border-box;
+  resize: none;
+}
+
+body {
     font-family: tahoma, arial;
 }
 
@@ -10,7 +19,6 @@
     height: 24px;
     position: relative;
     margin: 0px;
-    display: inline-block;
 }
 
 .Box {
@@ -58,9 +66,9 @@ div {
     position: relative;
 }
 
-.ExpanderButton:active, .ExpanderButton.active {
-    background-color: #FFF;
-}
+    .ExpanderButton:active, .ExpanderButton.active {
+        background-color: #FFF;
+    }
 
 .TaskChildContainer {
     padding: 3px;
@@ -88,20 +96,28 @@ div {
 }
 
 .Expanded::before {
-    content: "_";  
-    font-size: 23px;  color: #666;  position: absolute;  
-    top: -12px;  
+    content: "_";
+    font-size: 23px;
+    color: #666;
+    position: absolute;
+    top: -12px;
     right: 5px;
 }
 
-.TaskDescription {
+.TaskDescriptionContainer {
     position: relative;
     border: 1px solid #999;
     border-top: none;
     margin: 0px;
     padding: 0px;
     margin-left: 25px;
-    position: relative;
+    margin-bottom:3px;
+}
+
+.TaskDescription {
+    margin: 0px;
+    padding: 5px;
+    max-width: 300px;
 }
 
 .Active {
@@ -109,6 +125,7 @@ div {
 }
 
 .TaskContainer {
+    display: inline-block;
 }
 
 .Inactive {
@@ -148,27 +165,27 @@ div {
     position: relative;
 }
 
-.ConfirmButton.Save {
-    background-color: #C9CCFF;
-}
+    .ConfirmButton.Save {
+        background-color: #C9CCFF;
+    }
 
-.ConfirmButton.Cancel {
-    background-color: #E8E8E8;
-}
+    .ConfirmButton.Cancel {
+        background-color: #E8E8E8;
+    }
 
-.ConfirmButton:active, .ConfirmButton.active {
-    background-color: #fff;
-}
+    .ConfirmButton:active, .ConfirmButton.active {
+        background-color: #fff;
+    }
 
 
-.ConfirmButton.Cancel::before {
-    content: "\2715";
-    font-size: 19px;
-    color: #7C7C7C;
-    position: absolute;
-    top: 2px;
-    right: 2px;
-}
+    .ConfirmButton.Cancel::before {
+        content: "\2715";
+        font-size: 19px;
+        color: #7C7C7C;
+        position: absolute;
+        top: 2px;
+        right: 2px;
+    }
 
 .StatusButton {
     background-color: #F0F;
@@ -181,19 +198,19 @@ div {
     color: #666;
 }
 
-.StatusButton.ActiveStatus {
-    background-color: #B6FFB6;
-}
+    .StatusButton.ActiveStatus {
+        background-color: #B6FFB6;
+    }
 
-.StatusButton.ActiveStatus:active, .StatusButton.ActiveStatus.active {
-    color: #000000;
-    background-color: #0F0;
-    font-weight: bold;
-}
+        .StatusButton.ActiveStatus:active, .StatusButton.ActiveStatus.active {
+            color: #000000;
+            background-color: #0F0;
+            font-weight: bold;
+        }
 
-.StatusButton.InactiveStatus {
-    background-color: #e8e8e8;
-}
+    .StatusButton.InactiveStatus {
+        background-color: #e8e8e8;
+    }
 
 button.StatusButton.InactiveStatus:active, button.StatusButton.InactiveStatus.active {
     background-color: #000000;
@@ -214,11 +231,11 @@ button.StatusButton.InactiveStatus:active, button.StatusButton.InactiveStatus.ac
     background-color: #FFBEBE;
 }
 
-.StatusButton.CancelledStatus:active, .StatusButton.CancelledStatus.active {
-    background-color: #F00;
-    color: #000;
-    font-weight: bold;
-}
+    .StatusButton.CancelledStatus:active, .StatusButton.CancelledStatus.active {
+        background-color: #F00;
+        color: #000;
+        font-weight: bold;
+    }
 
 .StatusButton.ActiveStatus::before {
     content: "A";
