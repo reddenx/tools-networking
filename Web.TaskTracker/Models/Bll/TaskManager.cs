@@ -26,6 +26,18 @@ namespace Web.TaskTracker.Models.Bll
             return root.Children;
         }
 
+        public TaskTreeItem[] GetEntireChildTreeForTask(int taskId)
+        {
+            var currentTask = TaskRepo.GetTaskById(taskId);
+            var allTasks = TaskRepo.GetAllChildrenWithSameAccountAsTask(taskId);
+
+
+            var root = new TaskTreeItem(currentTask);
+            BuildTree(root, allTasks.ToArray());
+
+            return root.Children;
+        }
+
         public TaskItem CreateTask(string taskName, int accountId, int? parentTaskId, string description)
         {
             var taskId = TaskRepo.CreateTask(taskName, accountId, parentTaskId, description);
@@ -43,7 +55,9 @@ namespace Web.TaskTracker.Models.Bll
             var newChildren = new List<TaskTreeItem>();
             foreach (var item in items)
             {
-                if ((parent.Item != null && item.ParentTask.Value == parent.Item.TaskId)
+                //if the parent isn't null and this item's parentid matched, add it
+                //or if this task is null, add tasks with no parent item
+                if ((parent.Item != null && item.ParentTask.HasValue && item.ParentTask.Value == parent.Item.TaskId)
                     || (parent.Item == null && !item.ParentTask.HasValue))
                 {
                     var treeItem = new TaskTreeItem(item);

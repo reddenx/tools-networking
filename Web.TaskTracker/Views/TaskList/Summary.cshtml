@@ -24,6 +24,7 @@
             self.Children = ko.observableArray();
 
             //visual 
+            self.ShowingCompletChildren = ko.observable(false);
             self.IsEditing = ko.observable(false);
             self.IsBusy = ko.observable(false);
             self.Error = ko.observable('');
@@ -108,6 +109,40 @@
                 self.Backup.DateCompleted = model.DateCompleted;
             }
 
+            self.ShowCompletedChildren = function () {
+                self.ShowingCompletChildren(true);
+                $.ajax({
+                    url: 'GetAllChildrenForTask',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: { 'taskId': self.TaskId },
+                    success: function (response) {
+                        if (response.success) {
+                            self.HandleCompletedChildrenReply(response.data);
+                        }
+                        else {
+                            self.ShowingCompletChildren(false);
+                        }
+                    },
+                    error: function () {
+                        self.ShowingCompletChildren(false);
+                    }
+                });
+            }
+
+            self.HandleCompletedChildrenReply = function (data) {
+                //self.Children.removeAll();
+                $.each(data, function (index, item) {
+                    var match = ko.utils.arrayFirst(self.Children(), function (childItem) {
+                        return childItem.TaskId === item.Item.TaskId;
+                    });
+
+                    if (!match) {
+                        self.Children.push(new TreeItem(item, self));
+                    }
+                });
+            }
+
             //build children
             $.each(serverItem.Children, function (index, item) {
                 self.Children.push(new TreeItem(item, self));
@@ -145,7 +180,7 @@
     </script>
 }
 
-<div style="min-width:1280px;">
+<div style="min-width: 1280px;">
     <!-- ko foreach: Root -->
     <div data-bind="template: { name: 'child-template', data: $data }"></div>
     <!-- /ko -->
@@ -186,7 +221,7 @@
         </div>
         <div class="TaskChildOptions" data-bind="visible: ShowChildren()">
             <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
-            <a href="#" class="ChildActionLink">Show completed</a>
+            <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompletChildren()">Show completed</a>
         </div>
 
     </script>

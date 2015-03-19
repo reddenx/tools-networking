@@ -35,6 +35,22 @@ where t.AccountId = @AccountId
             return Querier.ExecuteReader(BuildTaskFromReader, sql, parameters);
         }
 
+        public IEnumerable<TaskItem> GetAllChildrenWithSameAccountAsTask(int taskId)
+        {
+            var sql = 
+@"select t2.*
+from Task t
+    inner join Task t2 on t2.accountId = t.accountId
+where t.TaskId = @TaskId";
+
+            var parameters = new IDbDataParameter[]
+            {
+                Querier.CreateParameter("@TaskId", SqlDbType.Int, taskId),
+            };
+
+            return Querier.ExecuteReader(BuildTaskFromReader, sql, parameters);
+        }
+
         public int CreateTask(string taskName, int accountId, int? parentTaskId, string desciption)
         {
             var sql =

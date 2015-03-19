@@ -48,7 +48,7 @@ namespace Web.TaskTracker.Controllers
             {
                 return Json(new AjaxResult(
                     success: false,
-                    error: e.Message), JsonRequestBehavior.AllowGet);
+                    error: e.Message), JsonRequestBehavior.DenyGet);
             }
 
             var result = new AjaxResult(
@@ -56,6 +56,17 @@ namespace Web.TaskTracker.Controllers
                 data: task);
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetAllChildrenForTask(int taskId)
+        {
+            var tasks = TaskMgr.GetEntireChildTreeForTask(taskId);
+
+            var result = new AjaxResult(
+                success: true,
+                data: tasks);
+
+            return Json(result, JsonRequestBehavior.DenyGet);
         }
     }
 }
