@@ -22,9 +22,10 @@
 
             self.Parent = parentViewModel;
             self.Children = ko.observableArray();
+            self.Backup = {};
 
             //visual 
-            self.ShowingCompletChildren = ko.observable(false);
+            self.ShowingCompleteChildren = ko.observable(false);
             self.IsEditing = ko.observable(false);
             self.IsBusy = ko.observable(false);
             self.Error = ko.observable('');
@@ -47,19 +48,23 @@
             }
 
             self.AddChild = function () {
-                var child = new TreeItem({ Item: {}, Children: [] })
+                var child = new TreeItem({ Item: {}, Children: [] }, self);
                 child.IsEditing(true);
                 child.ParentTaskId = self.TaskId;
                 child.Parent = self;
 
                 self.ShowChildren(true);
                 self.Children.push(child);
-
             }
 
             self.Save = function () {
                 self.IsBusy(true);
                 self.Error('');
+
+                //collapse description if it's been emptied
+                if (self.Description() != null && self.Description().length <= 0) {
+                    self.ShowDescription(false);
+                }
 
                 $.ajax({
                     url: 'SaveTask',
@@ -98,9 +103,8 @@
             self.CancelEdits = function () {
                 self.ResetValues(self.Backup);
                 self.IsEditing(false);
+                //if(self.Parent
             }
-
-            self.Backup = {};
 
             self.SetBackup = function (model) {
                 self.Backup.Name = model.Name;
@@ -113,7 +117,7 @@
             }
 
             self.ShowCompletedChildren = function () {
-                self.ShowingCompletChildren(true);
+                self.ShowingCompleteChildren(true);
                 $.ajax({
                     url: 'GetAllChildrenForTask',
                     dataType: 'json',
@@ -124,17 +128,17 @@
                             self.HandleCompletedChildrenReply(response.data);
                         }
                         else {
-                            self.ShowingCompletChildren(false);
+                            self.ShowingCompleteChildren(false);
                         }
                     },
                     error: function () {
-                        self.ShowingCompletChildren(false);
+                        self.ShowingCompleteChildren(false);
                     }
                 });
             }
 
             self.HandleCompletedChildrenReply = function (data) {
-                //self.Children.removeAll();
+
                 $.each(data, function (index, item) {
                     var match = ko.utils.arrayFirst(self.Children(), function (childItem) {
                         return childItem.TaskId === item.Item.TaskId;
@@ -151,6 +155,7 @@
                 self.Children.push(new TreeItem(item, self));
             });
 
+            //setup backup
             self.SetBackup(serverItem.Item);
 
             return self;
@@ -214,7 +219,7 @@
                     </div>
                 </div>
 
-                <div class="Box BoxRight" data-bind="visible: !IsEditing() && Description().length > 0">
+                <div class="Box BoxRight" data-bind="visible: !IsEditing() && Description() != null && Description().length > 0">
                     <button type="button" class="ExpanderButton" data-bind="click: function() { ShowDescription(!ShowDescription()); }">...</button>
                 </div>
 
@@ -232,18 +237,18 @@
 
             <div class="TaskDescriptionContainer" data-bind="visible: ShowDescription() || IsEditing()">
                 <p class="TaskDescription" data-bind="text: Description, visible: !IsEditing()"></p>
-                
                 <textarea class="AutoSizing" onkeyup="AutoGrow(this);" data-bind="value: Description, visible: IsEditing()"></textarea>
+            </div>
+        </div>
 
-            </div>
-
-            <div class="TaskChildContainer" data-bind="foreach: Children, visible: ShowChildren() && Children().length>0">
-                <div data-bind="template: { name: 'child-template', data: $data }"></div>
-            </div>
-            <div class="TaskChildOptions" data-bind="visible: ShowChildren()">
-                <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
-                <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompletChildren()">Show completed</a>
-            </div>
+        <div class="TaskChildContainer" data-bind="visible: ShowChildren() && Children().length>0">
+            <!-- ko foreach: Children -->
+            <div data-bind="template: { name: 'child-template', data: $data }"></div>
+            <!-- /ko -->
+        </div>
+        <div class="TaskChildOptions" data-bind="visible: ShowChildren()">
+            <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
+            <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompleteChildren()">Show completed</a>
         </div>
     </script>
 
