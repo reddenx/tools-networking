@@ -56,19 +56,8 @@ div {
 }
 
 .ExpanderButton {
-    border: 0px;
-    background-color: #E8E8E8;
-    width: 24px;
-    height: 24px;
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-    position: relative;
+    border: none;
 }
-
-    .ExpanderButton:active, .ExpanderButton.active {
-        background-color: #FFF;
-    }
 
 .TaskChildContainer {
     padding: 3px;
@@ -102,6 +91,10 @@ div {
     position: absolute;
     top: -12px;
     right: 5px;
+}
+
+.DescriptionExpander::before {
+    content: "...";
 }
 
 .TaskDescriptionContainer {
@@ -282,3 +275,17 @@ button.StatusButton.InactiveStatus:active, button.StatusButton.InactiveStatus.ac
 .Cancelled .TaskTitleInput {
     background-color: #FFBEBE;
 }
+
+.ExpanderButton {
+    background-color: #E8E8E8;
+    width: 24px;
+    height: 24px;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+    .ExpanderButton:active, .ExpanderButton.active {
+        background-color: #FFF;
+    }

@@ -61,10 +61,7 @@
                 self.IsBusy(true);
                 self.Error('');
 
-                //collapse description if it's been emptied
-                if (self.Description() != null && self.Description().length <= 0) {
-                    self.ShowDescription(false);
-                }
+                
 
                 $.ajax({
                     url: 'SaveTask',
@@ -76,6 +73,11 @@
                             self.IsEditing(false);
                             self.ResetValues(result.data);
                             self.SetBackup(result.data);
+
+                            //collapse description if it's been emptied
+                            if (self.Description() != null && self.Description().length <= 0) {
+                                self.ShowDescription(false);
+                            }
                         }
                         else {
                             self.Error(result.error);
@@ -103,6 +105,11 @@
             self.CancelEdits = function () {
                 self.ResetValues(self.Backup);
                 self.IsEditing(false);
+
+                if (!self.Description()) {
+                    self.ShowDescription(false);
+                }
+
                 if (!self.TaskId()) {
                     self.Parent.Children.remove(self);
                 }
@@ -222,7 +229,7 @@
                 </div>
 
                 <div class="Box BoxRight" data-bind="visible: !IsEditing() && Description() != null && Description().length > 0">
-                    <button type="button" class="ExpanderButton" data-bind="click: function() { ShowDescription(!ShowDescription()); }">...</button>
+                    <button type="button" class="ExpanderButton DescriptionExpander" data-bind="click: function() { ShowDescription(!ShowDescription()); }"></button>
                 </div>
 
                 <div class="Box BoxRight" style="border-left: none" data-bind="visible: IsEditing">
@@ -231,13 +238,16 @@
 
                     <input type="text" class="TaskTitleInput" data-bind="value: Name" />
 
+
                     <button class="StatusButton CancelledStatus" data-bind="click: function() { CurrentStatus(2) }, css: { 'active': CurrentStatus() === 2 }"></button>
                     <button class="StatusButton InactiveStatus" data-bind="click: function() { CurrentStatus(1) }, css: { 'active': CurrentStatus() === 1 }"></button>
                     <button class="StatusButton ActiveStatus" data-bind="click: function() { CurrentStatus(0) }, css: { 'active': CurrentStatus() === 0 }"></button>
+                    <button type="button" class="ExpanderButton StatusButton  DescriptionExpander" data-bind="click: function() { ShowDescription(!ShowDescription()); }"></button>
+
                 </div>
             </div>
 
-            <div class="TaskDescriptionContainer" data-bind="visible: ShowDescription() || IsEditing()">
+            <div class="TaskDescriptionContainer" data-bind="visible: ShowDescription()">
                 <p class="TaskDescription" data-bind="text: Description, visible: !IsEditing()"></p>
                 <textarea class="AutoSizing" onkeyup="AutoGrow(this);" onmousedown="AutoGrow(this)" data-bind="value: Description, visible: IsEditing()"></textarea>
             </div>
