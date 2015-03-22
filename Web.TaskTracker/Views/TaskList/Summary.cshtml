@@ -11,7 +11,7 @@
             var self = this;
 
             //Data
-            self.TaskId = serverItem.Item.TaskId;
+            self.TaskId = ko.observable(serverItem.Item.TaskId);
             self.ParentTaskId = serverItem.Item.ParentTaskId;
 
             self.Name = ko.observable(serverItem.Item.Name);
@@ -38,7 +38,7 @@
 
             //methods
             self.ResetValues = function (model) {
-                self.TaskId = model.TaskId;
+                self.TaskId(model.TaskId);
                 self.Name(model.Name);
                 self.Description(model.Description);
                 self.CurrentStatus(model.CurrentStatus);
@@ -50,7 +50,7 @@
             self.AddChild = function () {
                 var child = new TreeItem({ Item: {}, Children: [] }, self);
                 child.IsEditing(true);
-                child.ParentTaskId = self.TaskId;
+                child.ParentTaskId = self.TaskId();
                 child.Parent = self;
 
                 self.ShowChildren(true);
@@ -92,7 +92,7 @@
 
             self.GetSaveData = function () {
                 return {
-                    'TaskId': self.TaskId,
+                    'TaskId': self.TaskId(),
                     'ParentTaskId': self.ParentTaskId,
                     'TaskName': self.Name(),
                     'Description': self.Description(),
@@ -122,7 +122,7 @@
                     url: 'GetAllChildrenForTask',
                     dataType: 'json',
                     type: 'POST',
-                    data: { 'taskId': self.TaskId },
+                    data: { 'taskId': self.TaskId() },
                     success: function (response) {
                         if (response.success) {
                             self.HandleCompletedChildrenReply(response.data);
@@ -141,7 +141,7 @@
 
                 $.each(data, function (index, item) {
                     var match = ko.utils.arrayFirst(self.Children(), function (childItem) {
-                        return childItem.TaskId === item.Item.TaskId;
+                        return childItem.TaskId() === item.Item.TaskId;
                     });
 
                     if (!match) {
@@ -246,7 +246,7 @@
             <div data-bind="template: { name: 'child-template', data: $data }"></div>
             <!-- /ko -->
         </div>
-        <div class="TaskChildOptions" data-bind="visible: ShowChildren()">
+        <div class="TaskChildOptions" data-bind="visible: ShowChildren() && TaskId() != null">
             <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
             <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompleteChildren()">Show completed</a>
         </div>
