@@ -1,10 +1,10 @@
 ﻿textarea.AutoSizing {
-  overflow: hidden;
-  height: 21px;
-  width:100%;
-  border:none;
-  box-sizing:border-box;
-  resize: none;
+    overflow: hidden;
+    height: 21px;
+    width: 100%;
+    border: none;
+    box-sizing: border-box;
+    resize: none;
 }
 
 body {
@@ -107,13 +107,14 @@ div {
     margin: 0px;
     padding: 0px;
     margin-left: 25px;
-    margin-bottom:3px;
+    margin-bottom: 3px;
 }
 
 .TaskDescription {
     margin: 0px;
     padding: 5px;
     max-width: 300px;
+    white-space: pre-wrap;
 }
 
 .Active {

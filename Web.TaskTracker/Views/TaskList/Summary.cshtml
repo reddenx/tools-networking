@@ -47,6 +47,14 @@
                 self.Description(model.Description);
             }
 
+            self.ToggleChildren = function () {
+                if (self.ShowChildren() && !self.IsEditing()) {
+                    self.ShowDescription(false);
+                }
+
+                self.ShowChildren(!self.ShowChildren());
+            }
+
             self.AddChild = function () {
                 var child = new TreeItem({ Item: {}, Children: [] }, self);
                 child.IsEditing(true);
@@ -213,7 +221,7 @@
             <div class="TaskBox" data-bind="css: { 'Active': CurrentStatus() === 0, 'Inactive': CurrentStatus() === 1, 'Cancelled': CurrentStatus() === 2}">
 
                 <div class="Box BoxLeft">
-                    <button type="button" class="ExpanderButton" data-bind="click: function() { ShowChildren(!ShowChildren()); }, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}"></button>
+                    <button type="button" class="ExpanderButton" data-bind="click: ToggleChildren, css: { 'Expanded': ShowChildren, 'Collapsed': !ShowChildren()}"></button>
                 </div>
 
                 <div class="Box BoxCenter" data-bind="visible: !IsEditing()">
