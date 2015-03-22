@@ -237,7 +237,7 @@
 
             <div class="TaskDescriptionContainer" data-bind="visible: ShowDescription() || IsEditing()">
                 <p class="TaskDescription" data-bind="text: Description, visible: !IsEditing()"></p>
-                <textarea class="AutoSizing" onkeyup="AutoGrow(this);" data-bind="value: Description, visible: IsEditing()"></textarea>
+                <textarea class="AutoSizing" onkeyup="AutoGrow(this);" onmousedown="AutoGrow(this)" data-bind="value: Description, visible: IsEditing()"></textarea>
             </div>
         </div>
 

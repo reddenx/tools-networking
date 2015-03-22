@@ -38,9 +38,9 @@ namespace Web.TaskTracker.Models.Bll
             return root.Children;
         }
 
-        public TaskItem CreateTask(string taskName, int accountId, int? parentTaskId, string description)
+        public TaskItem CreateTask(string taskName, int accountId, int? parentTaskId, string description, TaskStatus currentStatus)
         {
-            var taskId = TaskRepo.CreateTask(taskName, accountId, parentTaskId, description);
+            var taskId = TaskRepo.CreateTask(taskName, accountId, parentTaskId, description, currentStatus);
             return TaskRepo.GetTaskById(taskId);
         }
 

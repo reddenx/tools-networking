@@ -51,7 +51,7 @@ where t.TaskId = @TaskId";
             return Querier.ExecuteReader(BuildTaskFromReader, sql, parameters);
         }
 
-        public int CreateTask(string taskName, int accountId, int? parentTaskId, string desciption)
+        public int CreateTask(string taskName, int accountId, int? parentTaskId, string description, TaskStatus currentStatus)
         {
             var sql =
 @"insert into Task (AccountId, ParentTaskId, TaskName, CurrentStatusId, DateCreated, DateCompleted, Description)
@@ -62,8 +62,8 @@ values (@AccountId,@ParentTaskId,@TaskName,@CurrentTaskId,GETDATE(),null, @Descr
                 Querier.CreateParameter("@AccountId", SqlDbType.Int, accountId),
                 Querier.CreateParameter("@ParentTaskId", SqlDbType.Int, parentTaskId),
                 Querier.CreateParameter("@TaskName", SqlDbType.NVarChar, 255, taskName),
-                Querier.CreateParameter("@CurrentTaskId", SqlDbType.Int, TaskStatus.Active),
-                Querier.CreateParameter("@Description", SqlDbType.NVarChar, 1000, desciption ?? string.Empty)
+                Querier.CreateParameter("@CurrentTaskId", SqlDbType.Int, currentStatus),
+                Querier.CreateParameter("@Description", SqlDbType.NVarChar, 1000, description ?? string.Empty)
             };
 
             return Querier.InsertAndGetIdentity(sql, parameters);

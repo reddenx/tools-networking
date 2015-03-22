@@ -37,7 +37,7 @@ namespace Web.TaskTracker.Controllers
             {
                 if (!input.TaskId.HasValue)
                 {
-                    task = TaskMgr.CreateTask(input.TaskName, 1, input.ParentTaskId, input.Description); //TODO-SM hardCoded id
+                    task = TaskMgr.CreateTask(input.TaskName, 1, input.ParentTaskId, input.Description, input.CurrentStatus); //TODO-SM hardCoded id
                 }
                 else
                 {
