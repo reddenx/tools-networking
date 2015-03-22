@@ -103,7 +103,9 @@
             self.CancelEdits = function () {
                 self.ResetValues(self.Backup);
                 self.IsEditing(false);
-                //if(self.Parent
+                if (!self.TaskId()) {
+                    self.Parent.Children.remove(self);
+                }
             }
 
             self.SetBackup = function (model) {
