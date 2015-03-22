@@ -85,12 +85,15 @@ div {
 }
 
 .Expanded::before {
-    content: "_";
-    font-size: 23px;
+    content: '';
+    font-size: 27px;
     color: #666;
     position: absolute;
-    top: -12px;
+    top: 9px;
     right: 5px;
+    border-bottom: 2px #666 solid;
+    width: 14px;
+    height: 3px;
 }
 
 .DescriptionExpander::before {
