@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.InputEvents",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.L33T3R1Zr", "App.L33T3R1Zr\App.L33T3R1Zr.csproj", "{3F71AF7F-E94A-4D73-8AED-7850C1CAA52B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.Configuration", "SMT.Utilities.Configuration\SMT.Utilities.Configuration.csproj", "{906AA950-A547-4061-A64A-2A5181B01FED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.TestingGrounds", "App.TestingGrounds\App.TestingGrounds.csproj", "{F919DF5A-99F3-4602-B920-862013FFA032}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{3F71AF7F-E94A-4D73-8AED-7850C1CAA52B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F71AF7F-E94A-4D73-8AED-7850C1CAA52B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F71AF7F-E94A-4D73-8AED-7850C1CAA52B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{906AA950-A547-4061-A64A-2A5181B01FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{906AA950-A547-4061-A64A-2A5181B01FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{906AA950-A547-4061-A64A-2A5181B01FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{906AA950-A547-4061-A64A-2A5181B01FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F919DF5A-99F3-4602-B920-862013FFA032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F919DF5A-99F3-4602-B920-862013FFA032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F919DF5A-99F3-4602-B920-862013FFA032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F919DF5A-99F3-4602-B920-862013FFA032}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
