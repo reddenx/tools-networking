@@ -15,10 +15,18 @@ namespace SMT.Utilities.Configuration
             var fields = this.GetType().GetFields();
             foreach (var field in fields)
             {
-                var attribute = field.GetCustomAttributes(typeof(AppSettingsAttribute)).Single() as AppSettingsAttribute;
-                if (attribute != null)
+                var appSetting = field.GetCustomAttributes(typeof(AppSettingsAttribute)).FirstOrDefault() as AppSettingsAttribute;
+                if (appSetting != null)
                 {
-                    field.SetValue(this, Convert.ChangeType(ConfigurationManager.AppSettings[attribute.Name], field.FieldType));
+                    field.SetValue(this, Convert.ChangeType(ConfigurationManager.AppSettings[appSetting.Name], field.FieldType));
+                }
+                else
+                {
+                    var connectionString = field.GetCustomAttributes(typeof(ConnectionStringAttribute)).FirstOrDefault() as ConnectionStringAttribute;
+                    if (connectionString != null)
+                    {
+                        field.SetValue(this, Convert.ChangeType(ConfigurationManager.ConnectionStrings[connectionString.Name], field.FieldType));
+                    }
                 }
             }
         }

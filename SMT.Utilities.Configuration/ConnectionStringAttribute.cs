@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SMT.Utilities.Configuration
 {
-    public class AppSettingsAttribute : System.Attribute
+    public class ConnectionStringAttribute : System.Attribute
     {
         public string Name { get; private set; }
 
-        public AppSettingsAttribute(string name)
+        public ConnectionStringAttribute(string name)
         {
             Name = name;
         }
