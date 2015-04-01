@@ -114,7 +114,6 @@
     <Compile Include="Models\Bol\TaskItem.cs" />
     <Compile Include="Models\Bol\TaskStatus.cs" />
     <Compile Include="Models\Bol\TaskTreeItem.cs" />
-    <Compile Include="Models\Dal\DataConfiguration.cs" />
     <Compile Include="Models\Dal\TaskRepository.cs" />
     <Compile Include="Models\ViewModels\AjaxResult.cs" />
     <Compile Include="Models\ViewModels\TaskList\SaveTaskInput.cs" />

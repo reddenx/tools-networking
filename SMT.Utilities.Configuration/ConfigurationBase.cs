@@ -25,7 +25,7 @@ namespace SMT.Utilities.Configuration
                     var connectionString = field.GetCustomAttributes(typeof(ConnectionStringAttribute)).FirstOrDefault() as ConnectionStringAttribute;
                     if (connectionString != null)
                     {
-                        field.SetValue(this, Convert.ChangeType(ConfigurationManager.ConnectionStrings[connectionString.Name], field.FieldType));
+                        field.SetValue(this, Convert.ChangeType(ConfigurationManager.ConnectionStrings[connectionString.Name].ConnectionString, field.FieldType));
                     }
                 }
             }

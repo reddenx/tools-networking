@@ -17,13 +17,12 @@ namespace Web.TaskTracker.Controllers
         private TaskManager _taskMgr;
         private TaskManager TaskMgr
         {
-            get { return _taskMgr ?? (_taskMgr = new TaskManager()); }
+            get { return _taskMgr ?? (_taskMgr = TaskManager.Get()); }
         }
 
         public ActionResult Summary()
         {
-            var builder = new TaskManager();
-            var items = builder.GetTaskTreeForAccount(1);
+            var items = TaskMgr.GetTaskTreeForAccount(1);
             var model = new TaskListViewModel() { RootItems = items };
 
             return View(model);

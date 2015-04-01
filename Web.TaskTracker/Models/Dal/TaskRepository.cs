@@ -14,9 +14,9 @@ namespace Web.TaskTracker.Models.Dal
     {
         private readonly ISqlQuerier Querier;
 
-        public TaskRepository(ISqlQuerier querier = null)
+        public TaskRepository(TaskTrackerConfiguration config)
         {
-            this.Querier = querier ?? SqlCeQuerier.Get(DataConfiguration.TaskConnectionString);
+            this.Querier = SqlCeQuerier.Get(config.TaskConnectionString);
         }
 
         public IEnumerable<TaskItem> GetTasksForAccount(int accountId)

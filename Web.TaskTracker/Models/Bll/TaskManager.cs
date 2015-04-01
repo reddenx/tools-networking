@@ -11,9 +11,16 @@ namespace Web.TaskTracker.Models.Bll
     {
         private readonly TaskRepository TaskRepo;
 
-        public TaskManager(TaskRepository taskRepository = null)
+        private TaskManager(TaskRepository taskRepository)
         {
-            TaskRepo = taskRepository ?? new TaskRepository();
+            TaskRepo = taskRepository;
+        }
+
+        public static TaskManager Get()
+        {
+            var config = new TaskTrackerConfiguration();
+            var repo = new TaskRepository(config);
+            return new TaskManager(repo);
         }
 
         public TaskTreeItem[] GetTaskTreeForAccount(int accountId)
