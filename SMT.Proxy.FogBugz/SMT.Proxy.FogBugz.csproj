@@ -43,7 +43,25 @@
     <Compile Include="FogBugzObjects\Case.cs" />
     <Compile Include="FogBugzObjects\CaseResponseRoot.cs" />
     <Compile Include="FogBugzObjects\Tags.cs" />
+    <Compile Include="FogBugzProxy.cs" />
+    <Compile Include="IFogBugzProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SamplePayloads\Areas.xml" />
+    <Content Include="SamplePayloads\Cases.xml" />
+    <Content Include="SamplePayloads\Categories.xml" />
+    <Content Include="SamplePayloads\Category.xml" />
+    <Content Include="SamplePayloads\Events.xml" />
+    <Content Include="SamplePayloads\Intervals.xml" />
+    <Content Include="SamplePayloads\Milestones.xml" />
+    <Content Include="SamplePayloads\MiniEvents.xml" />
+    <Content Include="SamplePayloads\People.xml" />
+    <Content Include="SamplePayloads\Priorities.xml" />
+    <Content Include="SamplePayloads\Project.xml" />
+    <Content Include="SamplePayloads\Projects.xml" />
+    <Content Include="SamplePayloads\Statuses.xml" />
+    <Content Include="SamplePayloads\Tags.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
