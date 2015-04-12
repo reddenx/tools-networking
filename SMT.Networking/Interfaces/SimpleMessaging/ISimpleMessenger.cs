@@ -12,5 +12,6 @@ namespace SMT.Networking.Interfaces.SimpleMessaging
 
         void Connect(string host, int port);
         void Send(TMessage message);
+        void Disconnect();
     }
 }

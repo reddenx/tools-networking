@@ -31,6 +31,7 @@ namespace SMT.Networking.Tcp
             {
                 Listener = new TcpListener(IPAddress.Any, port);
                 Listener.Start();
+                StartListenLoop();
                 IsListening = true;
                 return true;
             }

@@ -16,7 +16,7 @@ namespace SMT.Networking.Tcp
     {
         public event EventHandler<TMessage> OnMessageReceived;
 
-        private Thread SendThread;
+        private Thread ReceiveThread;
         private TcpClient Client;
         private bool IsConnected;
         private BinaryFormatter Formatter;
@@ -54,6 +54,27 @@ namespace SMT.Networking.Tcp
             }
         }
 
+        public void Disconnect()
+        {
+            if (IsConnected)
+            {
+                try
+                {
+                    IsConnected = false;
+                    Client.Close();
+                }
+                catch (SocketException)
+                { }
+
+                Client = null;
+
+                if (!ReceiveThread.Join(3000))
+                {
+                    ReceiveThread.Abort();
+                }
+            }
+        }
+
         public void Send(TMessage message)
         {
             Formatter.Serialize(Client.GetStream(), message);
@@ -69,9 +90,9 @@ namespace SMT.Networking.Tcp
 
         private void StartReceiveLoop()
         {
-            SendThread = new Thread(new ThreadStart(ReceiveLoop));
-            SendThread.IsBackground = true;
-            SendThread.Start();
+            ReceiveThread = new Thread(new ThreadStart(ReceiveLoop));
+            ReceiveThread.IsBackground = true;
+            ReceiveThread.Start();
         }
 
         private void ReceiveLoop()
@@ -85,7 +106,7 @@ namespace SMT.Networking.Tcp
                     HandleMessageReceived(result as TMessage);
                 }
             }
-            catch
+            catch(SocketException)
             {
                 IsConnected = false;
             }
