@@ -1,0 +1,43 @@
+﻿<Page
+    x:Class="App.Phone.PhoneRemote.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App.Phone.PhoneRemote"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Grid.Column="0"
+                BorderBrush="White"
+                BorderThickness="0"
+                Name="Mousepad"
+                >
+        </Border>
+        <Border Grid.Row="0"
+                Grid.Column="1"
+                BorderBrush="White"
+                BorderThickness="1"
+                Name="VerticalScrollpad">
+            
+        </Border>
+        <Border Grid.Row="1"
+                Grid.Column="0"
+                BorderBrush="White"
+                BorderThickness="1"
+                Name="HorizontalScrollpad">
+            
+        </Border>
+    </Grid>
+</Page>
