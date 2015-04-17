@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TcpSelfConnectionLifecycleTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -51,6 +52,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SMT.Networking\SMT.Networking.csproj">
+      <Project>{b2322749-b23b-46f0-98dd-d29c03ebfbba}</Project>
+      <Name>SMT.Networking</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SMT.Proxy.FogBugz\SMT.Proxy.FogBugz.csproj">
       <Project>{156009ef-e188-4505-8bfa-822c2ee22e64}</Project>
       <Name>SMT.Proxy.FogBugz</Name>

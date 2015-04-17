@@ -47,10 +47,10 @@
     <Compile Include="Tcp\SimpleTcpDataSender.cs" />
     <Compile Include="Tcp\SimpleTcpMessageHost.cs" />
     <Compile Include="Tcp\SimpleTcpMessenger.cs" />
+    <Compile Include="Udp\SimpleUdpMessenger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\Http\" />
-    <Folder Include="Udp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

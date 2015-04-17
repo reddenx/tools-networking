@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Xml.Serialization;
 using SMT.Proxy.FogBugz.FogBugzObjects;
 using System.IO;
+using App.TestingGrounds;
 
 namespace SMT.Utilities.Configuration
 {
@@ -16,10 +17,13 @@ namespace SMT.Utilities.Configuration
     {
         static void Main(string[] args)
         {
-            XmlSerializer serialzer = new XmlSerializer(typeof(CaseResponseRoot));
-            var test = serialzer.Deserialize(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
+            TcpSelfConnectionLifecycleTests.RunTest(Console.WriteLine);
 
-            return;
+
+            //XmlSerializer serialzer = new XmlSerializer(typeof(CaseResponseRoot));
+            //var test = serialzer.Deserialize(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
+
+            //return;
         }
 
         private static string xml = @"<cases count=""1""> -- count is included in the cases attribute
