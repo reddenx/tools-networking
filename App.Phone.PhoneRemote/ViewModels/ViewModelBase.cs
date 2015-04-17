@@ -6,12 +6,22 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace App.Phone.PhoneRemote.ViewModels
 {
-    internal abstract class ViewModelBase : INotifyPropertyChanged
+    //slight variation on my tried and true ViewModelBase pattern
+    class ViewModelBase : INotifyPropertyChanged
     {
-        //tried something too fancy... forgot how to reflect XD
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private readonly CoreDispatcher Dispatcher;
+
+        public ViewModelBase(CoreDispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
+        }
+
         protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpresssion)
         {
             string propertyName = ((propertyExpresssion.Body as MemberExpression).Member as PropertyInfo).Name;
@@ -24,15 +34,17 @@ namespace App.Phone.PhoneRemote.ViewModels
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected async virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            var handler = this.PropertyChanged;
-            if (handler != null)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                handler(this, e);
-            }
+                var handler = this.PropertyChanged;
+                if (handler != null)
+                {
+                    handler(this, e);
+                }
+            });
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

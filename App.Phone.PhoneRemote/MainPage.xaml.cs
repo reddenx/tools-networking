@@ -34,7 +34,7 @@ namespace App.Phone.PhoneRemote
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
-            this.DataContext = new MainScreenViewModel();
+            this.DataContext = new MainScreenViewModel(Dispatcher);
         }
 
         /// <summary>
