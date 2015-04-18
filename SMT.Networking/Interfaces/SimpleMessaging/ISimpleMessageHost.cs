@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace SMT.Networking.Interfaces.SimpleMessaging
 {
     public interface ISimpleMessageHost<TMessage>
+        where TMessage : class
     {
         event EventHandler<ISimpleMessenger<TMessage>> OnClientConnect; //host shouldn't care about client's message type? maybe I should rethink the syntax... on second thought, it'd be weird if different clients had different message types...
 

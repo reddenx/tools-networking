@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace SMT.Networking.Interfaces.SimpleMessaging
 {
     public interface ISimpleMessenger<TMessage>
+        where TMessage : class
     {
         event EventHandler<TMessage> OnMessageReceived;
 
