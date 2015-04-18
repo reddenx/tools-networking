@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Proxy.FogBugz
 {
-    public interface IFogBugzRepository
+    public interface IFogBugzProxy
     {
         Case GetCard(int caseId);
 

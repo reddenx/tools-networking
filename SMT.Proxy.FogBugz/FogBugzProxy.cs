@@ -17,7 +17,7 @@ namespace SMT.Proxy.FogBugz
 
         public static IFogBugzProxy Get()
         {
-
+            throw new NotImplementedException();
         }
     }
 }
