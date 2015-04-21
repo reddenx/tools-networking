@@ -154,6 +154,14 @@
                 });
             }
 
+            self.HideCompletedChildren = function () {
+                self.Children.remove(function (item) {
+                    return item.CurrentStatus() === 2;
+                });
+
+                self.ShowingCompleteChildren(false);
+            }
+
             self.HandleCompletedChildrenReply = function (data) {
 
                 $.each(data, function (index, item) {
@@ -211,7 +219,7 @@
     </script>
 }
 
-<div style="min-width: 1280px;">
+<div style="min-width: 1280px;margin-bottom:600px;">
     <!-- ko foreach: Root -->
     <div data-bind="template: { name: 'child-template', data: $data }"></div>
     <!-- /ko -->
@@ -269,6 +277,7 @@
         <div class="TaskChildOptions" data-bind="visible: ShowChildren() && TaskId() != null">
             <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
             <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompleteChildren()">Show completed</a>
+            <a href="#" class="ChildActionLink" data-bind="click: HideCompletedChildren, visible: ShowingCompleteChildren()">Hide completed</a>
         </div>
     </script>
 
