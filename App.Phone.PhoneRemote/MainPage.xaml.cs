@@ -1,4 +1,5 @@
-﻿using App.Phone.PhoneRemote.ViewModels;
+﻿using App.Phone.PhoneRemote.Models;
+using App.Phone.PhoneRemote.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,6 +54,18 @@ namespace App.Phone.PhoneRemote
             // this event is handled for you.
         }
 
-        
+        private void MousepadTouchEvent(object sender, PointerRoutedEventArgs eventInfo)
+        {
+            var touchState = new SimpleTouchEvent(
+                    touchId: eventInfo.Pointer.PointerId,
+                    location: eventInfo.GetCurrentPoint(sender as UIElement).Position,
+                    isPressed: eventInfo.Pointer.IsInContact);
+            
+            VM.HandleMousepadTouchEvent(
+                touchEventInfo: touchState);
+        }
+
+        private void VerticalScrollTouchEvent(object sender, PointerRoutedEventArgs eventInfo) { }
+        private void HorizontalScrollTouchEvent(object sender, PointerRoutedEventArgs eventInfo) { }
     }
 }

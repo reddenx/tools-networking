@@ -23,21 +23,48 @@
                 BorderBrush="White"
                 BorderThickness="0"
                 Name="Mousepad"
-                >
+                
+                PointerPressed="MousepadTouchEvent" 
+                PointerCanceled="MousepadTouchEvent" 
+                PointerCaptureLost="MousepadTouchEvent" 
+                PointerEntered="MousepadTouchEvent" 
+                PointerExited="MousepadTouchEvent" 
+                PointerReleased="MousepadTouchEvent" 
+                PointerMoved="MousepadTouchEvent" 
+                PointerWheelChanged="MousepadTouchEvent">
+                <Button>X</Button>
         </Border>
         <Border Grid.Row="0"
                 Grid.Column="1"
                 BorderBrush="White"
                 BorderThickness="1"
-                Name="VerticalScrollpad">
-            
+                Name="VerticalScrollpad"
+                
+                PointerPressed="VerticalScrollTouchEvent" 
+                PointerCanceled="VerticalScrollTouchEvent" 
+                PointerCaptureLost="VerticalScrollTouchEvent" 
+                PointerEntered="VerticalScrollTouchEvent" 
+                PointerExited="VerticalScrollTouchEvent" 
+                PointerReleased="VerticalScrollTouchEvent" 
+                PointerMoved="VerticalScrollTouchEvent" 
+                PointerWheelChanged="VerticalScrollTouchEvent">
+
         </Border>
         <Border Grid.Row="1"
                 Grid.Column="0"
                 BorderBrush="White"
                 BorderThickness="1"
-                Name="HorizontalScrollpad">
-            
+                Name="HorizontalScrollpad"
+                
+                PointerPressed="HorizontalScrollTouchEvent" 
+                PointerCanceled="HorizontalScrollTouchEvent" 
+                PointerCaptureLost="HorizontalScrollTouchEvent" 
+                PointerEntered="HorizontalScrollTouchEvent" 
+                PointerExited="HorizontalScrollTouchEvent" 
+                PointerReleased="HorizontalScrollTouchEvent" 
+                PointerMoved="HorizontalScrollTouchEvent" 
+                PointerWheelChanged="HorizontalScrollTouchEvent">
+
         </Border>
     </Grid>
 </Page>
