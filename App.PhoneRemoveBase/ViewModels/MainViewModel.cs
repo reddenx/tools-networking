@@ -16,5 +16,10 @@ namespace App.PhoneRemoveBase.ViewModels
         {
             Broadcast = new Broadcaster();
         }
+
+        internal void SetBroadcastingStatus(bool isChecked)
+        {
+            //TODO
+        }
     }
 }

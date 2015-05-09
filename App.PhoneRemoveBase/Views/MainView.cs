@@ -35,5 +35,17 @@ namespace App.PhoneRemoveBase.Views
             ViewModel = new MainViewModel();
             InitializeComponent();
         }
+
+        private void MenuAboutClick(object sender, EventArgs e)
+        {
+            var aboutForm = new AboutView();
+            aboutForm.ShowDialog(this);
+        }
+
+        private void CheckboxBroadcastChanged(object sender, EventArgs e)
+        {
+            var isChecked = CheckboxBroadcast.Checked;
+            ViewModel.SetBroadcastingStatus(isChecked);
+        }
     }
 }
