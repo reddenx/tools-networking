@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using SMT.Networking.Udp;
 
 namespace App.PhoneRemoveBase.Models
 {
@@ -14,8 +16,33 @@ namespace App.PhoneRemoveBase.Models
     /// </summary>
     class Broadcaster
     {
+        private const string BROADCAST_HOST = "255.255.255.255";
+        private readonly SimpleUdpMessenger<string> NetworkMessenger;
+        private readonly string BroadcastMessage;
+        private Thread BroadcastThread;
+
         public Broadcaster() { }
-        public void Start() { }
-        public void Stop() { }
+
+        public void Start()
+        {
+            if (BroadcastThread == null)
+            {
+            }
+        }
+
+        public void Stop() 
+        {
+            if (BroadcastThread != null)
+            {
+            }
+        }
+
+        private void BroadcastLoop()
+        {
+            while (true)
+            {
+                NetworkMessenger.Send(BroadcastMessage);
+            }
+        }
     }
 }
