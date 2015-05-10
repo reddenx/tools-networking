@@ -17,32 +17,46 @@ namespace App.PhoneRemoveBase.Models
     class Broadcaster
     {
         private const string BROADCAST_HOST = "255.255.255.255";
-        private readonly SimpleUdpMessenger<string> NetworkMessenger;
+        private readonly SimpleUdpMessageSender<string> NetworkSender;
         private readonly string BroadcastMessage;
         private Thread BroadcastThread;
 
-        public Broadcaster() { }
+        public Broadcaster()
+        {
+            BroadcastThread = null;
+            BroadcastMessage = "TEST12345";
+        }
 
         public void Start()
         {
             if (BroadcastThread == null)
             {
+                BroadcastThread = new Thread(new ThreadStart(BroadcastLoop));
+                BroadcastThread.IsBackground = true;
+                BroadcastThread.Start();
             }
         }
 
-        public void Stop() 
+        public void Stop()
         {
             if (BroadcastThread != null)
             {
+                BroadcastThread.Abort();
+                BroadcastThread = null;
             }
         }
 
         private void BroadcastLoop()
         {
-            while (true)
+            try
             {
-                NetworkMessenger.Send(BroadcastMessage);
+                while (true)
+                {
+                    NetworkSender.SendMessage(BROADCAST_HOST, 37015, BroadcastMessage);
+                }
             }
+            catch (ThreadAbortException)
+            { }
         }
     }
 }
