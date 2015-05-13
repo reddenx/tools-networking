@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.TestingGrounds", "App.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Proxy.FogBugz", "SMT.Proxy.FogBugz\SMT.Proxy.FogBugz.csproj", "{156009EF-E188-4505-8BFA-822C2EE22E64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.PhoneRemoveBase", "App.PhoneRemoveBase\App.PhoneRemoveBase.csproj", "{FC7B792C-DDA3-410D-A874-8F24D38FC360}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{156009EF-E188-4505-8BFA-822C2EE22E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{156009EF-E188-4505-8BFA-822C2EE22E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{156009EF-E188-4505-8BFA-822C2EE22E64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC7B792C-DDA3-410D-A874-8F24D38FC360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC7B792C-DDA3-410D-A874-8F24D38FC360}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC7B792C-DDA3-410D-A874-8F24D38FC360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC7B792C-DDA3-410D-A874-8F24D38FC360}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
