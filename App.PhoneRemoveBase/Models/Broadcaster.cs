@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SMT.Networking.Udp;
+using System.Net;
+using System.Net.Sockets;
 
 namespace App.PhoneRemoveBase.Models
 {
@@ -16,15 +18,18 @@ namespace App.PhoneRemoveBase.Models
     /// </summary>
     class Broadcaster
     {
-        private const string BROADCAST_HOST = "255.255.255.255";
         private readonly SimpleUdpMessageSender<string> NetworkSender;
-        private readonly string BroadcastMessage;
+        private readonly string BroadcastMessage = "[BROADCAST:{0}]";
+        private readonly int Port;
         private Thread BroadcastThread;
+        private string LocalHostname;
 
-        public Broadcaster()
+        public Broadcaster(int port)
         {
+            NetworkSender = new SimpleUdpMessageSender<string>();
             BroadcastThread = null;
-            BroadcastMessage = "TEST12345";
+            LocalHostname = GetLocalHostname();
+            Port = port;
         }
 
         public void Start()
@@ -52,11 +57,23 @@ namespace App.PhoneRemoveBase.Models
             {
                 while (true)
                 {
-                    NetworkSender.SendMessage(BROADCAST_HOST, 37015, BroadcastMessage);
+                    var message = string.Format(BroadcastMessage, LocalHostname);
+                    NetworkSender.SendMessage(IPAddress.Broadcast.ToString(), Port, message);
+                    Thread.Sleep(1000);
                 }
             }
             catch (ThreadAbortException)
             { }
+        }
+
+        private string GetLocalHostname()
+        {
+            var name = Dns.GetHostName();
+            var hosts = Dns.GetHostEntry(name);
+
+            return hosts.AddressList
+                .First(ip => ip.AddressFamily == AddressFamily.InterNetwork)
+                .ToString();
         }
     }
 }

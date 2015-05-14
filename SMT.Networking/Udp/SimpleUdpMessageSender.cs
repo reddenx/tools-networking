@@ -22,11 +22,11 @@ namespace SMT.Networking.Udp
 
         public void SendMessage(string host, int port, TMessage message)
         {
-            var serializedMessageBytes = GetSerializedMessage(message);
+            var serializedMessageBytes = message is string ? GetSerializedMessageASCII(message as string) : GetSerializedMessage(message);
             Client.Send(serializedMessageBytes, serializedMessageBytes.Length, host, port);
         }
 
-        private byte[] GetSerializedMessage(string message)
+        private byte[] GetSerializedMessageASCII(string message)
         {
             return ASCIIEncoding.ASCII.GetBytes(message);
         }

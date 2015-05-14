@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace SMT.Networking.Udp
 {
     class SimpleUdpMessageListener<TMessage>
+        where TMessage : class
     {
         public event EventHandler<TMessage> OnMessageReceived;
         public event EventHandler<string> OnNetworkError;
@@ -35,7 +36,7 @@ namespace SMT.Networking.Udp
 
             try
             {
-                Client = new UdpClient();
+                Client = new UdpClient(port);
                 ListenPort = port;
                 //Client.Client.Bind(new IPEndPoint(IPAddress.Any, port)); //may not be necessary?
                 StartListenLoop();
@@ -81,9 +82,16 @@ namespace SMT.Networking.Udp
 
         private TMessage GetMessageFromBytes(byte[] messageBytes)
         {
-            using (var stream = new MemoryStream(messageBytes))
+            if (typeof(TMessage) == typeof(string))
             {
-                return (TMessage)Formatter.Deserialize(stream);
+                return ASCIIEncoding.ASCII.GetString(messageBytes) as TMessage;
+            }
+            else
+            {
+                using (var stream = new MemoryStream(messageBytes))
+                {
+                    return (TMessage)Formatter.Deserialize(stream);
+                }
             }
         }
 

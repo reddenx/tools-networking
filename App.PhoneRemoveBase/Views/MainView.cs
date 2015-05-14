@@ -21,6 +21,7 @@ namespace App.PhoneRemoveBase.Views
         /// - can receive messages from phones(udp)
         /// - can translate messages into events
         /// - uses hardware events to simulate input from phone
+        /// 
         /// phase 2 feature set:
         /// - can connect to home server(tcp)
         /// - can identify itself on home server
