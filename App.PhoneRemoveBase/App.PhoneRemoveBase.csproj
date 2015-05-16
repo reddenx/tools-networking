@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Broadcaster.cs" />
+    <Compile Include="Models\MessageEnterpreter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -116,6 +117,10 @@
     <ProjectReference Include="..\SMT.Networking\SMT.Networking.csproj">
       <Project>{b2322749-b23b-46f0-98dd-d29c03ebfbba}</Project>
       <Name>SMT.Networking</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SMT.Utilities.InputEvents\SMT.Utilities.InputEvents.csproj">
+      <Project>{b74d090f-0c31-4f12-8dec-4768009bd833}</Project>
+      <Name>SMT.Utilities.InputEvents</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

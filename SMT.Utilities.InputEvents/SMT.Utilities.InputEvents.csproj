@@ -45,6 +45,8 @@
     <Compile Include="HardwareEvents\KeyboardEventResult.cs" />
     <Compile Include="HardwareEvents\KeyboardEventRunner.cs" />
     <Compile Include="HardwareEvents\KeyboardHardwareEventData.cs" />
+    <Compile Include="HardwareEvents\MouseEventArgs.cs" />
+    <Compile Include="HardwareEvents\MouseEventRunner.cs" />
     <Compile Include="Interfaces\IKeyboardEventListener.cs" />
     <Compile Include="Interfaces\IKeyboardEventRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
