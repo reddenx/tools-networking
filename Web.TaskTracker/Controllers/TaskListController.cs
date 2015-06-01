@@ -20,52 +20,46 @@ namespace Web.TaskTracker.Controllers
             get { return _taskMgr ?? (_taskMgr = TaskManager.Get()); }
         }
 
-        public ActionResult Summary()
+        //view
+        public ViewResult Summary()
         {
-            var items = TaskMgr.GetTaskTreeForAccount(1);
-            var model = new TaskListViewModel() { RootItems = items };
+            return View();
+        }
 
-            return View(model);
+        //ajax
+        public JsonResult GetTreeItems(int accountId)
+        {
+            var items = TaskMgr.GetTaskTreeForAccount(accountId);
+
+            return Json(AjaxResponse.GetSuccess(items));
         }
 
         public JsonResult SaveTask(SaveTaskInput input)
         {
-            TaskItem task;
-
             try
             {
                 if (!input.TaskId.HasValue)
                 {
-                    task = TaskMgr.CreateTask(input.TaskName, 1, input.ParentTaskId, input.Description, input.CurrentStatus); //TODO-SM hardCoded id
+                    //TODO-SM hardcoded accountId here
+                    var task = TaskMgr.CreateTask(input.TaskName, 1, input.ParentTaskId, input.Description, input.CurrentStatus); //TODO-SM hardCoded id
+                    return Json(AjaxResponse.GetSuccess(task));
                 }
                 else
                 {
-                    task = TaskMgr.UpdateTask(input.TaskId.Value, input.TaskName, input.CurrentStatus, input.Description);
+                    var task = TaskMgr.UpdateTask(input.TaskId.Value, input.TaskName, input.CurrentStatus, input.Description);
+                    return Json(AjaxResponse.GetSuccess(task));
                 }
             }
             catch(Exception e)
             {
-                return Json(new AjaxResult(
-                    success: false,
-                    error: e.Message), JsonRequestBehavior.DenyGet);
+                return Json(AjaxResponse.GetError(e.Message));
             }
-
-            var result = new AjaxResult(
-                success: true,
-                data: task);
-
-            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetAllChildrenForTask(int taskId)
         {
             var tasks = TaskMgr.GetEntireChildTreeForTask(taskId);
-
-            var result = new AjaxResult(
-                success: true,
-                data: tasks);
-
-            return Json(result, JsonRequestBehavior.DenyGet);
+            return Json(AjaxResponse.GetSuccess(tasks));
         }
     }
 }

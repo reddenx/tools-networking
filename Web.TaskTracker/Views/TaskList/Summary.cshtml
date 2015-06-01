@@ -6,223 +6,49 @@
 
 @section Scripts
 {
+    <script type="text/javascript" src="~/Content/Scripts/SummaryViewModel.js"></script>
+    <script type="text/javascript" src="~/Content/Scripts/TaskViewModel.js"></script>
+
     <script>
-        function TreeItem(serverItem, parentViewModel) {
-            var self = this;
-
-            //Data
-            self.TaskId = ko.observable(serverItem.Item.TaskId);
-            self.ParentTaskId = serverItem.Item.ParentTaskId;
-
-            self.Name = ko.observable(serverItem.Item.Name);
-            self.Description = ko.observable(serverItem.Item.Description);
-            self.CurrentStatus = ko.observable(serverItem.Item.CurrentStatus);
-            self.DateCreated = ko.observable(serverItem.Item.DateCreated);
-            self.DateCompleted = ko.observable(serverItem.Item.DateCompleted);
-
-            self.Parent = parentViewModel;
-            self.Children = ko.observableArray();
-            self.Backup = {};
-
-            //visual 
-            self.ShowingCompleteChildren = ko.observable(false);
-            self.IsEditing = ko.observable(false);
-            self.IsBusy = ko.observable(false);
-            self.Error = ko.observable('');
-            self.ShowChildren = ko.observable(false);
-            self.ShowExpander = ko.computed(function () {
-                return self.Children().length > 0
-                    || !!self.Description();
-            });
-            self.ShowDescription = ko.observable(false);
-
-            //methods
-            self.ResetValues = function (model) {
-                self.TaskId(model.TaskId);
-                self.Name(model.Name);
-                self.Description(model.Description);
-                self.CurrentStatus(model.CurrentStatus);
-                self.DateCreated(model.DateCreated);
-                self.DateCompleted(model.DateCreated);
-                self.Description(model.Description);
-            }
-
-            self.ToggleChildren = function () {
-                if (self.ShowChildren() && !self.IsEditing()) {
-                    self.ShowDescription(false);
-                }
-
-                self.ShowChildren(!self.ShowChildren());
-            }
-
-            self.AddChild = function () {
-                var child = new TreeItem({ Item: {}, Children: [] }, self);
-                child.IsEditing(true);
-                child.ParentTaskId = self.TaskId();
-                child.Parent = self;
-
-                self.ShowChildren(true);
-                self.Children.push(child);
-            }
-
-            self.Save = function () {
-                self.IsBusy(true);
-                self.Error('');
-
-                
-
-                $.ajax({
-                    url: 'SaveTask',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: self.GetSaveData(),
-                    success: function (result) {
-                        if (result.success) {
-                            self.IsEditing(false);
-                            self.ResetValues(result.data);
-                            self.SetBackup(result.data);
-
-                            //collapse description if it's been emptied
-                            if (self.Description() != null && self.Description().length <= 0) {
-                                self.ShowDescription(false);
-                            }
-                        }
-                        else {
-                            self.Error(result.error);
-                        }
-                    },
-                    error: function () {
-                        self.Error('Could not save');
-                    },
-                    complete: function () {
-                        self.IsBusy(false);
-                    }
-                });
-            }
-
-            self.GetSaveData = function () {
-                return {
-                    'TaskId': self.TaskId(),
-                    'ParentTaskId': self.ParentTaskId,
-                    'TaskName': self.Name(),
-                    'Description': self.Description(),
-                    'CurrentStatus': self.CurrentStatus(),
-                }
-            }
-
-            self.CancelEdits = function () {
-                self.ResetValues(self.Backup);
-                self.IsEditing(false);
-
-                if (!self.Description()) {
-                    self.ShowDescription(false);
-                }
-
-                if (!self.TaskId()) {
-                    self.Parent.Children.remove(self);
-                }
-            }
-
-            self.SetBackup = function (model) {
-                self.Backup.Name = model.Name;
-                self.Backup.TaskId = model.TaskId;
-                self.Backup.Description = model.Description;
-                self.Backup.CurrentStatus = model.CurrentStatus;
-                self.Backup.DateCreated = model.DateCreated;
-                self.Backup.DateCompleted = model.DateCompleted;
-                self.Backup.Description = model.Description;
-            }
-
-            self.ShowCompletedChildren = function () {
-                self.ShowingCompleteChildren(true);
-                $.ajax({
-                    url: 'GetAllChildrenForTask',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: { 'taskId': self.TaskId() },
-                    success: function (response) {
-                        if (response.success) {
-                            self.HandleCompletedChildrenReply(response.data);
-                        }
-                        else {
-                            self.ShowingCompleteChildren(false);
-                        }
-                    },
-                    error: function () {
-                        self.ShowingCompleteChildren(false);
-                    }
-                });
-            }
-
-            self.HideCompletedChildren = function () {
-                self.Children.remove(function (item) {
-                    return item.CurrentStatus() === 2;
-                });
-
-                self.ShowingCompleteChildren(false);
-            }
-
-            self.HandleCompletedChildrenReply = function (data) {
-
-                $.each(data, function (index, item) {
-                    var match = ko.utils.arrayFirst(self.Children(), function (childItem) {
-                        return childItem.TaskId() === item.Item.TaskId;
-                    });
-
-                    if (!match) {
-                        self.Children.push(new TreeItem(item, self));
-                    }
-                });
-            }
-
-            //build children
-            $.each(serverItem.Children, function (index, item) {
-                self.Children.push(new TreeItem(item, self));
-            });
-
-            //setup backup
-            self.SetBackup(serverItem.Item);
-
-            return self;
-        }
-
         function AutoGrow(sender) {
             if (sender.scrollHeight > sender.clientHeight) {
                 sender.style.height = sender.scrollHeight + "px";
             }
         }
 
-        var KVP = function (name, id) {
-            this.Key = name;
-            this.Id = id;
-        }
-
-        var ViewModel = new function (serverModel) {
-            var self = this;
-
-            self.TaskStatuses = [
-                new KVP('Active', 0),
-                new KVP('Complete', 1),
-                new KVP('Cancelled', 2),
-            ];
-
-            self.Root = ko.observableArray();
-
-            $.each(serverModel.RootItems, function (index, item) {
-                self.Root.push(new TreeItem(item));
-            });
-        }(@Html.Raw(Json.Encode(Model)));
+        var viewModel = new SummaryViewModel();
 
         $(document).ready(function () {
-            ko.applyBindings(ViewModel);
+            ko.applyBindings(viewModel);
+
+            viewModel.GetTree();
         });
+
+        Urls = {
+            Ajax: {
+                GetTreeItems: "@Url.Action("GetTreeItems")",
+                SaveTask: "@Url.Action("SaveTask")",
+                GetAllChildrenForTask: "@Url.Action("GetAllChildrenForTask")"
+            },
+            View: {},
+        }
     </script>
 }
 
-<div style="min-width: 1280px;margin-bottom:600px;">
-    <!-- ko foreach: Root -->
-    <div data-bind="template: { name: 'child-template', data: $data }"></div>
-    <!-- /ko -->
+<div style="min-width: 1280px; margin-bottom: 600px;">
+
+    <div class="errorContainer">
+        <span class="errorMessage" data-bind="text: Error"></span>
+    </div>
+
+    <div data-bind="visible: !IsBusy()">
+        <!-- ko foreach: TaskTreeTrunk -->
+        <div data-bind="template: { name: 'child-template', data: $data }"></div>
+        <!-- /ko -->
+    </div>
+    <div data-bind="visible: IsBusy()">
+        Gathering Items, please wait...
+    </div>
 
     <script type="text/html" id="child-template">
         <div class="TaskContainer">
@@ -234,7 +60,7 @@
 
                 <div class="Box BoxCenter" data-bind="visible: !IsEditing()">
                     <div class="TaskTitle">
-                        <span class="TaskName" data-bind="click: function() {IsEditing(true);}, text: Name"></span>
+                        <span class="TaskName" data-bind="click: StartEditing, text: Name"></span>
                     </div>
                 </div>
 
@@ -250,14 +76,14 @@
 
                 <div class="Box BoxRight" style="border-left: none" data-bind="visible: IsEditing">
                     <button class="ConfirmButton Save" data-bind="click: Save"></button>
-                    <button class="ConfirmButton Cancel" data-bind="click: CancelEdits"></button>
+                    <button class="ConfirmButton Cancel" data-bind="click: StopEditing"></button>
 
-                    <input type="text" class="TaskTitleInput" data-bind="value: Name" />
+                    <input type="text" class="TaskTitleInput" data-bind="value: EditModel.EditName" />
 
 
-                    <button class="StatusButton CancelledStatus" data-bind="click: function() { CurrentStatus(2) }, css: { 'active': CurrentStatus() === 2 }"></button>
-                    <button class="StatusButton InactiveStatus" data-bind="click: function() { CurrentStatus(1) }, css: { 'active': CurrentStatus() === 1 }"></button>
-                    <button class="StatusButton ActiveStatus" data-bind="click: function() { CurrentStatus(0) }, css: { 'active': CurrentStatus() === 0 }"></button>
+                    <button class="StatusButton CancelledStatus" data-bind="click: function() { EditModel.EditStatus(2) }, css: { 'active': EditModel.EditStatus() === 2 }"></button>
+                    <button class="StatusButton InactiveStatus" data-bind="click: function() { EditModel.EditStatus(1) }, css: { 'active': EditModel.EditStatus() === 1 }"></button>
+                    <button class="StatusButton ActiveStatus" data-bind="click: function() { EditModel.EditStatus(0) }, css: { 'active': EditModel.EditStatus() === 0 }"></button>
                     <button type="button" class="ExpanderButton StatusButton  DescriptionExpander" data-bind="click: function() { ShowDescription(!ShowDescription()); }"></button>
 
                 </div>
@@ -265,7 +91,7 @@
 
             <div class="TaskDescriptionContainer" data-bind="visible: ShowDescription()">
                 <p class="TaskDescription" data-bind="text: Description, visible: !IsEditing()"></p>
-                <textarea class="AutoSizing" onkeyup="AutoGrow(this);" onmousedown="AutoGrow(this)" data-bind="value: Description, visible: IsEditing()"></textarea>
+                <textarea class="AutoSizing" onkeyup="AutoGrow(this);" onmousedown="AutoGrow(this)" data-bind="value: EditModel.EditDescription, visible: IsEditing()"></textarea>
             </div>
         </div>
 
@@ -275,7 +101,7 @@
             <!-- /ko -->
         </div>
         <div class="TaskChildOptions" data-bind="visible: ShowChildren() && TaskId() != null">
-            <a href="#" class="ChildActionLink" data-bind="click: AddChild">Add Task</a>
+            <a href="#" class="ChildActionLink" data-bind="click: AddNewChild">Add Task</a>
             <a href="#" class="ChildActionLink" data-bind="click: ShowCompletedChildren, visible: !ShowingCompleteChildren()">Show completed</a>
             <a href="#" class="ChildActionLink" data-bind="click: HideCompletedChildren, visible: ShowingCompleteChildren()">Hide completed</a>
         </div>
