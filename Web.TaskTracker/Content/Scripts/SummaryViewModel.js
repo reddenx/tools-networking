@@ -32,7 +32,7 @@
 
         $.each(taskItems, function (index, item) {
             var taskModel = new TaskViewModel();
-            taskModel.AssignFromServerValues(item);
+            taskModel.BuildModelFromServerObject(item);
             self.TaskTreeTrunk.push(taskModel);
         });
 
