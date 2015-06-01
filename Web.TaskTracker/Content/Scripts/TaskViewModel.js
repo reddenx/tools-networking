@@ -120,6 +120,8 @@
         self.Children.remove(function (item) {
             return item.CurrentStatus() === 2; //TODO-SM hardcoded values
         });
+
+        self.ShowingCompleteChildren(false);
     }
     self.ToggleChildren = function () {
         self.ShowChildren(!self.ShowChildren());
@@ -147,47 +149,3 @@
 
     return self;
 }
-
-//kept around for when I bring over show complete children
-
-//    self.ShowCompletedChildren = function () {
-//        self.ShowingCompleteChildren(true);
-//        $.ajax({
-//            url: 'GetAllChildrenForTask',
-//            dataType: 'json',
-//            type: 'POST',
-//            data: { 'taskId': self.TaskId() },
-//            success: function (response) {
-//                if (response.success) {
-//                    self.HandleCompletedChildrenReply(response.data);
-//                }
-//                else {
-//                    self.ShowingCompleteChildren(false);
-//                }
-//            },
-//            error: function () {
-//                self.ShowingCompleteChildren(false);
-//            }
-//        });
-//    }
-
-//    self.HideCompletedChildren = function () {
-//        self.Children.remove(function (item) {
-//            return item.CurrentStatus() === 2;
-//        });
-
-//        self.ShowingCompleteChildren(false);
-//    }
-
-//    self.HandleCompletedChildrenReply = function (data) {
-
-//        $.each(data, function (index, item) {
-//            var match = ko.utils.arrayFirst(self.Children(), function (childItem) {
-//                return childItem.TaskId() === item.Item.TaskId;
-//            });
-
-//            if (!match) {
-//                self.Children.push(new TreeItem(item, self));
-//            }
-//        });
-//    }
