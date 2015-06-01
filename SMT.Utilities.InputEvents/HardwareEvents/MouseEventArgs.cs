@@ -21,12 +21,12 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
             this.Data = data;
         }
 
-        public static MouseEventArgs LeftDown();
-        public static MouseEventArgs LeftUp();
-        public static MouseEventArgs RightDown();
-        public static MouseEventArgs RightUp();
-        public static MouseEventArgs ScrollUp();
-        public static MouseEventArgs ScrollDown();        
-        public static MouseEventArgs Move(
+        //public static MouseEventArgs LeftDown();
+        //public static MouseEventArgs LeftUp();
+        //public static MouseEventArgs RightDown();
+        //public static MouseEventArgs RightUp();
+        //public static MouseEventArgs ScrollUp();
+        //public static MouseEventArgs ScrollDown();
+        //public static MouseEventArgs Move();
     }
 }
