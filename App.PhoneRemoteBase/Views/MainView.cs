@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using App.PhoneRemoveBase.ViewModels;
+using App.PhoneRemoteBase.ViewModels;
 
-namespace App.PhoneRemoveBase.Views
+namespace App.PhoneRemoteBase.Views
 {
 
     public partial class MainView : Form

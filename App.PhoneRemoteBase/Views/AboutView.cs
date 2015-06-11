@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace App.PhoneRemoveBase.Views
+namespace App.PhoneRemoteBase.Views
 {
     public partial class AboutView : Form
     {

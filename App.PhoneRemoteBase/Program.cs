@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using App.PhoneRemoveBase.Views;
+using App.PhoneRemoteBase.Views;
 
-namespace App.PhoneRemoveBase
+namespace App.PhoneRemoteBase
 {
     static class Program
     {

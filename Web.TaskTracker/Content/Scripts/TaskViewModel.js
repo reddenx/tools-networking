@@ -35,6 +35,14 @@
         self.EditModel.EditName(self.Name());
         self.EditModel.EditDescription(self.Description());
         self.EditModel.EditStatus(self.CurrentStatus());
+
+        if (self.ShowDescription() && !self.Description()) {
+            self.ShowDescription();
+        }
+
+        if (!self.TaskId()) {
+            self.Parent.Children.remove(self);
+        }
     }
     self.AddNewChild = function () {
         var child = new TaskViewModel(self);
@@ -124,6 +132,10 @@
         self.ShowingCompleteChildren(false);
     }
     self.ToggleChildren = function () {
+        if (self.ShowChildren() && self.ShowDescription()) {
+            self.ShowDescription(false);
+        }
+
         self.ShowChildren(!self.ShowChildren());
     }
 

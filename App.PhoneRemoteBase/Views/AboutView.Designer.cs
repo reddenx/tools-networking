@@ -1,4 +1,4 @@
-﻿namespace App.PhoneRemoveBase.Views
+﻿namespace App.PhoneRemoteBase.Views
 {
     partial class AboutView
     {
