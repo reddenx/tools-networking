@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.TestingGrounds", "App.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Proxy.FogBugz", "SMT.Proxy.FogBugz\SMT.Proxy.FogBugz.csproj", "{156009EF-E188-4505-8BFA-822C2EE22E64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.PhoneRemoveBase", "App.PhoneRemoveBase\App.PhoneRemoveBase.csproj", "{FC7B792C-DDA3-410D-A874-8F24D38FC360}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.PhoneRemoteBase", "App.PhoneRemoteBase\App.PhoneRemoteBase.csproj", "{FC7B792C-DDA3-410D-A874-8F24D38FC360}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

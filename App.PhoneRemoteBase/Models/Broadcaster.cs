@@ -8,7 +8,7 @@ using SMT.Networking.Udp;
 using System.Net;
 using System.Net.Sockets;
 
-namespace App.PhoneRemoveBase.Models
+namespace App.PhoneRemoteBase.Models
 {
     /// <summary>
     /// this is the udp broadcaster object

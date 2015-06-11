@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.PhoneRemoveBase.Models
+namespace App.PhoneRemoteBase.Models
 {
     class MessageEnterpreter
     {

@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.PhoneRemoveBase.ViewModels
+namespace App.PhoneRemoteBase.ViewModels
 {
     class ViewModelBase : INotifyPropertyChanged
     {

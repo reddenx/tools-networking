@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using App.PhoneRemoveBase.Models;
+using App.PhoneRemoteBase.Models;
 
-namespace App.PhoneRemoveBase.ViewModels
+namespace App.PhoneRemoteBase.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
