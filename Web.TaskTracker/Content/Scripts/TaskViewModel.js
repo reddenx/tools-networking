@@ -128,6 +128,10 @@
         self.ShowingCompleteChildren(false);
     }
     self.ToggleChildren = function () {
+        if (self.ShowChildren() && self.ShowDescription()) {
+            self.ShowDescription(false);
+        }
+
         self.ShowChildren(!self.ShowChildren());
     }
 
