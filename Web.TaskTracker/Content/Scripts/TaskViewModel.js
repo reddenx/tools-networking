@@ -35,6 +35,10 @@
         self.EditModel.EditName(self.Name());
         self.EditModel.EditDescription(self.Description());
         self.EditModel.EditStatus(self.CurrentStatus());
+
+        if (!self.TaskId()) {
+            self.Parent.Children.remove(self);
+        }
     }
     self.AddNewChild = function () {
         var child = new TaskViewModel(self);
