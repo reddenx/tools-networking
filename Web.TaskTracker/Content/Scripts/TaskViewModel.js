@@ -37,7 +37,7 @@
         self.EditModel.EditStatus(self.CurrentStatus());
 
         if (self.ShowDescription() && !self.Description()) {
-            self.ShowDescription();
+            self.ShowDescription(false);
         }
 
         if (!self.TaskId()) {
