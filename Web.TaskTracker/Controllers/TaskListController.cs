@@ -26,6 +26,11 @@ namespace Web.TaskTracker.Controllers
             return View();
         }
 
+        public ViewResult TaskDetails(int id)
+        {
+            return View(viewName: "Summary", model: id);
+        }
+
         //ajax
         public JsonResult GetTreeItems(int accountId)
         {

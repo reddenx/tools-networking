@@ -1,4 +1,4 @@
-﻿@model Web.TaskTracker.Models.ViewModels.TaskList.TaskListViewModel
+﻿@model int?
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,7 +21,7 @@
         $(document).ready(function () {
             ko.applyBindings(viewModel);
 
-            viewModel.GetTree();
+            viewModel.GetTree(@Model);
         });
 
         Urls = {

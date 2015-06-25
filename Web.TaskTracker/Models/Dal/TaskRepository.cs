@@ -19,7 +19,7 @@ namespace Web.TaskTracker.Models.Dal
             this.Querier = SqlCeQuerier.Get(config.TaskConnectionString);
         }
 
-        public IEnumerable<TaskItem> GetTasksForAccount(int accountId)
+        public IEnumerable<TaskItem> GetActiveTasksForAccount(int accountId)
         {
             var sql = 
 @"select t.*

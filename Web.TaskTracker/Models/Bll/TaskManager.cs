@@ -25,7 +25,7 @@ namespace Web.TaskTracker.Models.Bll
 
         public TaskTreeItem[] GetTaskTreeForAccount(int accountId)
         {
-            var tasks = TaskRepo.GetTasksForAccount(accountId);
+            var tasks = TaskRepo.GetActiveTasksForAccount(accountId);
 
             var root = new TaskTreeItem(null);
             BuildTree(root, tasks.ToArray());
