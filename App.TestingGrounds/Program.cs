@@ -8,10 +8,7 @@ namespace SMT.Utilities.Configuration
     {
         static void Main(string[] args)
         {
-            var listener = new UdpConsoleFeedbackListener();
-            Console.ReadLine();
-
-            //TcpSelfConnectionLifecycleTests.RunTest(Console.WriteLine);
+            TcpDataConnectionTesting.Start();
         }
     }
 }

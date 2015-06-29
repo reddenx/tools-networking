@@ -45,6 +45,7 @@
     <Compile Include="FogbugzTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TcpDataConnectionTesting.cs" />
     <Compile Include="TcpSelfConnectionLifecycleTests.cs" />
     <Compile Include="UdpConsoleFeedbackListener.cs" />
   </ItemGroup>
