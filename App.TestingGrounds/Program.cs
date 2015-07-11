@@ -8,7 +8,7 @@ namespace SMT.Utilities.Configuration
     {
         static void Main(string[] args)
         {
-            TcpDataConnectionTesting.Start();
+            UdpTesting.Start();
         }
     }
 }

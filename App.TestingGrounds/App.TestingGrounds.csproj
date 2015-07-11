@@ -48,6 +48,7 @@
     <Compile Include="TcpDataConnectionTesting.cs" />
     <Compile Include="TcpSelfConnectionLifecycleTests.cs" />
     <Compile Include="UdpConsoleFeedbackListener.cs" />
+    <Compile Include="UdpTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
