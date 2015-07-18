@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FogBugzProxyTesting.cs" />
     <Compile Include="FogbugzTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +64,10 @@
     <ProjectReference Include="..\SMT.Proxy.FogBugz\SMT.Proxy.FogBugz.csproj">
       <Project>{156009ef-e188-4505-8bfa-822c2ee22e64}</Project>
       <Name>SMT.Proxy.FogBugz</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SMT.Utilities.Configuration\SMT.Utilities.Configuration.csproj">
+      <Project>{906aa950-a547-4061-a64a-2a5181b01fed}</Project>
+      <Name>SMT.Utilities.Configuration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

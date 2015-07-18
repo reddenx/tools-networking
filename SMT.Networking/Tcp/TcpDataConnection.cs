@@ -127,9 +127,13 @@ namespace SMT.Networking.Tcp
                     OnMessageReceived(FromBytes(messageBytes));
                 }
             }
-            catch (ThreadAbortException e)
+            catch (ThreadAbortException)
             {
                 //expected to break this from disconnect on blocking read
+            }
+            catch (SocketException)
+            {
+                //unexpected client disconnect
             }
         }
     }

@@ -40,12 +40,14 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FogBugzConfiguration.cs" />
     <Compile Include="FogBugzObjects\Case.cs" />
     <Compile Include="FogBugzObjects\CaseResponseRoot.cs" />
     <Compile Include="FogBugzObjects\Tags.cs" />
-    <Compile Include="FogBugzProxy.cs" />
-    <Compile Include="IFogBugzProxy.cs" />
+    <Compile Include="FogBugzRepository.cs" />
+    <Compile Include="IFogBugzRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FogBugzRequester.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SamplePayloads\Areas.xml" />
@@ -62,6 +64,12 @@
     <Content Include="SamplePayloads\Projects.xml" />
     <Content Include="SamplePayloads\Statuses.xml" />
     <Content Include="SamplePayloads\Tags.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SMT.Utilities.Configuration\SMT.Utilities.Configuration.csproj">
+      <Project>{906aa950-a547-4061-a64a-2a5181b01fed}</Project>
+      <Name>SMT.Utilities.Configuration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
