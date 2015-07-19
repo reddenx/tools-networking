@@ -51,7 +51,6 @@
     <Compile Include="Tcp\SimpleTcpMessenger.cs" />
     <Compile Include="Udp\SimpleUdpMessageListener.cs" />
     <Compile Include="Udp\SimpleUdpMessageSender.cs" />
-    <Compile Include="Udp\SimpleUdpMessegeHost.cs" />
     <Compile Include="Udp\SimpleUdpMessenger.cs" />
     <Compile Include="Udp\UdpDataConnection.cs" />
   </ItemGroup>

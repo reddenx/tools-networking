@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace SMT.Networking.Tcp
 {
@@ -131,7 +132,7 @@ namespace SMT.Networking.Tcp
             {
                 //expected to break this from disconnect on blocking read
             }
-            catch (SocketException)
+            catch (IOException)
             {
                 //unexpected client disconnect
             }
