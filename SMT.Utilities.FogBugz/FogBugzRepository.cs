@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using SMT.Proxy.FogBugz.FogBugzObjects;
-using SMT.Proxy.FogBugz.Web;
+using SMT.Utilities.FogBugz.FogBugzObjects;
+using SMT.Utilities.FogBugz.Web;
 
-namespace SMT.Proxy.FogBugz
+namespace SMT.Utilities.FogBugz
 {
     public interface IFogBugzRepository
     {

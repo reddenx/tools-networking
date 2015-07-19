@@ -1,5 +1,4 @@
-﻿using SMT.Proxy.FogBugz.FogBugzObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

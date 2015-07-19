@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SMT.Proxy.FogBugz.FogBugzObjects
+namespace SMT.Utilities.FogBugz.FogBugzObjects
 {
     [XmlRoot("tags")]
     public class Tags

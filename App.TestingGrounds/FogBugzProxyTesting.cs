@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
-using SMT.Proxy.FogBugz;
+using SMT.Utilities.FogBugz;
 
 namespace App.TestingGrounds
 {

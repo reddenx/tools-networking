@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SMT.Utilities.Configuration;
 
-namespace SMT.Proxy.FogBugz
+namespace SMT.Utilities.FogBugz
 {
     public class FogBugzConfiguration : ConfigurationBase
     {

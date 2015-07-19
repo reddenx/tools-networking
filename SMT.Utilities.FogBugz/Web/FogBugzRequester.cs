@@ -7,9 +7,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using SMT.Proxy.FogBugz.FogBugzObjects;
+using SMT.Utilities.FogBugz.FogBugzObjects;
 
-namespace SMT.Proxy.FogBugz.Web
+namespace SMT.Utilities.FogBugz.Web
 {
     internal class FogBugzRequester
     {

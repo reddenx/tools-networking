@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SMT.Proxy.FogBugz.Web
+namespace SMT.Utilities.FogBugz.Web
 {
     internal class RequestorResponse<T>
         where T : class

@@ -7,8 +7,8 @@
     <ProjectGuid>{156009EF-E188-4505-8BFA-822C2EE22E64}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SMT.Proxy.FogBugz</RootNamespace>
-    <AssemblyName>SMT.Proxy.FogBugz</AssemblyName>
+    <RootNamespace>SMT.Utilities.FogBugz</RootNamespace>
+    <AssemblyName>SMT.Utilities.FogBugz</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
