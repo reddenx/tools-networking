@@ -7,10 +7,17 @@ using System.Xml.Serialization;
 
 namespace SMT.Proxy.FogBugz.FogBugzObjects
 {
-    [XmlRootAttribute("cases")]
+    [XmlRootAttribute("response")]
     public class CaseResponseRoot
     {
+        [XmlElement("cases")]
+        public CaseCollection CaseList;
+    }
+
+    [XmlRootAttribute("cases")]
+    public class CaseCollection
+    {
         [XmlElement("case")]
-        public Case[] cases;
+        public Case[] Cases;
     }
 }

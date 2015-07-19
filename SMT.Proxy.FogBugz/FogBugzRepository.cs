@@ -7,10 +7,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using SMT.Proxy.FogBugz.FogBugzObjects;
+using SMT.Proxy.FogBugz.Web;
 
 namespace SMT.Proxy.FogBugz
 {
-    //should be internal and used by the bll 
+    public interface IFogBugzRepository
+    {
+        ICase[] SearchCases(string queryString, int maxAmount);
+
+        ITimeInterval[] GetIntervalsForCase(int caseId);
+        ITimeInterval[] GetIntervalsForCase(int caseId, int userId);
+        ITimeInterval[] GetIntervalsForDates(DateTime start, DateTime end);
+        ITimeInterval[] GetIntervalsForDates(DateTime start, DateTime end, int userId);
+
+        IMilestone[] GetAllMilestones();
+
+        //IUser[] GetUsers();
+    }
+
     public class FogBugzRepository : IFogBugzRepository
     {
         private readonly string SecurityToken;
@@ -24,31 +38,90 @@ namespace SMT.Proxy.FogBugz
             Requester = new FogBugzRequester(baseUrl, SecurityToken);
         }
 
-        public Case GetCaseById(int taskId)
+        public ICase[] SearchCases(string queryString, int maxAmount)
         {
             var arguments = new Dictionary<string, string>()
             {
-                {"q", taskId.ToString()}
+                {"q", queryString},
+                {"cols", string.Join(",",XmlUtilities.GetXmlElementNamesForType(typeof(Case)))},
+                {"max", maxAmount.ToString()}
             };
 
-            var response = Requester.MakeRequest<Case>("search", arguments);
+            var response = Requester.MakeRequest<CaseResponseRoot>("search", arguments);
 
-            return response;
+            if (response.Success)
+            {
+                return response.Data.CaseList.Cases;
+            }
+            return null;
         }
 
-        public IEnumerable<Case> GetCasesForBranch(string branchName)
+        private ITimeInterval[] GetIntervals(Dictionary<string, string> arguments)
         {
-            throw new NotImplementedException();
+            var response = Requester.MakeRequest<TimeIntervalResponseRoot>("listIntervals", arguments);
+            if (response.Success)
+            {
+                return response.Data.IntervalList.Intervals;
+            }
+            return null;
         }
 
-        public IEnumerable<Case> GetCasesForSprint(string sprintName)
+        public ITimeInterval[] GetIntervalsForCase(int caseId)
         {
-            throw new NotImplementedException();
+            var arguments = new Dictionary<string, string>()
+            {
+                {"ixBug", caseId.ToString()}
+            };
+
+            return GetIntervals(arguments);
         }
 
-        public IEnumerable<Case> GetCasesWorkedOn(int userId, DateTime beginDate, DateTime endDate)
+        public ITimeInterval[] GetIntervalsForCase(int caseId, int userId)
         {
-            throw new NotImplementedException();
+            var arguments = new Dictionary<string, string>()
+            {
+                {"ixBug", caseId.ToString()},
+                {"ixPerson", userId.ToString()},
+            };
+
+            return GetIntervals(arguments);
+        }
+
+        public ITimeInterval[] GetIntervalsForDates(DateTime start, DateTime end)
+        {
+            var arguments = new Dictionary<string, string>()
+            {
+                {"dtStart", start.ToString("o")},
+                {"dtEnd", end.ToString("o")},
+                {"ixPerson", "1"}
+            };
+
+            return GetIntervals(arguments);
+        }
+
+        public ITimeInterval[] GetIntervalsForDates(DateTime start, DateTime end, int userId)
+        {
+            var arguments = new Dictionary<string, string>()
+            {
+                {"dtStart", start.ToString("o")},
+                {"dtEnd", end.ToString("o")},
+                {"ixPerson", userId.ToString()},
+            };
+
+            return GetIntervals(arguments);
+        }
+
+        public IMilestone[] GetAllMilestones()
+        {
+            var arguments = new Dictionary<string, string>();
+
+            var response = Requester.MakeRequest<MilestoneResponseRoot>("listFixFors", arguments);
+
+            if (response.Success)
+            {
+                return response.Data.MilestoneList.Milestones;
+            }
+            return null;
         }
     }
 }

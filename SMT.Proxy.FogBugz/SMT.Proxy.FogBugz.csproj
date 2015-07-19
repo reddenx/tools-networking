@@ -43,14 +43,19 @@
     <Compile Include="FogBugzConfiguration.cs" />
     <Compile Include="FogBugzObjects\Case.cs" />
     <Compile Include="FogBugzObjects\CaseResponseRoot.cs" />
+    <Compile Include="FogBugzObjects\TimeIntervalResponseRoot.cs" />
+    <Compile Include="FogBugzObjects\Milestone.cs" />
+    <Compile Include="FogBugzObjects\MilestoneResponseRoot.cs" />
     <Compile Include="FogBugzObjects\Tags.cs" />
+    <Compile Include="FogBugzObjects\TimeInterval.cs" />
+    <Compile Include="FogBugzObjects\XmlUtilities.cs" />
     <Compile Include="FogBugzRepository.cs" />
-    <Compile Include="IFogBugzRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FogBugzRequester.cs" />
+    <Compile Include="Web\FogBugzRequester.cs" />
+    <Compile Include="Web\RequestorResponse.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SamplePayloads\Areas.xml" />
+    <None Include="SamplePayloads\Areas.xml" />
     <Content Include="SamplePayloads\Cases.xml" />
     <Content Include="SamplePayloads\Categories.xml" />
     <Content Include="SamplePayloads\Category.xml" />
