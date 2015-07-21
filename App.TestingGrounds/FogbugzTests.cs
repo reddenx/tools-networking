@@ -1,5 +1,4 @@
-﻿using SMT.Proxy.FogBugz.FogBugzObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,8 +13,8 @@ namespace App.TestingGrounds
 
         public void Test()
         {
-            XmlSerializer serialzer = new XmlSerializer(typeof(CaseResponseRoot));
-            var test = serialzer.Deserialize(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
+            //XmlSerializer serialzer = new XmlSerializer(typeof(CaseResponseRoot));
+            //var test = serialzer.Deserialize(new MemoryStream(Encoding.UTF8.GetBytes(xml)));
 
             return;
         }

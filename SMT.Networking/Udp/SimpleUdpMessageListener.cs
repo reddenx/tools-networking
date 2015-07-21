@@ -38,7 +38,6 @@ namespace SMT.Networking.Udp
             {
                 Client = new UdpClient(port);
                 ListenPort = port;
-                //Client.Client.Bind(new IPEndPoint(IPAddress.Any, port)); //may not be necessary?
                 StartListenLoop();
             }
             catch (SocketException e)

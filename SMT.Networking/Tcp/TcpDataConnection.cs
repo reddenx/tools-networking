@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace SMT.Networking.Tcp
 {
@@ -127,9 +128,13 @@ namespace SMT.Networking.Tcp
                     OnMessageReceived(FromBytes(messageBytes));
                 }
             }
-            catch (ThreadAbortException e)
+            catch (ThreadAbortException)
             {
                 //expected to break this from disconnect on blocking read
+            }
+            catch (IOException)
+            {
+                //unexpected client disconnect
             }
         }
     }

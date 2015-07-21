@@ -1,7 +1,0 @@
-Purpose: to synchronize game saves on multiple machines automatically via LAN
-
-Service: to run on main machine that's always on, say a desktop or something
-
-Client: runs on startup and listens for the service on a given network.  If it finds it, it syncs it's local saves with it.
-
-
