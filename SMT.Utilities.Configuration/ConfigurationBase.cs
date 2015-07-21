@@ -13,6 +13,7 @@ namespace SMT.Utilities.Configuration
         protected ConfigurationBase()
         {
             var fields = this.GetType().GetFields();
+
             foreach (var field in fields)
             {
                 var appSetting = field.GetCustomAttributes(typeof(AppSettingsAttribute)).FirstOrDefault() as AppSettingsAttribute;

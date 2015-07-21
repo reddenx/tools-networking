@@ -12,8 +12,7 @@ namespace App.TestingGrounds
     {
         public static void Start()
         {
-            var config = new FogBugzConfiguration();
-            var repo = new FogBugzRepository(config.SecurityToken, config.ApiBaseUrl);
+            var repo = new FogBugzRepository("", "");
 
             //var cards = repo.SearchCases("23339", 100);
             //var intervals = repo.GetIntervalsForCase(23339);
