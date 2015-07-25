@@ -8,16 +8,16 @@ using System.Xml.Serialization;
 namespace SMT.Utilities.FogBugz.FogBugzObjects
 {
     [XmlRoot("response")]
-    public class CaseResponseRoot
+    public class UserResponseRoot
     {
-        [XmlElement("cases")]
-        public CaseCollection CaseList;
+        [XmlElement("people")]
+        public UserCollection UserList;
     }
 
-    [XmlRoot("cases")]
-    public class CaseCollection
+    [XmlRoot("people")]
+    public class UserCollection
     {
-        [XmlElement("case")]
-        public Case[] Cases;
+        [XmlElement("person")]
+        public User[] Users;
     }
 }

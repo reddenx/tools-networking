@@ -47,6 +47,8 @@
     <Compile Include="FogBugzObjects\MilestoneResponseRoot.cs" />
     <Compile Include="FogBugzObjects\Tags.cs" />
     <Compile Include="FogBugzObjects\TimeInterval.cs" />
+    <Compile Include="FogBugzObjects\User.cs" />
+    <Compile Include="FogBugzObjects\UserResponseRoot.cs" />
     <Compile Include="FogBugzObjects\XmlUtilities.cs" />
     <Compile Include="FogBugzRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

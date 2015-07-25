@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,19 +13,26 @@ namespace App.TestingGrounds
     {
         public static void Start()
         {
-            var repo = new FogBugzRepository("", "");
+            var secureTestData = File.ReadAllLines("C:/Dev/DataSources/FBTesting.txt");
+            var values = secureTestData.ToDictionary<string, string, string>(str => str.Split('=')[0].Trim(), str => str.Split('=')[1].Trim());
 
-            //var cards = repo.SearchCases("23339", 100);
-            //var intervals = repo.GetIntervalsForCase(23339);
-            //var intervals2 = repo.GetIntervalsForCase(23339, 56);
-            //var intervals3 = repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now);
-            //var intervals4 = repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now, 56);
-            //var milestones = repo.GetAllMilestones();
+            var repo = new FogBugzRepository(values["token"], values["baseAddress"]);
 
-            //var jsonSerializer = new JavaScriptSerializer();
-            //Console.WriteLine(jsonSerializer.Serialize(intervals));
+            Report(repo.SearchCases("23339", 100));
+            Report(repo.GetIntervalsForCase(23339));
+            Report(repo.GetIntervalsForCase(23339, 56));
+            Report(repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now));
+            Report(repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now, 56));
+            Report(repo.GetAllMilestones());
+            Report(repo.GetUsers());
 
             Console.ReadLine();
+        }
+
+        static void Report(object obj)
+        {
+            var ser = new JavaScriptSerializer();
+            Console.WriteLine(ser.Serialize(obj));
         }
     }
 }
