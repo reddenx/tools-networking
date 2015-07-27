@@ -22,7 +22,7 @@ namespace SMT.Utilities.FogBugz
 
         IMilestone[] GetAllMilestones();
 
-        //IUser[] GetUsers();
+        IUser[] GetUsers();
     }
 
     public class FogBugzRepository : IFogBugzRepository
@@ -120,6 +120,19 @@ namespace SMT.Utilities.FogBugz
             if (response.Success)
             {
                 return response.Data.MilestoneList.Milestones;
+            }
+            return null;
+        }
+
+        public IUser[] GetUsers()
+        {
+            var arguments = new Dictionary<string, string>();
+
+            var response = Requester.MakeRequest<UserResponseRoot>("listPeople", arguments);
+
+            if (response.Success)
+            {
+                return response.Data.UserList.Users;
             }
             return null;
         }

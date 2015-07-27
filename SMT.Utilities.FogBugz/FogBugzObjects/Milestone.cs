@@ -60,7 +60,7 @@ namespace SMT.Utilities.FogBugz.FogBugzObjects
             get
             {
                 return _dependencyList ??
-                    (_dependencyList = string.IsNullOrWhiteSpace(_dependencyListStr)
+                    (_dependencyList = !string.IsNullOrWhiteSpace(_dependencyListStr)
                     ? _dependencyListStr.Split(',').Select(str => int.Parse(str)).ToArray()
                     : new int[] { });
             }
