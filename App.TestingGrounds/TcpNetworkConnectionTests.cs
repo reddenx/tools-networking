@@ -38,10 +38,6 @@ namespace App.TestingGrounds
                 listener.Stop();
             });
 
-
-
-
-
             connectionA.Connect("127.0.0.1:37123");
 
             Console.ReadLine();
@@ -53,7 +49,8 @@ namespace App.TestingGrounds
 
             Console.ReadLine();
 
-            connectionB.Disconnect();
+
+            connectionA.Dispose();
         }
 
 

@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
-
-
     public class TcpNetworkConnection<T> : INetworkConnection<T>
     {
         public delegate byte[] Serialize(T message);
@@ -64,6 +62,22 @@ namespace SMT.Networking.Tcp
         {
             this.Client = client;
             StartThreads();
+        }
+
+        public void Dispose()
+        {
+            Disconnect();
+
+            DoCheapAsync(() =>
+            {
+                while (Connected) { Thread.Sleep(10); }
+
+                OnMessageReceived.GetInvocationList().ToList().ForEach(item => OnMessageReceived -= (EventHandler<T>)item);
+                OnConnected.GetInvocationList().ToList().ForEach(item => OnConnected -= (EventHandler<IPEndPoint>)item);
+                OnMessageSent.GetInvocationList().ToList().ForEach(item => OnMessageSent -= (EventHandler<T>)item);
+                OnError.GetInvocationList().ToList().ForEach(item => OnError -= (EventHandler<Exception>)item);
+                OnDisconnected.GetInvocationList().ToList().ForEach(item => OnDisconnected -= (EventHandler)item);
+            });
         }
 
         public void Disconnect()
@@ -291,5 +305,6 @@ namespace SMT.Networking.Tcp
             }
         }
 
+        
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Interfaces
 {
-    public interface INetworkConnection<T>
+    public interface INetworkConnection<T> : IDisposable
     {
         event EventHandler<T> OnMessageReceived;
         event EventHandler<IPEndPoint> OnConnected;
