@@ -13,6 +13,7 @@ namespace SMT.Networking.Interfaces
         event EventHandler<IPEndPoint> OnConnected;
         event EventHandler<T> OnMessageSent;
         event EventHandler<Exception> OnError;
+        event EventHandler OnDisconnected;
 
         bool Connected { get; }
         string HostName { get; }

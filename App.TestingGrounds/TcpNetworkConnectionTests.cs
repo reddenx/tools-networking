@@ -1,4 +1,5 @@
-﻿using SMT.Networking.Tcp;
+﻿using SMT.Networking.Interfaces;
+using SMT.Networking.Tcp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,14 @@ namespace App.TestingGrounds
             var listener = new TcpListener(new IPEndPoint(IPAddress.Any, 37123));
             listener.Start();
 
-            TcpNetworkConnection<string> connectionA = new TcpNetworkConnection<string>(ASCIIEncoding.ASCII.GetString, ASCIIEncoding.ASCII.GetBytes);
+            INetworkConnection<string> connectionA = new TcpNetworkConnection<string>(ASCIIEncoding.ASCII.GetString, ASCIIEncoding.ASCII.GetBytes);
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };
             connectionA.OnMessageReceived += (o, m) => { Console.WriteLine("AREC: " + m); };
             connectionA.OnMessageSent += (o, m) => { Console.WriteLine("ASEN: " + m); };
 
-            TcpNetworkConnection<string> connectionB = null;
+            INetworkConnection<string> connectionB = null;
 
             DoCheapAsync(() =>
             {
