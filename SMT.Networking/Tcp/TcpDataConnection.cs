@@ -47,7 +47,7 @@ namespace SMT.Networking.Tcp
                 StartReceiveLoop();
                 return Client.Connected;
             }
-            catch (SocketException e)
+            catch (SocketException)
             {
                 return false;
             }
