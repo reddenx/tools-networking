@@ -8,10 +8,8 @@ namespace SMT.Utilities.Configuration
     {
         static void Main(string[] args)
         {
-            //SpeechTests.Test();
-            TcpNetworkConnectionTests.Run();
+            SpeechTests.Test();
 
-            Console.ReadKey();
         }
     }
 }
