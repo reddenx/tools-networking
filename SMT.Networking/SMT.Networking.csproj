@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\INetworkConnection.cs" />
+    <Compile Include="Interfaces\INetworkConnectionListener.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleDataSender.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleMessageHost.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleMessenger.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Tcp\SimpleTcpMessageHost.cs" />
     <Compile Include="Tcp\SimpleTcpMessenger.cs" />
     <Compile Include="Tcp\TcpNetworkConnection.cs" />
+    <Compile Include="Tcp\TcpNetworkConnectionListener.cs" />
     <Compile Include="Udp\SimpleUdpMessageListener.cs" />
     <Compile Include="Udp\SimpleUdpMessageSender.cs" />
     <Compile Include="Udp\SimpleUdpMessenger.cs" />

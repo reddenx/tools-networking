@@ -16,7 +16,7 @@ namespace SMT.Networking.Tcp
         public delegate byte[] Serialize(T message);
         public delegate T Deserialize(byte[] message);
 
-        private const int MAX_MESSAGE_SIZE = 2048;
+        private readonly int MaxMessageSize;
 
         public event EventHandler<T> OnMessageReceived;
         public event EventHandler<IPEndPoint> OnConnected;
@@ -48,17 +48,18 @@ namespace SMT.Networking.Tcp
         private Queue<T> Outbox;
         private Queue<T> Inbox; //maybe use later in some other scheme, for now this will just bloat
 
-        public TcpNetworkConnection(Deserialize deserializer, Serialize serializer)
+        public TcpNetworkConnection(Deserialize deserializer, Serialize serializer, int maxMessageSize)
         {
             this.Serializer = serializer;
             this.Deserializer = deserializer;
+            this.MaxMessageSize = maxMessageSize;
 
             this.Outbox = new Queue<T>();
             this.Inbox = new Queue<T>();
         }
 
-        public TcpNetworkConnection(TcpClient client, Deserialize deserializer, Serialize serializer)
-            :this(deserializer, serializer)
+        public TcpNetworkConnection(TcpClient client, Deserialize deserializer, Serialize serializer, int maxMessageSize)
+            :this(deserializer, serializer, maxMessageSize)
         {
             this.Client = client;
             StartThreads();
@@ -154,7 +155,7 @@ namespace SMT.Networking.Tcp
             try
             {
                 var instream = Client.GetStream();
-                byte[] buffer = new byte[MAX_MESSAGE_SIZE];
+                byte[] buffer = new byte[MaxMessageSize];
 
                 while (Connected)
                 {
@@ -166,7 +167,7 @@ namespace SMT.Networking.Tcp
                     }
 
                     int messageSize = BitConverter.ToInt32(buffer, 0);
-                    if (messageSize > 0 && messageSize < MAX_MESSAGE_SIZE)
+                    if (messageSize > 0 && messageSize < MaxMessageSize)
                     {
                         int totalReadBytes = 0;
                         do //handling partial messages
@@ -304,7 +305,5 @@ namespace SMT.Networking.Tcp
                 cleanup = null;
             }
         }
-
-        
     }
 }

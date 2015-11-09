@@ -18,7 +18,7 @@ namespace App.TestingGrounds
             var listener = new TcpListener(new IPEndPoint(IPAddress.Any, 37123));
             listener.Start();
 
-            INetworkConnection<string> connectionA = new TcpNetworkConnection<string>(ASCIIEncoding.ASCII.GetString, ASCIIEncoding.ASCII.GetBytes);
+            INetworkConnection<string> connectionA = new TcpNetworkConnection<string>(ASCIIEncoding.ASCII.GetString, ASCIIEncoding.ASCII.GetBytes, 2048);
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };
@@ -29,7 +29,7 @@ namespace App.TestingGrounds
 
             DoCheapAsync(() =>
             {
-                connectionB = new TcpNetworkConnection<string>(listener.AcceptTcpClient(), ASCIIEncoding.ASCII.GetString, ASCIIEncoding.ASCII.GetBytes);
+                connectionB = new TcpNetworkConnection<string>(listener.AcceptTcpClient(), ASCIIEncoding.ASCII.GetString, ASCIIEncoding.ASCII.GetBytes, 2048);
                 connectionB.OnConnected += (o, ip) => { Console.WriteLine("BCON: " + ip.ToString()); };
                 connectionB.OnDisconnected += (o, e) => { Console.WriteLine("BDIS:"); };
                 connectionB.OnError += (o, e) => { Console.WriteLine("BERR: " + e.ToString()); };
