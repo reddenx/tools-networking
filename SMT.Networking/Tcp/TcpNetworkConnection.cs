@@ -13,9 +13,6 @@ namespace SMT.Networking.Tcp
 {
     public class TcpNetworkConnection<T> : INetworkConnection<T>
     {
-        public delegate byte[] Serialize(T message);
-        public delegate T Deserialize(byte[] message);
-
         private readonly int MaxMessageSize;
 
         public event EventHandler<T> OnMessageReceived;
@@ -37,8 +34,8 @@ namespace SMT.Networking.Tcp
             get { return Endpoint == null ? -1 : Endpoint.Port; }
         }
 
-        private readonly Deserialize Deserializer;
-        private readonly Serialize Serializer;
+        private readonly Deserialize<T> Deserializer;
+        private readonly Serialize<T> Serializer;
 
         private IPEndPoint Endpoint;
         private TcpClient Client;
@@ -48,7 +45,7 @@ namespace SMT.Networking.Tcp
         private Queue<T> Outbox;
         private Queue<T> Inbox; //maybe use later in some other scheme, for now this will just bloat
 
-        public TcpNetworkConnection(Deserialize deserializer, Serialize serializer, int maxMessageSize)
+        public TcpNetworkConnection(Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
         {
             this.Serializer = serializer;
             this.Deserializer = deserializer;
@@ -58,8 +55,8 @@ namespace SMT.Networking.Tcp
             this.Inbox = new Queue<T>();
         }
 
-        public TcpNetworkConnection(TcpClient client, Deserialize deserializer, Serialize serializer, int maxMessageSize)
-            :this(deserializer, serializer, maxMessageSize)
+        public TcpNetworkConnection(TcpClient client, Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
+            : this(serializer, deserializer, maxMessageSize)
         {
             this.Client = client;
             StartThreads();
@@ -142,7 +139,7 @@ namespace SMT.Networking.Tcp
         public T[] GetPendingMessages()
         {
             T[] messages;
-            lock(Inbox)
+            lock (Inbox)
             {
                 messages = Inbox.ToArray();
                 Inbox.Clear();
@@ -189,7 +186,7 @@ namespace SMT.Networking.Tcp
                         {
                             Inbox.Enqueue(message);
                         }
-                        
+
                         OnMessageReceived(this, message);
                     }
                     else

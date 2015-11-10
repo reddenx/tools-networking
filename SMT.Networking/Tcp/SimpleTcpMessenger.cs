@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
+    [Obsolete("Use TcpNetworkConnection")]
     public class SimpleTcpMessenger<TMessage> : ISimpleMessenger<TMessage>
         where TMessage : class
     {

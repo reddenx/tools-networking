@@ -10,6 +10,7 @@ using System.IO;
 
 namespace SMT.Networking.Tcp
 {
+    [Obsolete("Use TcpNetworkConnection")]
     public class TcpDataConnection<TMessageType>
         where TMessageType : class
     {

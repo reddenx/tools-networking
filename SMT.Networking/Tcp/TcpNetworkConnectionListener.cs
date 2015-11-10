@@ -17,11 +17,11 @@ namespace SMT.Networking.Tcp
         private Thread ListenThread;
         private TcpListener Listener;
 
-        private readonly TcpNetworkConnection<T>.Serialize Serializer;
-        private readonly TcpNetworkConnection<T>.Deserialize Deserializer;
+        private readonly Serialize<T> Serializer;
+        private readonly Deserialize<T> Deserializer;
         private readonly int MaxMessageSize;
 
-        public TcpNetworkConnectionListener(TcpNetworkConnection<T>.Serialize serializer, TcpNetworkConnection<T>.Deserialize deserializer, int maxMessageSize)
+        public TcpNetworkConnectionListener(Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
         {
             this.Serializer = serializer;
             this.Deserializer = deserializer;
@@ -61,7 +61,7 @@ namespace SMT.Networking.Tcp
 
                     if (OnClientConnected != null)
                     {
-                        var connection = new TcpNetworkConnection<T>(client, Deserializer, Serializer, MaxMessageSize);
+                        var connection = new TcpNetworkConnection<T>(client, Serializer, Deserializer, MaxMessageSize);
                         OnClientConnected(this, connection);
                     }
                     else //no handler, close it

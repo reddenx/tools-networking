@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Interfaces.SimpleMessaging
 {
+    [Obsolete("Use TcpNetworkConnection")]
     interface ISimpleDataSender
     {
         TransferInfo CurrentTransferInfo { get; }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
+    [Obsolete("Use TcpNetworkConnection")]
     public class TcpDataConnectionListener<TMessageType>
         where TMessageType : class
     {

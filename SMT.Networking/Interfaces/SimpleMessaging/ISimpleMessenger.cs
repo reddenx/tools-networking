@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Interfaces.SimpleMessaging
 {
+    [Obsolete("Use TcpNetworkConnection")]
     public interface ISimpleMessenger<TMessage>
         where TMessage : class
     {
