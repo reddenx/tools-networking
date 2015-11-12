@@ -206,27 +206,37 @@ namespace SMT.Networking.Tcp
 
         private void SendLoop()
         {
-            var outStream = Client.GetStream();
-
-            while (Connected)
+            try
             {
-                if (Outbox.Count > 0)
-                {
-                    var message = Outbox.Dequeue();
-                    var messageBytes = Serializer(message);
-                    var sizeBytes = BitConverter.GetBytes(messageBytes.Length);//length of 4
+                var outStream = Client.GetStream();
 
-                    outStream.Write(sizeBytes, 0, 4);
-                    outStream.Write(messageBytes, 0, messageBytes.Length);
-
-                    if (OnMessageSent != null)
-                        OnMessageSent(this, message);
-                }
-                else
+                while (Connected)
                 {
-                    Thread.Sleep(10);//yield while waiting
+                    if (Outbox.Count > 0)
+                    {
+                        var message = Outbox.Dequeue();
+                        var messageBytes = Serializer(message);
+                        var sizeBytes = BitConverter.GetBytes(messageBytes.Length);//length of 4
+
+                        outStream.Write(sizeBytes, 0, 4);
+                        outStream.Write(messageBytes, 0, messageBytes.Length);
+
+                        if (OnMessageSent != null)
+                            OnMessageSent(this, message);
+                    }
+                    else
+                    {
+                        Thread.Sleep(10);//yield while waiting
+                    }
                 }
             }
+            catch (IOException e)
+            {
+                CleanupClient();
+                if (OnError != null)
+                    OnError(this, e);
+            }
+            catch (ThreadAbortException) { }
         }
 
         private void CleanupClient()
