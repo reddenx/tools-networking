@@ -1,4 +1,5 @@
-﻿using SMT.Networking.Interfaces;
+﻿using SMT.Networking;
+using SMT.Networking.Interfaces;
 using SMT.Networking.Tcp;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,19 @@ namespace App.TestingGrounds
 {
     static class TcpNetworkConnectionTests
     {
+        private class AsciiSerializer : INetworkConnectionSerializer<string>
+        {
+            public byte[] Serialize(string message) { return ASCIIEncoding.ASCII.GetBytes(message); }
+            public string Deserialize(byte[] data) { return ASCIIEncoding.ASCII.GetString(data); }
+        }
+
         public static void Run()
         {
-            var listener = new TcpListener(new IPEndPoint(IPAddress.Any, 37123));
-            listener.Start();
+            var networkFactory = new NetworkConnectionFactory();
+            INetworkConnectionListener<string> listener = networkFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
+            listener.Start(37123);
 
-            INetworkConnection<string> connectionA = new TcpNetworkConnection<string>(ASCIIEncoding.ASCII.GetBytes, ASCIIEncoding.ASCII.GetString, 2048);
+            INetworkConnection<string> connectionA = networkFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };
@@ -27,9 +35,14 @@ namespace App.TestingGrounds
 
             INetworkConnection<string> connectionB = null;
 
+
             DoCheapAsync(() =>
             {
-                connectionB = new TcpNetworkConnection<string>(listener.AcceptTcpClient(), ASCIIEncoding.ASCII.GetBytes, ASCIIEncoding.ASCII.GetString, 2048);
+                listener.OnClientConnected += (s, c) => { connectionB = c; };
+                while (connectionB == null)
+                {
+                    Thread.Sleep(100);
+                }
                 connectionB.OnConnected += (o, ip) => { Console.WriteLine("BCON: " + ip.ToString()); };
                 connectionB.OnDisconnected += (o, e) => { Console.WriteLine("BDIS:"); };
                 connectionB.OnError += (o, e) => { Console.WriteLine("BERR: " + e.ToString()); };
@@ -41,17 +54,24 @@ namespace App.TestingGrounds
 
             connectionA.Connect("127.0.0.1:37123");
 
-            Console.ReadLine();
+            Thread.Sleep(800);
 
             connectionA.Send("hello");
             connectionB.Send("hi :)");
             connectionA.Send("goodbye");
             connectionB.Send("buh bye");
 
-            Console.ReadLine();
-
+            Thread.Sleep(800);
 
             connectionA.Dispose();
+            connectionB.Dispose();
+            listener.Stop();
+            //listener.Dispose();
+
+            Thread.Sleep(800);
+
+            Console.WriteLine("test complete...");
+            Console.ReadLine();
         }
 
 

@@ -10,22 +10,20 @@ using SMT.Networking.Interfaces;
 
 namespace SMT.Networking.Tcp
 {
+    //TODO implement disposable and clean up channels and threads
     public class TcpNetworkConnectionListener<T> : INetworkConnectionListener<T>
     {
         public event EventHandler<INetworkConnection<T>> OnClientConnected;
+        public event EventHandler<Exception> OnError;
 
         private Thread ListenThread;
         private TcpListener Listener;
 
-        private readonly Serialize<T> Serializer;
-        private readonly Deserialize<T> Deserializer;
-        private readonly int MaxMessageSize;
+        private readonly INetworkConnectionSerializer<T> Serializer;
 
-        public TcpNetworkConnectionListener(Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
+        public TcpNetworkConnectionListener(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
-            this.Deserializer = deserializer;
-            this.MaxMessageSize = maxMessageSize;
         }
 
         public void Start(int port)
@@ -61,7 +59,7 @@ namespace SMT.Networking.Tcp
 
                     if (OnClientConnected != null)
                     {
-                        var connection = new TcpNetworkConnection<T>(client, Serializer, Deserializer, MaxMessageSize);
+                        var connection = new TcpNetworkConnection<T>(client, Serializer);
                         OnClientConnected(this, connection);
                     }
                     else //no handler, close it
@@ -69,9 +67,9 @@ namespace SMT.Networking.Tcp
                         client.Close();
                     }
                 }
-                catch
-                { 
-                    //TODO more reporting
+                catch(Exception e)
+                {
+                    if (OnError != null) OnError(this, e);
                 }
             }
         }

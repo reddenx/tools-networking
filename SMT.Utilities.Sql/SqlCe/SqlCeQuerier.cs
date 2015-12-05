@@ -23,7 +23,7 @@ namespace SMT.Utilities.Sql.SqlCe
             return new SqlCeQuerier(connectionString);
         }
 
-        public T[] ExecuteReader<T>(BuildObjectFromReader<T> getObjectFromRecord, string sql, IDbDataParameter[] parameters)
+        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters, BuildObjectFromReader<T> getObjectFromRecord)
         {
             var data = new List<T>();
 

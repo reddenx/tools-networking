@@ -13,7 +13,7 @@ namespace SMT.Networking.Tcp
 {
     public class SimpleTcpDataSender : ISimpleDataSender
     {
-        private const int MESSAGE_BLOCK_SIZE = 1024; //not sure if this is the most efficient or not?
+        private const int MESSAGE_BLOCK_SIZE = 4096; //not sure if this is the most efficient or not?
 
         private long CurrentTotalBytes;
         private long BytesSent;
@@ -79,6 +79,7 @@ namespace SMT.Networking.Tcp
             long lastRecordedBytes = 0;
             DateTime lastRecordTime = DateTime.Now;
 
+            //inputStream.CopyTo(outputStream, MESSAGE_BLOCK_SIZE); // I feel bad I've basically reinvented the wheel :(
             try
             {
                 while ((bytesRead = inputStream.Read(fileBytes, 0, MESSAGE_BLOCK_SIZE)) > 0)
@@ -86,13 +87,12 @@ namespace SMT.Networking.Tcp
                     outputStream.Write(fileBytes, 0, bytesRead);
                     BytesSent += bytesRead;
 
-                    if (diffCounter % 20 == 0)//lets see if a syncronous solution doesn't muck with the results
+                    if (diffCounter++ % 20 == 0)
                     {
                         DiffSeconds = (DateTime.Now - lastRecordTime).TotalSeconds;
                         DiffBytes = BytesSent - lastRecordedBytes;
                         lastRecordedBytes = BytesSent;
                     }
-                    ++diffCounter;
                 }
             }
             catch

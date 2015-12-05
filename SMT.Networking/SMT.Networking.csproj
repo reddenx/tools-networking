@@ -22,9 +22,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,8 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventUtils.cs" />
     <Compile Include="Interfaces\INetworkConnection.cs" />
     <Compile Include="Interfaces\INetworkConnectionListener.cs" />
+    <Compile Include="Interfaces\INetworkConnectionSerializer.cs" />
+    <Compile Include="NetworkConnectionFactory.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleDataSender.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleMessageHost.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleMessenger.cs" />

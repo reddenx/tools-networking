@@ -11,10 +11,8 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
-    public class TcpNetworkConnection<T> : INetworkConnection<T>
+    internal class TcpNetworkConnection<T> : INetworkConnection<T>
     {
-        private readonly int MaxMessageSize;
-
         public event EventHandler<T> OnMessageReceived;
         public event EventHandler<IPEndPoint> OnConnected;
         public event EventHandler<T> OnMessageSent;
@@ -34,8 +32,7 @@ namespace SMT.Networking.Tcp
             get { return Endpoint == null ? -1 : Endpoint.Port; }
         }
 
-        private readonly Deserialize<T> Deserializer;
-        private readonly Serialize<T> Serializer;
+        private readonly INetworkConnectionSerializer<T> Serializer;
 
         private IPEndPoint Endpoint;
         private TcpClient Client;
@@ -43,20 +40,18 @@ namespace SMT.Networking.Tcp
         private Thread ReceiveThread;
 
         private Queue<T> Outbox;
-        private Queue<T> Inbox; //maybe use later in some other scheme, for now this will just bloat
+        private Queue<T> Inbox;
 
-        public TcpNetworkConnection(Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
+        public TcpNetworkConnection(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
-            this.Deserializer = deserializer;
-            this.MaxMessageSize = maxMessageSize;
 
             this.Outbox = new Queue<T>();
             this.Inbox = new Queue<T>();
         }
 
-        public TcpNetworkConnection(TcpClient client, Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
-            : this(serializer, deserializer, maxMessageSize)
+        public TcpNetworkConnection(TcpClient client, INetworkConnectionSerializer<T> serializer)
+            : this(serializer)
         {
             this.Client = client;
             StartThreads();
@@ -70,11 +65,11 @@ namespace SMT.Networking.Tcp
             {
                 while (Connected) { Thread.Sleep(10); }
 
-                OnMessageReceived.GetInvocationList().ToList().ForEach(item => OnMessageReceived -= (EventHandler<T>)item);
-                OnConnected.GetInvocationList().ToList().ForEach(item => OnConnected -= (EventHandler<IPEndPoint>)item);
-                OnMessageSent.GetInvocationList().ToList().ForEach(item => OnMessageSent -= (EventHandler<T>)item);
-                OnError.GetInvocationList().ToList().ForEach(item => OnError -= (EventHandler<Exception>)item);
-                OnDisconnected.GetInvocationList().ToList().ForEach(item => OnDisconnected -= (EventHandler)item);
+                EventUtils.RemoveAllListeners(OnMessageReceived);
+                EventUtils.RemoveAllListeners(OnConnected);
+                EventUtils.RemoveAllListeners(OnMessageSent);
+                EventUtils.RemoveAllListeners(OnError);
+                EventUtils.RemoveAllListeners(OnDisconnected);
             });
         }
 
@@ -152,24 +147,25 @@ namespace SMT.Networking.Tcp
             try
             {
                 var instream = Client.GetStream();
-                byte[] buffer = new byte[MaxMessageSize];
+                byte[] sizeBuffer = new byte[4];
 
                 while (Connected)
                 {
-                    int bytesRead = instream.Read(buffer, 0, 4);
+                    int bytesRead = instream.Read(sizeBuffer, 0, 4);
                     if (bytesRead != 4)
                     {
                         CleanupClient();
                         return; //stream has been closed;
                     }
 
-                    int messageSize = BitConverter.ToInt32(buffer, 0);
-                    if (messageSize > 0 && messageSize < MaxMessageSize)
+                    int messageSize = BitConverter.ToInt32(sizeBuffer, 0);
+                    if (messageSize > 0)
                     {
+                        byte[] messageBuffer = new byte[messageSize];//this could thrash memory in a realtime environment :(
                         int totalReadBytes = 0;
-                        do //handling partial messages
+                        do
                         {
-                            int messageBytesRead = instream.Read(buffer, totalReadBytes, messageSize - totalReadBytes);
+                            int messageBytesRead = instream.Read(messageBuffer, totalReadBytes, messageSize - totalReadBytes);
                             if (bytesRead <= 0)
                             {
                                 CleanupClient();
@@ -178,20 +174,25 @@ namespace SMT.Networking.Tcp
 
                             totalReadBytes += messageBytesRead;
                         }
-                        while (totalReadBytes < messageSize);
+                        while (totalReadBytes < messageSize);//handling partial messages
 
-                        var message = Deserializer(buffer.Take(messageSize).ToArray());
+                        var message = Serializer.Deserialize(messageBuffer);
 
-                        lock (Inbox)
+                        if (OnMessageReceived != null)
                         {
-                            Inbox.Enqueue(message);
+                            OnMessageReceived(this, message);
                         }
-
-                        OnMessageReceived(this, message);
+                        else
+                        {
+                            lock (Inbox)
+                            {
+                                Inbox.Enqueue(message);
+                            }
+                        }
                     }
                     else
                     {
-                        throw new IOException("message was improperly formatted or too large");
+                        throw new IOException("message was improperly formatted");
                     }
                 }
             }
@@ -201,7 +202,7 @@ namespace SMT.Networking.Tcp
                 if (OnError != null)
                     OnError(this, e);
             }
-            catch (ThreadAbortException) { }//expecting these
+            catch (ThreadAbortException) { }//expecting these on abort
         }
 
         private void SendLoop()
@@ -215,7 +216,7 @@ namespace SMT.Networking.Tcp
                     if (Outbox.Count > 0)
                     {
                         var message = Outbox.Dequeue();
-                        var messageBytes = Serializer(message);
+                        var messageBytes = Serializer.Serialize(message);
                         var sizeBytes = BitConverter.GetBytes(messageBytes.Length);//length of 4
 
                         outStream.Write(sizeBytes, 0, 4);
