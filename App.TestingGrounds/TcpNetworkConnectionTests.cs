@@ -1,4 +1,5 @@
-﻿using SMT.Networking.Interfaces;
+﻿using SMT.Networking;
+using SMT.Networking.Interfaces;
 using SMT.Networking.Tcp;
 using System;
 using System.Collections.Generic;
@@ -21,10 +22,10 @@ namespace App.TestingGrounds
 
         public static void Run()
         {
-            INetworkConnectionListener<string> listener = NetworkConnectionFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer(), 2048);
+            INetworkConnectionListener<string> listener = NetworkConnectionFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
             listener.Start(37123);
 
-            INetworkConnection<string> connectionA = NetworkConnectionFactory.GetTcpNetworkConnection<string>(new AsciiSerializer(), 2048);
+            INetworkConnection<string> connectionA = NetworkConnectionFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };
@@ -52,17 +53,24 @@ namespace App.TestingGrounds
 
             connectionA.Connect("127.0.0.1:37123");
 
-            Console.ReadLine();
+            Thread.Sleep(800);
 
             connectionA.Send("hello");
             connectionB.Send("hi :)");
             connectionA.Send("goodbye");
             connectionB.Send("buh bye");
 
-            Console.ReadLine();
-
+            Thread.Sleep(800);
 
             connectionA.Dispose();
+            connectionB.Dispose();
+            listener.Stop();
+            //listener.Dispose();
+
+            Thread.Sleep(800);
+
+            Console.WriteLine("test complete...");
+            Console.ReadLine();
         }
 
 

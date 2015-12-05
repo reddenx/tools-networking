@@ -13,8 +13,6 @@ namespace SMT.Networking.Tcp
 {
     internal class TcpNetworkConnection<T> : INetworkConnection<T>
     {
-        private readonly int MaxMessageSize;
-
         public event EventHandler<T> OnMessageReceived;
         public event EventHandler<IPEndPoint> OnConnected;
         public event EventHandler<T> OnMessageSent;
@@ -44,17 +42,16 @@ namespace SMT.Networking.Tcp
         private Queue<T> Outbox;
         private Queue<T> Inbox;
 
-        public TcpNetworkConnection(INetworkConnectionSerializer<T> serializer, int maxMessageSize)
+        public TcpNetworkConnection(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
-            this.MaxMessageSize = maxMessageSize;
 
             this.Outbox = new Queue<T>();
             this.Inbox = new Queue<T>();
         }
 
-        public TcpNetworkConnection(TcpClient client, INetworkConnectionSerializer<T> serializer, int maxMessageSize)
-            : this(serializer, maxMessageSize)
+        public TcpNetworkConnection(TcpClient client, INetworkConnectionSerializer<T> serializer)
+            : this(serializer)
         {
             this.Client = client;
             StartThreads();
@@ -150,24 +147,25 @@ namespace SMT.Networking.Tcp
             try
             {
                 var instream = Client.GetStream();
-                byte[] buffer = new byte[MaxMessageSize];
+                byte[] sizeBuffer = new byte[4];
 
                 while (Connected)
                 {
-                    int bytesRead = instream.Read(buffer, 0, 4);
+                    int bytesRead = instream.Read(sizeBuffer, 0, 4);
                     if (bytesRead != 4)
                     {
                         CleanupClient();
                         return; //stream has been closed;
                     }
 
-                    int messageSize = BitConverter.ToInt32(buffer, 0);
-                    if (messageSize > 0 && messageSize < MaxMessageSize)
+                    int messageSize = BitConverter.ToInt32(sizeBuffer, 0);
+                    if (messageSize > 0)
                     {
+                        byte[] messageBuffer = new byte[messageSize];//this could thrash memory in a realtime environment :(
                         int totalReadBytes = 0;
-                        do //handling partial messages
+                        do
                         {
-                            int messageBytesRead = instream.Read(buffer, totalReadBytes, messageSize - totalReadBytes);
+                            int messageBytesRead = instream.Read(messageBuffer, totalReadBytes, messageSize - totalReadBytes);
                             if (bytesRead <= 0)
                             {
                                 CleanupClient();
@@ -176,9 +174,9 @@ namespace SMT.Networking.Tcp
 
                             totalReadBytes += messageBytesRead;
                         }
-                        while (totalReadBytes < messageSize);
+                        while (totalReadBytes < messageSize);//handling partial messages
 
-                        var message = Serializer.Deserialize(buffer.Take(messageSize).ToArray());
+                        var message = Serializer.Deserialize(messageBuffer);
 
                         if (OnMessageReceived != null)
                         {
@@ -194,7 +192,7 @@ namespace SMT.Networking.Tcp
                     }
                     else
                     {
-                        throw new IOException("message was improperly formatted or too large");
+                        throw new IOException("message was improperly formatted");
                     }
                 }
             }
@@ -204,7 +202,7 @@ namespace SMT.Networking.Tcp
                 if (OnError != null)
                     OnError(this, e);
             }
-            catch (ThreadAbortException) { }//expecting these
+            catch (ThreadAbortException) { }//expecting these on abort
         }
 
         private void SendLoop()

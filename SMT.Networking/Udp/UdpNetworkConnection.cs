@@ -23,7 +23,7 @@ namespace SMT.Networking.Udp
 
         private readonly INetworkConnectionSerializer<T> Serializer;
 
-        public UdpNetworkConnection(INetworkConnectionSerializer<T> serializer, int maxMessageSize)
+        public UdpNetworkConnection(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
         }

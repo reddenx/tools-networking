@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking
 {
-    static class EventUtils
+    internal static class EventUtils
     {
         public static void RemoveAllListeners<T>(EventHandler<T> handlerList)
         {
