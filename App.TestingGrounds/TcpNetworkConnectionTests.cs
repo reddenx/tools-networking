@@ -13,12 +13,18 @@ namespace App.TestingGrounds
 {
     static class TcpNetworkConnectionTests
     {
+        private class AsciiSerializer : INetworkConnectionSerializer<string>
+        {
+            public byte[] Serialize(string message) { return ASCIIEncoding.ASCII.GetBytes(message); }
+            public string Deserialize(byte[] data) { return ASCIIEncoding.ASCII.GetString(data); }
+        }
+
         public static void Run()
         {
-            var listener = new TcpListener(new IPEndPoint(IPAddress.Any, 37123));
-            listener.Start();
+            INetworkConnectionListener<string> listener = NetworkConnectionFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer(), 2048);
+            listener.Start(37123);
 
-            INetworkConnection<string> connectionA = new TcpNetworkConnection<string>(ASCIIEncoding.ASCII.GetBytes, ASCIIEncoding.ASCII.GetString, 2048);
+            INetworkConnection<string> connectionA = NetworkConnectionFactory.GetTcpNetworkConnection<string>(new AsciiSerializer(), 2048);
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };
@@ -27,9 +33,14 @@ namespace App.TestingGrounds
 
             INetworkConnection<string> connectionB = null;
 
+
             DoCheapAsync(() =>
             {
-                connectionB = new TcpNetworkConnection<string>(listener.AcceptTcpClient(), ASCIIEncoding.ASCII.GetBytes, ASCIIEncoding.ASCII.GetString, 2048);
+                listener.OnClientConnected += (s, c) => { connectionB = c; };
+                while (connectionB == null)
+                {
+                    Thread.Sleep(100);
+                }
                 connectionB.OnConnected += (o, ip) => { Console.WriteLine("BCON: " + ip.ToString()); };
                 connectionB.OnDisconnected += (o, e) => { Console.WriteLine("BDIS:"); };
                 connectionB.OnError += (o, e) => { Console.WriteLine("BERR: " + e.ToString()); };

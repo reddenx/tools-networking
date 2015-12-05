@@ -21,13 +21,11 @@ namespace SMT.Networking.Udp
         public string HostName { get; private set; }
         public int Port { get; private set; }
 
-        private readonly Deserialize<T> Deserializer;
-        private readonly Serialize<T> Serializer;
+        private readonly INetworkConnectionSerializer<T> Serializer;
 
-        public UdpNetworkConnection(Serialize<T> serializer, Deserialize<T> deserializer)
+        public UdpNetworkConnection(INetworkConnectionSerializer<T> serializer, int maxMessageSize)
         {
             this.Serializer = serializer;
-            this.Deserializer = deserializer;
         }
 
         //stop listening to incoming messages, unbind port
@@ -48,6 +46,7 @@ namespace SMT.Networking.Udp
             throw new NotImplementedException();
         }
 
+        //queue message
         public void Send(T message)
         {
             throw new NotImplementedException();

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
-    public class TcpNetworkConnection<T> : INetworkConnection<T>
+    internal class TcpNetworkConnection<T> : INetworkConnection<T>
     {
         private readonly int MaxMessageSize;
 
@@ -34,8 +34,7 @@ namespace SMT.Networking.Tcp
             get { return Endpoint == null ? -1 : Endpoint.Port; }
         }
 
-        private readonly Deserialize<T> Deserializer;
-        private readonly Serialize<T> Serializer;
+        private readonly INetworkConnectionSerializer<T> Serializer;
 
         private IPEndPoint Endpoint;
         private TcpClient Client;
@@ -43,20 +42,19 @@ namespace SMT.Networking.Tcp
         private Thread ReceiveThread;
 
         private Queue<T> Outbox;
-        private Queue<T> Inbox; //maybe use later in some other scheme, for now this will just bloat
+        private Queue<T> Inbox;
 
-        public TcpNetworkConnection(Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
+        public TcpNetworkConnection(INetworkConnectionSerializer<T> serializer, int maxMessageSize)
         {
             this.Serializer = serializer;
-            this.Deserializer = deserializer;
             this.MaxMessageSize = maxMessageSize;
 
             this.Outbox = new Queue<T>();
             this.Inbox = new Queue<T>();
         }
 
-        public TcpNetworkConnection(TcpClient client, Serialize<T> serializer, Deserialize<T> deserializer, int maxMessageSize)
-            : this(serializer, deserializer, maxMessageSize)
+        public TcpNetworkConnection(TcpClient client, INetworkConnectionSerializer<T> serializer, int maxMessageSize)
+            : this(serializer, maxMessageSize)
         {
             this.Client = client;
             StartThreads();
@@ -70,11 +68,11 @@ namespace SMT.Networking.Tcp
             {
                 while (Connected) { Thread.Sleep(10); }
 
-                OnMessageReceived.GetInvocationList().ToList().ForEach(item => OnMessageReceived -= (EventHandler<T>)item);
-                OnConnected.GetInvocationList().ToList().ForEach(item => OnConnected -= (EventHandler<IPEndPoint>)item);
-                OnMessageSent.GetInvocationList().ToList().ForEach(item => OnMessageSent -= (EventHandler<T>)item);
-                OnError.GetInvocationList().ToList().ForEach(item => OnError -= (EventHandler<Exception>)item);
-                OnDisconnected.GetInvocationList().ToList().ForEach(item => OnDisconnected -= (EventHandler)item);
+                EventUtils.RemoveAllListeners(OnMessageReceived);
+                EventUtils.RemoveAllListeners(OnConnected);
+                EventUtils.RemoveAllListeners(OnMessageSent);
+                EventUtils.RemoveAllListeners(OnError);
+                EventUtils.RemoveAllListeners(OnDisconnected);
             });
         }
 
@@ -180,14 +178,19 @@ namespace SMT.Networking.Tcp
                         }
                         while (totalReadBytes < messageSize);
 
-                        var message = Deserializer(buffer.Take(messageSize).ToArray());
+                        var message = Serializer.Deserialize(buffer.Take(messageSize).ToArray());
 
-                        lock (Inbox)
+                        if (OnMessageReceived != null)
                         {
-                            Inbox.Enqueue(message);
+                            OnMessageReceived(this, message);
                         }
-
-                        OnMessageReceived(this, message);
+                        else
+                        {
+                            lock (Inbox)
+                            {
+                                Inbox.Enqueue(message);
+                            }
+                        }
                     }
                     else
                     {
@@ -215,7 +218,7 @@ namespace SMT.Networking.Tcp
                     if (Outbox.Count > 0)
                     {
                         var message = Outbox.Dequeue();
-                        var messageBytes = Serializer(message);
+                        var messageBytes = Serializer.Serialize(message);
                         var sizeBytes = BitConverter.GetBytes(messageBytes.Length);//length of 4
 
                         outStream.Write(sizeBytes, 0, 4);

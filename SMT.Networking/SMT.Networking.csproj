@@ -39,8 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventUtils.cs" />
     <Compile Include="Interfaces\INetworkConnection.cs" />
     <Compile Include="Interfaces\INetworkConnectionListener.cs" />
+    <Compile Include="Interfaces\INetworkConnectionSerializer.cs" />
+    <Compile Include="Interfaces\NetworkConnectionFactory.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleDataSender.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleMessageHost.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleMessenger.cs" />
