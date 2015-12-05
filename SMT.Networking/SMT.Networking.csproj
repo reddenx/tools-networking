@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonSerializers\AnonymousSerializer.cs" />
+    <Compile Include="CommonSerializers\AsciiSerializer.cs" />
     <Compile Include="EventUtils.cs" />
     <Compile Include="Interfaces\INetworkConnection.cs" />
     <Compile Include="Interfaces\INetworkConnectionListener.cs" />
