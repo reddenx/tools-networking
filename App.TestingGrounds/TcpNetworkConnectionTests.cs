@@ -22,10 +22,11 @@ namespace App.TestingGrounds
 
         public static void Run()
         {
-            INetworkConnectionListener<string> listener = NetworkConnectionFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
+            var networkFactory = new NetworkConnectionFactory();
+            INetworkConnectionListener<string> listener = networkFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
             listener.Start(37123);
 
-            INetworkConnection<string> connectionA = NetworkConnectionFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
+            INetworkConnection<string> connectionA = networkFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };

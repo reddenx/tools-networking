@@ -9,20 +9,28 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking
 {
-    public static class NetworkConnectionFactory
+    public interface INetworkConnectionFactory
     {
-        public static INetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
+        INetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer);
+        INetworkConnectionListener<T> GetTcpNetworkConnectionListener<T>(INetworkConnectionSerializer<T> serializer);
+        INetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer);
+    }
+
+    //assembly component interface
+    public class NetworkConnectionFactory : INetworkConnectionFactory
+    {
+        public INetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
         {
             return new TcpNetworkConnection<T>(serializer);
         }
 
-        public static INetworkConnectionListener<T> GetTcpNetworkConnectionListener<T>(INetworkConnectionSerializer<T> serializer)
+        public INetworkConnectionListener<T> GetTcpNetworkConnectionListener<T>(INetworkConnectionSerializer<T> serializer)
         {
             return new TcpNetworkConnectionListener<T>(serializer);
         }
 
         //unfinished component
-        public static INetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
+        public INetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
         {
             return new UdpNetworkConnection<T>(serializer);
         }
