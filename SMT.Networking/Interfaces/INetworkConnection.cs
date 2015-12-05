@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Interfaces
 {
-    public delegate byte[] Serialize<T>(T message);
-    public delegate T Deserialize<T>(byte[] message);
-
     public interface INetworkConnection<T> : IDisposable
     {
         event EventHandler<T> OnMessageReceived;
