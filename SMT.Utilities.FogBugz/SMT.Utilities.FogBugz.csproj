@@ -40,8 +40,12 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FogBugzObjects\Area.cs" />
+    <Compile Include="FogBugzObjects\AreaResponseRoot.cs" />
     <Compile Include="FogBugzObjects\Case.cs" />
     <Compile Include="FogBugzObjects\CaseResponseRoot.cs" />
+    <Compile Include="FogBugzObjects\Category.cs" />
+    <Compile Include="FogBugzObjects\CategoryResponseRoot.cs" />
     <Compile Include="FogBugzObjects\TimeIntervalResponseRoot.cs" />
     <Compile Include="FogBugzObjects\Milestone.cs" />
     <Compile Include="FogBugzObjects\MilestoneResponseRoot.cs" />

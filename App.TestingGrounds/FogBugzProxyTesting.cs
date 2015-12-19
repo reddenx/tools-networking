@@ -18,13 +18,23 @@ namespace App.TestingGrounds
 
             var repo = new FogBugzRepository(values["token"], values["baseAddress"]);
 
-            Report(repo.SearchCases("23339", 100));
-            Report(repo.GetIntervalsForCase(23339));
-            Report(repo.GetIntervalsForCase(23339, 56));
-            Report(repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now));
-            Report(repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now, 56));
-            Report(repo.GetAllMilestones());
-            Report(repo.GetUsers());
+            //Report(repo.GetAllCategories());
+
+            //areas testing
+            //var areas = repo.GetAreas();
+            //var areasForRandomProject = repo.GetAreasForProject(184);
+            //var area = repo.GetAreaById(311);
+            //Report(areasForRandomProject);
+            //Report(area);
+
+
+            //Report(repo.SearchCases("23339", 100));
+            //Report(repo.GetIntervalsForCase(23339));
+            //Report(repo.GetIntervalsForCase(23339, 56));
+            //Report(repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now));
+            //Report(repo.GetIntervalsForDates(DateTime.Now - TimeSpan.FromDays(30), DateTime.Now, 56));
+            //Report(repo.GetAllMilestones());
+            //Report(repo.GetUsers());
 
             Console.ReadLine();
         }

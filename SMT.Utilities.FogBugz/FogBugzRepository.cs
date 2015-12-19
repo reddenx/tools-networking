@@ -22,6 +22,12 @@ namespace SMT.Utilities.FogBugz
 
         IMilestone[] GetAllMilestones();
 
+        IArea[] GetAreas();
+        IArea[] GetAreasForProject(int projectId);
+        IArea GetAreaById(int areaId);
+
+        ICategory[] GetAllCategories();
+
         IUser[] GetUsers();
     }
 
@@ -133,6 +139,63 @@ namespace SMT.Utilities.FogBugz
             if (response.Success)
             {
                 return response.Data.UserList.Users;
+            }
+            return null;
+        }
+
+
+        public IArea[] GetAreas()
+        {
+            var arguments = new Dictionary<string, string>();
+            var response = Requester.MakeRequest<AreaResponseRoot>("listAreas", arguments);
+
+            if (response.Success)
+            {
+                return response.Data.AreaList.Areas;
+            }
+            return null;
+        }
+
+
+        public IArea[] GetAreasForProject(int projectId)
+        {
+            var arguments = new Dictionary<string, string>()
+            {
+                { "ixProject", projectId.ToString() }
+            };
+            var response = Requester.MakeRequest<AreaResponseRoot>("listAreas", arguments);
+
+            if (response.Success)
+            {
+                return response.Data.AreaList.Areas;
+            }
+            return null;
+        }
+
+        public IArea GetAreaById(int areaId)
+        {
+            var arguments = new Dictionary<string, string>()
+            {
+                { "ixArea", areaId.ToString() }
+            };
+            var response = Requester.MakeRequest<AreaResponseRoot>("listAreas", arguments);
+
+            if (response.Success)
+            {
+                return response.Data.AreaList.Areas.FirstOrDefault(area => area.AreaId == areaId);
+            }
+            return null;
+        }
+
+        public ICategory[] GetAllCategories()
+        {
+            var arguments = new Dictionary<string, string>();
+
+            var response = Requester.MakeRequest<CategoryResponseRoot>("listCategories", arguments);
+
+            if (response.Success)
+            {
+                return response.Data.CategoryList.Categories;
             }
             return null;
         }
