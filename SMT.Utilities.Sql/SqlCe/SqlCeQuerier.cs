@@ -6,21 +6,67 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SMT.Utilities.Sql.Interfaces;
+using SMT.Utilities.Sql.ObjectMapping;
 
 namespace SMT.Utilities.Sql.SqlCe
 {
-    public class SqlCeQuerier : ISqlQuerier
+    internal class SqlCeQuerier : ISqlQuerier
     {
         private readonly string ConnectionString;
 
-        private SqlCeQuerier(string connectionString)
+        internal SqlCeQuerier(string connectionString)
         {
             this.ConnectionString = connectionString;
         }
 
-        public static ISqlQuerier Get(string connectionString)
+
+        public T[] ExecuteReader<T>(string sql)
+            where T : new()
         {
-            return new SqlCeQuerier(connectionString);
+            return ExecuteReader<T>(sql, new IDbDataParameter[] { });
+        }
+
+        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters)
+            where T : new()
+        {
+            var type = typeof(T);
+            if (!type.GetCustomAttributes(typeof(DBObjectAttribute), false).Any())
+            {
+                throw new ArgumentException(string.Format("Output type is not marked with DBObject attribute, type: {0}", type.FullName));
+            }
+
+            //get list of attributed properties
+            var properties = type.GetProperties().Where(pi => pi.GetCustomAttributes(typeof(DBColumnAttribute), false).Any());
+            //get list of attributed fields
+            var fields = type.GetFields().Where(fi => fi.GetCustomAttributes(typeof(DBColumnAttribute), false).Any());
+
+            var items = ExecuteReader<T>(sql, parameters,
+                r =>
+                {
+                    var item = new T();
+                    foreach (var property in properties)
+                    {
+                        var attribute = property.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
+                        var dbValue = Convert.ChangeType(r[attribute.ColumnName], property.PropertyType);
+                        property.SetValue(item, dbValue);
+                    }
+
+                    foreach (var field in fields)
+                    {
+                        var attribute = field.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
+                        var dbValue = Convert.ChangeType(r[attribute.ColumnName], field.FieldType);
+                        field.SetValue(item, dbValue);
+                    }
+
+                    return item;
+                });
+
+            return items;
+        }
+
+        public T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord)
+        {
+            return ExecuteReader(sql, new IDbDataParameter[] { }, getObjectFromRecord);
         }
 
         public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters, BuildObjectFromReader<T> getObjectFromRecord)

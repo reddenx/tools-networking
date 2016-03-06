@@ -10,7 +10,8 @@ namespace SMT.Utilities.Configuration
         {
             //SpeechTests.Test();
             //TcpNetworkConnectionTests.Run();
-            FogBugzProxyTesting.Start();
+            //FogBugzProxyTesting.Start();
+            SqlTesting.Run();
         }
     }
 }
