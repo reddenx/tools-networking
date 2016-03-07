@@ -42,6 +42,7 @@
     <Compile Include="ObjectMapping\DBObjectAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCe\SqlCeQuerier.cs" />
+    <Compile Include="TSql\SqlQuerier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.txt" />

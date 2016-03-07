@@ -1,5 +1,6 @@
 ﻿using SMT.Utilities.Sql.Interfaces;
 using SMT.Utilities.Sql.SqlCe;
+using SMT.Utilities.Sql.TSql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace SMT.Utilities.Sql
             return new SqlCeQuerier(connectionString);
         }
 
-        public static ISqlQuerier GetSqlQuerier()
+        public static ISqlQuerier GetSqlQuerier(string connectionString)
         {
-            throw new NotImplementedException("");
+            return new SqlQuerier(connectionString);
         }
     }
 }

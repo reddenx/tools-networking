@@ -1,32 +1,30 @@
-﻿using System;
+﻿using SMT.Utilities.Sql.Interfaces;
+using SMT.Utilities.Sql.ObjectMapping;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlServerCe;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SMT.Utilities.Sql.Interfaces;
-using SMT.Utilities.Sql.ObjectMapping;
 
-namespace SMT.Utilities.Sql.SqlCe
+namespace SMT.Utilities.Sql.TSql
 {
-    internal class SqlCeQuerier : ISqlQuerier
+    internal class SqlQuerier : ISqlQuerier
     {
         private readonly string ConnectionString;
 
-        internal SqlCeQuerier(string connectionString)
+        public SqlQuerier(string connectionString)
         {
             this.ConnectionString = connectionString;
         }
 
-        public T[] ExecuteReader<T>(string sql)
-            where T : new()
+        public T[] ExecuteReader<T>(string sql) where T : new()
         {
             return ExecuteReader<T>(sql, new IDbDataParameter[] { });
         }
 
-        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters)
-            where T : new()
+        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters) where T : new()
         {
             var type = typeof(T);
             if (!type.GetCustomAttributes(typeof(DBObjectAttribute), false).Any())
@@ -65,29 +63,37 @@ namespace SMT.Utilities.Sql.SqlCe
 
         public T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord)
         {
-            return ExecuteReader(sql, new IDbDataParameter[] { }, getObjectFromRecord);
+            return ExecuteReader<T>(sql, new IDbDataParameter[] { }, getObjectFromRecord);
         }
 
         public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters, BuildObjectFromReader<T> getObjectFromRecord)
         {
             var data = new List<T>();
 
-
-            using (var connection = new SqlCeConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 var command = BuildCommand(sql, parameters, connection);
 
                 connection.Open();
 
-                using (var reader = command.ExecuteReader())
+                try
                 {
-                    while (reader.Read())
+                    using (var reader = command.ExecuteReader())
                     {
-                        data.Add(getObjectFromRecord(reader));
+                        while (reader.Read())
+                        {
+                            data.Add(getObjectFromRecord(reader));
+                        }
                     }
                 }
-
-                connection.Close();
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
 
             return data.ToArray();
@@ -95,19 +101,27 @@ namespace SMT.Utilities.Sql.SqlCe
 
         public int InsertAndGetIdentity(string sql, IDbDataParameter[] parameters)
         {
-            using (var connection = new SqlCeConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 var command = BuildCommand(sql, parameters, connection);
 
-                SqlCeCommand command2 = new SqlCeCommand(@"select @@identity", connection);
+                SqlCommand command2 = new SqlCommand(@"select SCOPE_IDENTITY()", connection);
+                object identity = null;
 
                 connection.Open();
-
-                command.ExecuteNonQuery();
-
-                var identity = command2.ExecuteScalar();
-
-                connection.Close();
+                try
+                {
+                    command.ExecuteNonQuery();
+                    identity = command2.ExecuteScalar();
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
 
                 return Convert.ToInt32(identity);
             }
@@ -116,48 +130,55 @@ namespace SMT.Utilities.Sql.SqlCe
         public int ExecuteNonQuery(string sql, IDbDataParameter[] parameters)
         {
             int linesModified = -1;
-            using (var connection = new SqlCeConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 var command = BuildCommand(sql, parameters, connection);
 
                 connection.Open();
 
-                linesModified = command.ExecuteNonQuery();
-
-                connection.Close();
+                try
+                {
+                    linesModified = command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
 
             return linesModified;
         }
 
-        private SqlCeCommand BuildCommand(string sql, IDbDataParameter[] parameters, SqlCeConnection connection)
+        private SqlCommand BuildCommand(string sql, IDbDataParameter[] parameters, SqlConnection connection)
         {
-            var command = new SqlCeCommand(sql, connection);
+            var command = new SqlCommand(sql, connection);
 
-            foreach (var parameter in parameters)
+            foreach (SqlParameter parameter in parameters)
             {
-                command.Parameters.Add(parameter as SqlCeParameter);
+                command.Parameters.Add(parameter);
             }
 
             return command;
         }
 
-        public IDbDataParameter CreateParameter(string name, SqlDbType type, int size, object value)
+        public IDbDataParameter CreateParameter(string name, SqlDbType type, object value)
         {
-            var param = new SqlCeParameter(name, type, size);
+            var param = new SqlParameter(name, type);
             param.Value = value;
 
             return param;
         }
 
-        public IDbDataParameter CreateParameter(string name, SqlDbType type, object value)
+        public IDbDataParameter CreateParameter(string name, SqlDbType type, int size, object value)
         {
-            var param = new SqlCeParameter(name, type);
-            param.Value = value ?? DBNull.Value;
+            var param = new SqlParameter(name, type, size);
+            param.Value = value;
 
             return param;
         }
-
-
     }
 }
