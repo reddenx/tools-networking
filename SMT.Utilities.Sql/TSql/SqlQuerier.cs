@@ -19,12 +19,7 @@ namespace SMT.Utilities.Sql.TSql
             this.ConnectionString = connectionString;
         }
 
-        public T[] ExecuteReader<T>(string sql) where T : new()
-        {
-            return ExecuteReader<T>(sql, new IDbDataParameter[] { });
-        }
-
-        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters) where T : new()
+        public T[] ExecuteReader<T>(string sql, params IDbDataParameter[] parameters) where T : new()
         {
             var type = typeof(T);
             if (!type.GetCustomAttributes(typeof(DBObjectAttribute), false).Any())
@@ -37,14 +32,28 @@ namespace SMT.Utilities.Sql.TSql
             //get list of attributed fields
             var fields = type.GetFields().Where(fi => fi.GetCustomAttributes(typeof(DBColumnAttribute), false).Any());
 
-            var items = ExecuteReader<T>(sql, parameters,
+            var items = ExecuteReader<T>(sql,
                 r =>
                 {
                     var item = new T();
                     foreach (var property in properties)
                     {
                         var attribute = property.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
-                        var dbValue = Convert.ChangeType(r[attribute.ColumnName], property.PropertyType);
+
+                        var nullsafeValue = r[attribute.ColumnName] != DBNull.Value ? r[attribute.ColumnName] : null;
+                        object dbValue;
+                        if (property.PropertyType.IsEnum && r[attribute.ColumnName] is string)
+                        {
+                            dbValue = Enum.Parse(property.PropertyType, nullsafeValue as string);
+                        }
+                        else if (property.PropertyType.IsValueType && nullsafeValue == null)
+                        {
+                            dbValue = default(T);
+                        }
+                        else
+                        {
+                            dbValue = Convert.ChangeType(nullsafeValue, property.PropertyType);
+                        }
                         property.SetValue(item, dbValue);
                     }
 
@@ -56,17 +65,12 @@ namespace SMT.Utilities.Sql.TSql
                     }
 
                     return item;
-                });
+                }, parameters);
 
             return items;
         }
 
-        public T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord)
-        {
-            return ExecuteReader<T>(sql, new IDbDataParameter[] { }, getObjectFromRecord);
-        }
-
-        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters, BuildObjectFromReader<T> getObjectFromRecord)
+        public T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord, params IDbDataParameter[] parameters)
         {
             var data = new List<T>();
 
@@ -99,7 +103,7 @@ namespace SMT.Utilities.Sql.TSql
             return data.ToArray();
         }
 
-        public int InsertAndGetIdentity(string sql, IDbDataParameter[] parameters)
+        public int InsertAndGetIdentity(string sql, params IDbDataParameter[] parameters)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -127,7 +131,7 @@ namespace SMT.Utilities.Sql.TSql
             }
         }
 
-        public int ExecuteNonQuery(string sql, IDbDataParameter[] parameters)
+        public int ExecuteNonQuery(string sql, params IDbDataParameter[] parameters)
         {
             int linesModified = -1;
             using (var connection = new SqlConnection(ConnectionString))
