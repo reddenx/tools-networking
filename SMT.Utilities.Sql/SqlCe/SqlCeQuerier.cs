@@ -19,13 +19,7 @@ namespace SMT.Utilities.Sql.SqlCe
             this.ConnectionString = connectionString;
         }
 
-        public T[] ExecuteReader<T>(string sql)
-            where T : new()
-        {
-            return ExecuteReader<T>(sql, new IDbDataParameter[] { });
-        }
-
-        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters)
+        public T[] ExecuteReader<T>(string sql, params IDbDataParameter[] parameters)
             where T : new()
         {
             var type = typeof(T);
@@ -39,7 +33,7 @@ namespace SMT.Utilities.Sql.SqlCe
             //get list of attributed fields
             var fields = type.GetFields().Where(fi => fi.GetCustomAttributes(typeof(DBColumnAttribute), false).Any());
 
-            var items = ExecuteReader<T>(sql, parameters,
+            var items = ExecuteReader<T>(sql,
                 r =>
                 {
                     var item = new T();
@@ -58,20 +52,14 @@ namespace SMT.Utilities.Sql.SqlCe
                     }
 
                     return item;
-                });
+                }, parameters);
 
             return items;
         }
 
-        public T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord)
-        {
-            return ExecuteReader(sql, new IDbDataParameter[] { }, getObjectFromRecord);
-        }
-
-        public T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters, BuildObjectFromReader<T> getObjectFromRecord)
+        public T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord, params IDbDataParameter[] parameters)
         {
             var data = new List<T>();
-
 
             using (var connection = new SqlCeConnection(ConnectionString))
             {
@@ -93,7 +81,7 @@ namespace SMT.Utilities.Sql.SqlCe
             return data.ToArray();
         }
 
-        public int InsertAndGetIdentity(string sql, IDbDataParameter[] parameters)
+        public int InsertAndGetIdentity(string sql, params IDbDataParameter[] parameters)
         {
             using (var connection = new SqlCeConnection(ConnectionString))
             {
@@ -113,7 +101,7 @@ namespace SMT.Utilities.Sql.SqlCe
             }
         }
 
-        public int ExecuteNonQuery(string sql, IDbDataParameter[] parameters)
+        public int ExecuteNonQuery(string sql, params IDbDataParameter[] parameters)
         {
             int linesModified = -1;
             using (var connection = new SqlCeConnection(ConnectionString))

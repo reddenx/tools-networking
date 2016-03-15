@@ -12,12 +12,10 @@ namespace SMT.Utilities.Sql.Interfaces
 
     public interface ISqlQuerier
     {
-        T[] ExecuteReader<T>(string sql) where T : new();
-        T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters) where T : new();
-        T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord);
-        T[] ExecuteReader<T>(string sql, IDbDataParameter[] parameters, BuildObjectFromReader<T> getObjectFromRecord);
-        int InsertAndGetIdentity(string sql, IDbDataParameter[] parameters);
-        int ExecuteNonQuery(string sql, IDbDataParameter[] parameters);
+        T[] ExecuteReader<T>(string sql, params IDbDataParameter[] parameters) where T : new();
+        T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord, params IDbDataParameter[] parameters);
+        int InsertAndGetIdentity(string sql, params IDbDataParameter[] parameters);
+        int ExecuteNonQuery(string sql, params IDbDataParameter[] parameters);
 
         IDbDataParameter CreateParameter(string name, SqlDbType type, object value);
         IDbDataParameter CreateParameter(string name, SqlDbType type, int size, object value);
