@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace SMT.Networking.Udp
 {
@@ -21,7 +22,11 @@ namespace SMT.Networking.Udp
         public string HostName { get; private set; }
         public int Port { get; private set; }
 
+        private UdpClient Client;
+
         private readonly INetworkConnectionSerializer<T> Serializer;
+        private readonly Queue<T> OutBox;
+        private readonly Queue<T> Inbox;
 
         public UdpNetworkConnection(INetworkConnectionSerializer<T> serializer)
         {
@@ -31,18 +36,21 @@ namespace SMT.Networking.Udp
         //stop listening to incoming messages, unbind port
         public void Disconnect()
         {
+            //get client back to null by unbinding and throwing away any in process threads
             throw new NotImplementedException();
         }
 
         //bind port, start listening to messages
         public void Connect(string hostname, int port)
         {
+            //cleanup current client if it's not null
             throw new NotImplementedException();
         }
 
         //bind port, start listening to messages
         public void Connect(string connectionString)
         {
+            //parse connection string and call connect
             throw new NotImplementedException();
         }
 
@@ -58,7 +66,31 @@ namespace SMT.Networking.Udp
             throw new NotImplementedException();
         }
 
-        private Thread DoCheapAsync(Action asyncAction)
+        //run once connected, cleanup once disconnected
+        private void SendLoop()
+        {
+            try
+            {
+                while (true)
+                {
+                    if (OutBox.Count > 0)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        Thread.Sleep(10);
+                    }
+                }
+            }
+            catch (ThreadAbortException aborted) {} //expected abort procedure given blocking call
+            finally
+            {
+                //cleanup
+            }
+        }
+
+        private Thread GetBackgroundThread(Action asyncAction)
         {
             var thread = new Thread(new ThreadStart(asyncAction));
             thread.IsBackground = true;
