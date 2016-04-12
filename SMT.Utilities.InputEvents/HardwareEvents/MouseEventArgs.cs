@@ -11,9 +11,9 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
         internal readonly int DiffX;
         internal readonly int DiffY;
         internal readonly uint Flags;
-        internal readonly uint Data;
+        internal readonly int Data;
 
-        private MouseEventArgs(int diffX, int diffY, uint flags, uint data)
+        private MouseEventArgs(int diffX, int diffY, uint flags, int data)
         {
             this.DiffX = diffX;
             this.DiffY = diffY;
@@ -48,7 +48,7 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
 
         public static MouseEventArgs ScrollDown()
         {
-            return new MouseEventArgs(0, 0, MouseEventDefinitions.MOUSEEVENTF_HWHEEL, 120);
+            return new MouseEventArgs(0, 0, MouseEventDefinitions.MOUSEEVENTF_WHEEL, -120);
         }
 
         public static MouseEventArgs Move(int diffX, int diffY)

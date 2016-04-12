@@ -20,7 +20,7 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
         }
 
         [DllImport("user32.dll")]
-        static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
+        static extern void mouse_event(uint dwFlags, int dx, int dy, int dwData, UIntPtr dwExtraInfo);
     }
 
     public static class MouseEventDefinitions
