@@ -11,7 +11,8 @@ namespace SMT.Utilities.Configuration
             //SpeechTests.Test();
             //TcpNetworkConnectionTests.Run();
             //FogBugzProxyTesting.Start();
-            SqlTesting.Run();
+            //SqlTesting.Run();
+            MouseInputTesting.Run();
         }
     }
 }

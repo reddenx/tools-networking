@@ -16,11 +16,11 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
 
         public void DoEvent(MouseEventArgs eventArgs)
         {
-            mouse_event(eventArgs.Flags, eventArgs.DiffX, eventArgs.DiffX, eventArgs.Data, UIntPtr.Zero);
+            mouse_event(eventArgs.Flags, eventArgs.DiffX, eventArgs.DiffY, eventArgs.Data, UIntPtr.Zero);
         }
 
         [DllImport("user32.dll")]
-        static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
+        static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
     }
 
     public static class MouseEventDefinitions
