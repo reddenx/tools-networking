@@ -52,7 +52,8 @@ namespace SMT.Utilities.Sql.TSql
                         }
                         else
                         {
-                            dbValue = Convert.ChangeType(nullsafeValue, property.PropertyType);
+                            var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                            dbValue = Convert.ChangeType(nullsafeValue, propertyType);
                         }
                         property.SetValue(item, dbValue);
                     }
@@ -60,8 +61,16 @@ namespace SMT.Utilities.Sql.TSql
                     foreach (var field in fields)
                     {
                         var attribute = field.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
-                        var dbValue = Convert.ChangeType(r[attribute.ColumnName], field.FieldType);
-                        field.SetValue(item, dbValue);
+                        if (r[attribute.ColumnName] == DBNull.Value)
+                        {
+                            field.SetValue(item, null);
+                        }
+                        else
+                        {
+                            var fieldType = Nullable.GetUnderlyingType(field.FieldType) ?? field.FieldType;
+                            var dbValue = Convert.ChangeType(r[attribute.ColumnName], fieldType);
+                            field.SetValue(item, dbValue);
+                        }
                     }
 
                     return item;

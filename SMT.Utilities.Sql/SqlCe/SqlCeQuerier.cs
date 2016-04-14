@@ -47,8 +47,16 @@ namespace SMT.Utilities.Sql.SqlCe
                     foreach (var field in fields)
                     {
                         var attribute = field.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
-                        var dbValue = Convert.ChangeType(r[attribute.ColumnName], field.FieldType);
-                        field.SetValue(item, dbValue);
+                        if (r[attribute.ColumnName] == DBNull.Value)
+                        {
+                            field.SetValue(item, null);
+                        }
+                        else
+                        {
+                            var fieldType = Nullable.GetUnderlyingType(field.FieldType) ?? field.FieldType;
+                            var dbValue = Convert.ChangeType(r[attribute.ColumnName], fieldType);
+                            field.SetValue(item, dbValue);
+                        }
                     }
 
                     return item;
