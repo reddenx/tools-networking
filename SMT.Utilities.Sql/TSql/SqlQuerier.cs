@@ -39,44 +39,55 @@ namespace SMT.Utilities.Sql.TSql
                     foreach (var property in properties)
                     {
                         var attribute = property.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
+                        object dbValue = ConvertFromDbObject(r, property.PropertyType, attribute);
 
-                        var nullsafeValue = r[attribute.ColumnName] != DBNull.Value ? r[attribute.ColumnName] : null;
-                        object dbValue;
-                        if (property.PropertyType.IsEnum && r[attribute.ColumnName] is string)
-                        {
-                            dbValue = Enum.Parse(property.PropertyType, nullsafeValue as string);
-                        }
-                        else if (property.PropertyType.IsValueType && nullsafeValue == null)
-                        {
-                            dbValue = default(T);
-                        }
-                        else
-                        {
-                            var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                            dbValue = Convert.ChangeType(nullsafeValue, propertyType);
-                        }
                         property.SetValue(item, dbValue);
                     }
 
                     foreach (var field in fields)
                     {
                         var attribute = field.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
-                        if (r[attribute.ColumnName] == DBNull.Value)
-                        {
-                            field.SetValue(item, null);
-                        }
-                        else
-                        {
-                            var fieldType = Nullable.GetUnderlyingType(field.FieldType) ?? field.FieldType;
-                            var dbValue = Convert.ChangeType(r[attribute.ColumnName], fieldType);
-                            field.SetValue(item, dbValue);
-                        }
+                        object dbValue = ConvertFromDbObject(r, field.FieldType, attribute);
+
+                        field.SetValue(item, dbValue);
                     }
 
                     return item;
                 }, parameters);
 
             return items;
+        }
+
+        //fuckin woo enums!
+        private object ConvertFromDbObject(IDataRecord r, Type destinationType, DBColumnAttribute attributeInfo)
+        {
+            //convert dbnull to null
+            var nullsafeValue = r[attributeInfo.ColumnName] != DBNull.Value ? r[attributeInfo.ColumnName] : null;
+            var nullableType = Nullable.GetUnderlyingType(destinationType) ?? destinationType;
+            object dbValue;
+
+            //if it's output is an enum and it's input is a string we can parse it
+            if (nullableType.IsEnum && r[attributeInfo.ColumnName] is string)
+            {
+                dbValue = Enum.Parse(nullableType, nullsafeValue as string, true);
+            }
+                //if it's output is an enum and it's input is an int
+            else if (nullableType.IsEnum && r[attributeInfo.ColumnName] is int)
+            {
+                dbValue = Enum.ToObject(nullableType, r[attributeInfo.ColumnName]);
+            }
+                //if it's output is a value type and it's input is null, create a default
+            else if (destinationType.IsValueType && nullsafeValue == null)
+            {
+                dbValue = Activator.CreateInstance(destinationType);
+            }
+                //if it's none of those other scenarios, do a nullable base type conversion from db
+            else
+            {
+                dbValue = Convert.ChangeType(nullsafeValue, nullableType);
+            }
+
+            return dbValue;
         }
 
         public T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord, params IDbDataParameter[] parameters)
@@ -181,6 +192,10 @@ namespace SMT.Utilities.Sql.TSql
         public IDbDataParameter CreateParameter(string name, SqlDbType type, object value)
         {
             var param = new SqlParameter(name, type);
+            if (value == null)
+            {
+                value = DBNull.Value;
+            }
             param.Value = value;
 
             return param;
@@ -189,6 +204,10 @@ namespace SMT.Utilities.Sql.TSql
         public IDbDataParameter CreateParameter(string name, SqlDbType type, int size, object value)
         {
             var param = new SqlParameter(name, type, size);
+            if (value == null)
+            {
+                value = DBNull.Value;
+            }
             param.Value = value;
 
             return param;

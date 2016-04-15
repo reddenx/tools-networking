@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SolitaireGrammar.xml" />
+    <Content Include="sqltestschema.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
