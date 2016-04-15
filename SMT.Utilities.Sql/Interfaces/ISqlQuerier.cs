@@ -14,6 +14,7 @@ namespace SMT.Utilities.Sql.Interfaces
     {
         T[] ExecuteReader<T>(string sql, params IDbDataParameter[] parameters) where T : new();
         T[] ExecuteReader<T>(string sql, BuildObjectFromReader<T> getObjectFromRecord, params IDbDataParameter[] parameters);
+        T ExecuteScalar<T>(string sql, params IDbDataParameter[] parameters);
         int InsertAndGetIdentity(string sql, params IDbDataParameter[] parameters);
         int ExecuteNonQuery(string sql, params IDbDataParameter[] parameters);
 

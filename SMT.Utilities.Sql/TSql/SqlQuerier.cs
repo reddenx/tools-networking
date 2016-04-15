@@ -39,7 +39,7 @@ namespace SMT.Utilities.Sql.TSql
                     foreach (var property in properties)
                     {
                         var attribute = property.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
-                        object dbValue = ConvertFromDbObject(r, property.PropertyType, attribute);
+                        object dbValue = ConvertFromDbObject(r[attribute.ColumnName], property.PropertyType);
 
                         property.SetValue(item, dbValue);
                     }
@@ -47,7 +47,7 @@ namespace SMT.Utilities.Sql.TSql
                     foreach (var field in fields)
                     {
                         var attribute = field.GetCustomAttributes(typeof(DBColumnAttribute), false).First() as DBColumnAttribute;
-                        object dbValue = ConvertFromDbObject(r, field.FieldType, attribute);
+                        object dbValue = ConvertFromDbObject(r[attribute.ColumnName], field.FieldType);
 
                         field.SetValue(item, dbValue);
                     }
@@ -59,29 +59,29 @@ namespace SMT.Utilities.Sql.TSql
         }
 
         //fuckin woo enums!
-        private object ConvertFromDbObject(IDataRecord r, Type destinationType, DBColumnAttribute attributeInfo)
+        private object ConvertFromDbObject(object dbObject, Type destinationType)
         {
             //convert dbnull to null
-            var nullsafeValue = r[attributeInfo.ColumnName] != DBNull.Value ? r[attributeInfo.ColumnName] : null;
+            var nullsafeValue = dbObject != DBNull.Value ? dbObject : null;
             var nullableType = Nullable.GetUnderlyingType(destinationType) ?? destinationType;
             object dbValue;
 
             //if it's output is an enum and it's input is a string we can parse it
-            if (nullableType.IsEnum && r[attributeInfo.ColumnName] is string)
+            if (nullableType.IsEnum && dbObject is string)
             {
                 dbValue = Enum.Parse(nullableType, nullsafeValue as string, true);
             }
-                //if it's output is an enum and it's input is an int
-            else if (nullableType.IsEnum && r[attributeInfo.ColumnName] is int)
+            //if it's output is an enum and it's input is an int
+            else if (nullableType.IsEnum && dbObject is int)
             {
-                dbValue = Enum.ToObject(nullableType, r[attributeInfo.ColumnName]);
+                dbValue = Enum.ToObject(nullableType, dbObject);
             }
-                //if it's output is a value type and it's input is null, create a default
+            //if it's output is a value type and it's input is null, create a default
             else if (destinationType.IsValueType && nullsafeValue == null)
             {
                 dbValue = Activator.CreateInstance(destinationType);
             }
-                //if it's none of those other scenarios, do a nullable base type conversion from db
+            //if it's none of those other scenarios, do a nullable base type conversion from db
             else
             {
                 dbValue = Convert.ChangeType(nullsafeValue, nullableType);
@@ -121,6 +121,27 @@ namespace SMT.Utilities.Sql.TSql
             }
 
             return data.ToArray();
+        }
+
+        public T ExecuteScalar<T>(string sql, params IDbDataParameter[] parameters)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            {
+                var command = BuildCommand(sql, parameters, connection);
+                connection.Open();
+                try
+                {
+                    return (T)ConvertFromDbObject(command.ExecuteScalar(), typeof(T));
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
 
         public int InsertAndGetIdentity(string sql, params IDbDataParameter[] parameters)

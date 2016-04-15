@@ -42,7 +42,7 @@ declare @Test6 varchar(200) = @TestInputString
 select *
 from dbo.DataObjectTesting
 ";
-            var objects = querier.ExecuteReader<TestObjectFieldBased>(sql,
+            var objects = querier.ExecuteReader<TestObjectPropertyBased>(sql,
                 querier.CreateParameter("@TestNullInputInt", SqlDbType.Int, null),
                 querier.CreateParameter("@TestInputInt", SqlDbType.Int, -1200),
                 querier.CreateParameter("@TestNullInputBit", SqlDbType.Bit, null),
@@ -52,7 +52,7 @@ from dbo.DataObjectTesting
 
             foreach (var obj in objects)
             {
-                foreach (var prop in obj.GetType().GetFields())
+                foreach (var prop in obj.GetType().GetProperties())
                 {
                     if (prop.GetValue(obj) != null)
                     {
