@@ -222,6 +222,14 @@ namespace SMT.Utilities.Sql.TSql
             return param;
         }
 
+        public IDbDataParameter CreateParameter(string name, SqlDbType type, string customTypeName, object value)
+        {
+            var param = new SqlParameter(name, type);
+            param.Value = value ?? DBNull.Value;
+            param.TypeName = customTypeName;
+            return param;
+        }
+
         public IDbDataParameter CreateParameter(string name, SqlDbType type, int size, object value)
         {
             var param = new SqlParameter(name, type, size);

@@ -154,10 +154,12 @@ namespace SMT.Utilities.Sql.SqlCe
             return param;
         }
 
-
-
-
         public T ExecuteScalar<T>(string sql, params IDbDataParameter[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDbDataParameter CreateParameter(string name, SqlDbType type, string customTypeName, object value)
         {
             throw new NotImplementedException();
         }

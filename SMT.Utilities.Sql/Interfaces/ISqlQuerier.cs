@@ -20,5 +20,6 @@ namespace SMT.Utilities.Sql.Interfaces
 
         IDbDataParameter CreateParameter(string name, SqlDbType type, object value);
         IDbDataParameter CreateParameter(string name, SqlDbType type, int size, object value);
+        IDbDataParameter CreateParameter(string name, SqlDbType type, string customTypeName, object value);
     }
 }
