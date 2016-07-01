@@ -55,5 +55,13 @@ namespace SMT.Utilities.InputEvents.HardwareEvents
         {
             return new MouseEventArgs(diffX, diffY, MouseEventDefinitions.MOUSEEVENTF_MOVE, 0);
         }
+
+        public static MouseEventArgs Set(float x, float y)
+        {
+            var xDiff = (int)(65535f * x);
+            var yDiff = (int)(65535f * y);
+
+            return new MouseEventArgs(xDiff, yDiff, MouseEventDefinitions.MOUSEEVENTF_ABSOLUTE | MouseEventDefinitions.MOUSEEVENTF_MOVE, 0);
+        }
     }
 }
