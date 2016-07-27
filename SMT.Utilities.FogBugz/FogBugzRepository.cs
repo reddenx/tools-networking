@@ -76,8 +76,9 @@ namespace SMT.Utilities.FogBugz
         {
             var arguments = new Dictionary<string, string>()
             {
-                {"ixBug", caseId.ToString()}
-            };
+                {"ixBug", caseId.ToString()},
+                {"ixPerson", "1"}
+			};
 
             return GetIntervals(arguments);
         }
