@@ -11,12 +11,20 @@ using Newtonsoft.Json.Linq;
 
 namespace SMT.Utilities.DynamicApi
 {
-    //server side: given the interface and implementation of the object that is proxied, build out a controller that calls into this object
+    /// <summary>
+    /// Acts as a controller for all dynamically generated Apis, It does internal routing to ensure methods are routed to the correct api
+    /// </summary>
     public class DynamicApiBaseController : ApiController
     {
         private static Type[] DynamicApis;
 
-        //called during api registration
+        //server side: given the interface and implementation of the object that is proxied, build out a controller that calls into this object
+
+        /// <summary>
+        /// Must be called during webapi configuration setup
+        /// </summary>
+        /// <param name="routes">the configured routes of the application</param>
+        /// <param name="prefix">the prefix for all dynamic endpoints, built to BaseUrl/{prefix}/DestinationObjectApi/Action</param>
         public static void RegisterDynamicRoutes(HttpRouteCollection routes, string prefix)
         {
             //get all interfaces with the attribute
@@ -36,12 +44,11 @@ namespace SMT.Utilities.DynamicApi
             DynamicApis = dynamicApis.ToArray();
         }
 
-        //allow all the things!
-        [HttpGet]
+        /// <summary>
+        /// Not meant to be called directly, this is the entry point for all incoming api calls from the WebApi framework.
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
-        [HttpPut]
-        [HttpDelete]
-        [HttpPatch]
         public object RunDynamic()
         {
             //build up routing information since this is the generic input for everything
@@ -86,11 +93,6 @@ namespace SMT.Utilities.DynamicApi
 
             var response = objMethod.Invoke(destObj, parameters.ToArray());
             return response;
-        }
-
-        public override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Web.Http.Controllers.HttpControllerContext controllerContext, System.Threading.CancellationToken cancellationToken)
-        {
-            return base.ExecuteAsync(controllerContext, cancellationToken);
         }
     }
 }
