@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.TestingGrounds", "App.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.FogBugz", "SMT.Utilities.FogBugz\SMT.Utilities.FogBugz.csproj", "{156009EF-E188-4505-8BFA-822C2EE22E64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.DynamicApi", "SMT.Utilities.DynamicApi\SMT.Utilities.DynamicApi.csproj", "{71BB3B57-BF93-477B-BEAD-67704AB8CB4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{156009EF-E188-4505-8BFA-822C2EE22E64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{156009EF-E188-4505-8BFA-822C2EE22E64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{156009EF-E188-4505-8BFA-822C2EE22E64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71BB3B57-BF93-477B-BEAD-67704AB8CB4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71BB3B57-BF93-477B-BEAD-67704AB8CB4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71BB3B57-BF93-477B-BEAD-67704AB8CB4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71BB3B57-BF93-477B-BEAD-67704AB8CB4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
