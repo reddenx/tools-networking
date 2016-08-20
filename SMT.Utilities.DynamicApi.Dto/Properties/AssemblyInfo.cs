@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SMT.Utilities.DynamicApi")]
+[assembly: AssemblyTitle("SMT.Utilities.DynamicApi.Dto")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SMT.Utilities.DynamicApi")]
+[assembly: AssemblyProduct("SMT.Utilities.DynamicApi.Dto")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4eda1d09-a345-44b3-9a62-034cec94029b")]
+[assembly: Guid("f9df3743-4bd7-4fae-ba2b-a8d291ee1544")]
 
 // Version information for an assembly consists of the following four values:
 //
