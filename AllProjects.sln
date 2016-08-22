@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Networking", "SMT.Networking\SMT.Networking.csproj", "{B2322749-B23B-46F0-98DD-D29C03EBFBBA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.Sql", "SMT.Utilities.Sql\SMT.Utilities.Sql.csproj", "{897B5EC0-2FDE-46DF-9D62-C4A92661D18A}"
@@ -20,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.DynamicApi.Dto", "SMT.Utilities.DynamicApi.Dto\SMT.Utilities.DynamicApi.Dto.csproj", "{F9DF3743-4BD7-4FAE-BA2B-A8D291EE1544}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.DynamicApi.Api", "SMT.Utilities.DynamicApi.Api\SMT.Utilities.DynamicApi.Api.csproj", "{B720B12C-6C6E-428B-A812-9C244EA74304}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.WebTesting", "App.WebTesting\App.WebTesting.csproj", "{A3CD59D5-E355-483D-B3CB-5208676137C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +63,10 @@ Global
 		{B720B12C-6C6E-428B-A812-9C244EA74304}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B720B12C-6C6E-428B-A812-9C244EA74304}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B720B12C-6C6E-428B-A812-9C244EA74304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3CD59D5-E355-483D-B3CB-5208676137C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3CD59D5-E355-483D-B3CB-5208676137C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3CD59D5-E355-483D-B3CB-5208676137C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3CD59D5-E355-483D-B3CB-5208676137C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
