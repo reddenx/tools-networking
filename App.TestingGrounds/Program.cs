@@ -13,7 +13,8 @@ namespace SMT.Utilities.Configuration
             //FogBugzProxyTesting.Start();
             //SqlTesting.Run();
             //MouseInputTesting.Run();
-            DynamicApiTesting.Run();
+            //DynamicApiTesting.Run();
+            TypeGenerationTesting.Run();
         }
     }
 }

@@ -71,6 +71,7 @@
     <Compile Include="TcpDataConnectionTesting.cs" />
     <Compile Include="TcpNetworkConnectionTests.cs" />
     <Compile Include="TcpSelfConnectionLifecycleTests.cs" />
+    <Compile Include="TypeGenerationTesting.cs" />
     <Compile Include="UdpConsoleFeedbackListener.cs" />
     <Compile Include="UdpTesting.cs" />
   </ItemGroup>
@@ -103,6 +104,10 @@
     <ProjectReference Include="..\SMT.Utilities.InputEvents\SMT.Utilities.InputEvents.csproj">
       <Project>{b74d090f-0c31-4f12-8dec-4768009bd833}</Project>
       <Name>SMT.Utilities.InputEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SMT.Utilities.Reflection\SMT.Utilities.Reflection.csproj">
+      <Project>{1f326986-a2a3-40ee-9376-832f05851c43}</Project>
+      <Name>SMT.Utilities.Reflection</Name>
     </ProjectReference>
     <ProjectReference Include="..\SMT.Utilities.Sql\SMT.Utilities.Sql.csproj">
       <Project>{897b5ec0-2fde-46df-9d62-c4a92661d18a}</Project>
