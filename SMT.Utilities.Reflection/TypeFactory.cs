@@ -37,11 +37,39 @@ namespace SMT.Utilities.Reflection
             }
         }
 
-
-
-
-        public void AppendStaticMethod<MethodDefinition>(string methodName, Expression<MethodDefinition> expressionBody)
+        public void OverrideMethod<MethodDefinition>(string methodName, Type overridingType, string methodToOverride, Expression<MethodDefinition> expressionBody)
         {
+            var method = CompileExpressionToMethod(methodName, expressionBody);
+
+            //var methodBuilderStatic = TypeBuilderInstance.DefineMethod("_" + methodName,
+            //    MethodAttributes.Public |
+            //    MethodAttributes.Static);
+            //expressionBody.CompileToMethod(methodBuilderStatic);
+            
+            //var methodBuilder = TypeBuilderInstance.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Virtual);
+
+            TypeBuilderInstance.DefineMethodOverride(method, overridingType.GetMethod(methodToOverride));
+
+            //methodBuilder.SetReturnType(expressionBody.ReturnType);
+            //
+            //var ilGenerator = methodBuilder.GetILGenerator();
+            //
+            //var types = expressionBody.Parameters.Select(p => p.Type).ToArray();
+            //methodBuilder.SetParameters(types);
+            //
+            //for (Int32 i = 1; i <= types.Length; ++i)
+            //{
+            //    ilGenerator.Emit(OpCodes.Ldarg, i);
+            //}
+            //
+            //ilGenerator.EmitCall(OpCodes.Call, methodBuilderStatic, null);
+            //ilGenerator.Emit(OpCodes.Ret);
+        }
+
+        public void AppendMethod<MethodDefinition>(string methodName, Expression<MethodDefinition> expressionBody)
+        {
+            var methodBuilder = CompileExpressionToMethod(methodName, expressionBody);
+
             //var methodInfo = (lambda as Delegate);
             //if (methodInfo == null)
             //{
@@ -64,29 +92,29 @@ namespace SMT.Utilities.Reflection
 
 
             //turn expression into private static method
-            var methodBuilderStatic = TypeBuilderInstance.DefineMethod("_" + methodName,
-                MethodAttributes.Public |
-                MethodAttributes.Static);
-            expressionBody.CompileToMethod(methodBuilderStatic);
+            //var methodBuilderStatic = TypeBuilderInstance.DefineMethod("_" + methodName,
+            //    MethodAttributes.Public |
+            //    MethodAttributes.Static);
+            //expressionBody.CompileToMethod(methodBuilderStatic);
             
-            var methodBuilder = TypeBuilderInstance.DefineMethod(methodName,
-                MethodAttributes.Public);
+            //var methodBuilder = TypeBuilderInstance.DefineMethod(methodName,
+            //    MethodAttributes.Public);
             
             
-            methodBuilder.SetReturnType(expressionBody.ReturnType);
+            //methodBuilder.SetReturnType(expressionBody.ReturnType);
             
-            var ilGenerator = methodBuilder.GetILGenerator();
+            //var ilGenerator = methodBuilder.GetILGenerator();
 
-            var types = expressionBody.Parameters.Select(p => p.Type).ToArray();
-            methodBuilder.SetParameters(types);
+            //var types = expressionBody.Parameters.Select(p => p.Type).ToArray();
+            //methodBuilder.SetParameters(types);
 
-            for (Int32 i = 1; i <= types.Length; ++i)
-            {
-                ilGenerator.Emit(OpCodes.Ldarg, i);
-            }
+            //for (Int32 i = 1; i <= types.Length; ++i)
+            //{
+            //    ilGenerator.Emit(OpCodes.Ldarg, i);
+            //}
 
-            ilGenerator.EmitCall(OpCodes.Call, methodBuilderStatic, null);
-            ilGenerator.Emit(OpCodes.Ret);
+            //ilGenerator.EmitCall(OpCodes.Call, methodBuilderStatic, null);
+            //ilGenerator.Emit(OpCodes.Ret);
 
 
             //var ilGen = methodBuilder.GetILGenerator();
@@ -111,6 +139,35 @@ namespace SMT.Utilities.Reflection
             //TODO-SM only one method override currently supported
             //var interfaceMethod = interfaces.GetMethod(method.Name);
             //typeBuilder.DefineMethodOverride(method, interfaceMethod);
+        }
+
+        private MethodBuilder CompileExpressionToMethod<T>(string methodName, Expression<T> expressionBody)
+        {
+            var methodBuilderStatic = TypeBuilderInstance.DefineMethod("_" + methodName,
+                MethodAttributes.Public |
+                MethodAttributes.Static);
+            expressionBody.CompileToMethod(methodBuilderStatic);
+
+            var methodBuilder = TypeBuilderInstance.DefineMethod(methodName,
+                MethodAttributes.Public | MethodAttributes.Virtual);
+
+
+            methodBuilder.SetReturnType(expressionBody.ReturnType);
+
+            var ilGenerator = methodBuilder.GetILGenerator();
+
+            var types = expressionBody.Parameters.Select(p => p.Type).ToArray();
+            methodBuilder.SetParameters(types);
+
+            for (Int32 i = 1; i <= types.Length; ++i)
+            {
+                ilGenerator.Emit(OpCodes.Ldarg, i);
+            }
+
+            ilGenerator.EmitCall(OpCodes.Call, methodBuilderStatic, null);
+            ilGenerator.Emit(OpCodes.Ret);
+
+            return methodBuilder;
         }
 
         public Type Generate()
