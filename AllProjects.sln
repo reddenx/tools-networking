@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.WebTesting", "App.WebTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.Reflection", "SMT.Utilities.Reflection\SMT.Utilities.Reflection.csproj", "{1F326986-A2A3-40EE-9376-832F05851C43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.Images", "SMT.Utilities.Images\SMT.Utilities.Images.csproj", "{BE7FAA34-7072-4EE9-A5AF-A5836E44274F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{1F326986-A2A3-40EE-9376-832F05851C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F326986-A2A3-40EE-9376-832F05851C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F326986-A2A3-40EE-9376-832F05851C43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE7FAA34-7072-4EE9-A5AF-A5836E44274F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7FAA34-7072-4EE9-A5AF-A5836E44274F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7FAA34-7072-4EE9-A5AF-A5836E44274F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7FAA34-7072-4EE9-A5AF-A5836E44274F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

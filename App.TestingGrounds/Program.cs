@@ -14,7 +14,8 @@ namespace SMT.Utilities.Configuration
             //SqlTesting.Run();
             //MouseInputTesting.Run();
             //DynamicApiTesting.Run();
-            TypeGenerationTesting.Run();
+            //TypeGenerationTesting.Run();
+            ImageSizeTesting.Run();
         }
     }
 }

@@ -50,6 +50,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -63,6 +64,7 @@
     <Compile Include="DynamicApiTesting.cs" />
     <Compile Include="FogBugzProxyTesting.cs" />
     <Compile Include="FogbugzTests.cs" />
+    <Compile Include="ImageSizeTesting.cs" />
     <Compile Include="MouseInputTesting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +102,10 @@
     <ProjectReference Include="..\SMT.Utilities.FogBugz\SMT.Utilities.FogBugz.csproj">
       <Project>{156009ef-e188-4505-8bfa-822c2ee22e64}</Project>
       <Name>SMT.Utilities.FogBugz</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SMT.Utilities.Images\SMT.Utilities.Images.csproj">
+      <Project>{be7faa34-7072-4ee9-a5af-a5836e44274f}</Project>
+      <Name>SMT.Utilities.Images</Name>
     </ProjectReference>
     <ProjectReference Include="..\SMT.Utilities.InputEvents\SMT.Utilities.InputEvents.csproj">
       <Project>{b74d090f-0c31-4f12-8dec-4768009bd833}</Project>
