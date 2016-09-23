@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>PotatoSoft.SMT.Configuration</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Sean Marek</authors>
+    <owners>Sean Marek</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple Configuration Utility</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>configurationmanager configuration simple utility config webconfig web.config appconfig app.cofnig</tags>
+  </metadata>
+</package>
