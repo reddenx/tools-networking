@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>PotatoSoft.SMT.Configuration</id>
-    <version>$version$</version>
+    <version>1.0.0</version>
     <title>$title$</title>
     <authors>Sean Marek</authors>
     <owners>Sean Marek</owners>
