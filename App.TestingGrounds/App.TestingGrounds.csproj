@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationTesting.cs" />
     <Compile Include="DynamicApiTesting.cs" />
     <Compile Include="FogBugzProxyTesting.cs" />
     <Compile Include="FogbugzTests.cs" />
@@ -90,14 +91,6 @@
     <ProjectReference Include="..\SMT.Utilities.Configuration\SMT.Utilities.Configuration.csproj">
       <Project>{906aa950-a547-4061-a64a-2a5181b01fed}</Project>
       <Name>SMT.Utilities.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SMT.Utilities.DynamicApi.Client\SMT.Utilities.DynamicApi.Client.csproj">
-      <Project>{2eb17b30-a88a-4b75-8312-2ad0d81f5583}</Project>
-      <Name>SMT.Utilities.DynamicApi.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SMT.Utilities.DynamicApi.Dto\SMT.Utilities.DynamicApi.Dto.csproj">
-      <Project>{f9df3743-4bd7-4fae-ba2b-a8d291ee1544}</Project>
-      <Name>SMT.Utilities.DynamicApi.Dto</Name>
     </ProjectReference>
     <ProjectReference Include="..\SMT.Utilities.FogBugz\SMT.Utilities.FogBugz.csproj">
       <Project>{156009ef-e188-4505-8bfa-822c2ee22e64}</Project>

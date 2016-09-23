@@ -8,6 +8,7 @@ namespace SMT.Utilities.Configuration
     {
         static void Main(string[] args)
         {
+            ConfigurationTesting.Run();
             //SpeechTests.Test();
             //TcpNetworkConnectionTests.Run();
             //FogBugzProxyTesting.Start();
@@ -15,7 +16,7 @@ namespace SMT.Utilities.Configuration
             //MouseInputTesting.Run();
             //DynamicApiTesting.Run();
             //TypeGenerationTesting.Run();
-            ImageSizeTesting.Run();
+            //ImageSizeTesting.Run();
         }
     }
 }
