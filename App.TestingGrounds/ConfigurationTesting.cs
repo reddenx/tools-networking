@@ -33,7 +33,7 @@ namespace App.TestingGrounds
         public readonly int Something;
 
         [AppSettings("Test2")]
-        public readonly bool SomethingElse;
+        public readonly int SomethingElse;
 
         [AppSettings("Test3")]
         public readonly string AnotherThing;
