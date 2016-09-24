@@ -10,50 +10,43 @@ namespace SMT.Utilities.Configuration
 	{
 		protected ConfigurationBase()
 		{
-			var configurationErrorMessages = new List<string>();
-			var fields = this.GetType().GetFields();
+            //get all appsettings fields
+            var appSettingsFields = this.GetType().GetFields().Where(f => f.GetCustomAttribute<AppSettingsAttribute>() != null);
+            foreach (var appSettingsField in appSettingsFields)
+            {
+                var name = appSettingsField.GetCustomAttribute<AppSettingsAttribute>().Name;
+                var value = ConfigurationManager.AppSettings[name];
+                appSettingsField.SetValue(this, GetConvertedValue(value, appSettingsField.FieldType));
+            }
 
-			foreach (var field in fields)
-			{
-				//try app settings
-				var appSetting = field.GetCustomAttributes(typeof(AppSettingsAttribute)).FirstOrDefault() as AppSettingsAttribute;
-				if (appSetting != null)
-				{
-					var configValue = ConfigurationManager.AppSettings[appSetting.Name];
-					if (configValue == null)
-					{
-						configurationErrorMessages.Add(
-							string.Format("AppSetting:{0}", appSetting.Name));
-					}
-					else
-					{
-						field.SetValue(this, Convert.ChangeType(configValue, field.FieldType));
-					}
-				}
-				else //try connection strings
-				{
-					var connectionString = field.GetCustomAttributes(typeof(ConnectionStringAttribute)).FirstOrDefault() as ConnectionStringAttribute;
-					if (connectionString != null)
-					{
-						var configValue = ConfigurationManager.ConnectionStrings[connectionString.Name];
-						if (configValue == null)
-						{
-							configurationErrorMessages.Add(
-								string.Format("AppSetting:{0}", appSetting.Name));
-						}
-						else
-						{
-							field.SetValue(this, Convert.ChangeType(ConfigurationManager.ConnectionStrings[connectionString.Name].ConnectionString, field.FieldType));
-						}
-					}
-				}
-			}
+            var appSettingsProperties = this.GetType().GetProperties().Where(p => p.GetCustomAttribute<AppSettingsAttribute>() != null);
+            foreach (var appSettingsProperty in appSettingsProperties)
+            {
+                var name = appSettingsProperty.GetCustomAttribute<AppSettingsAttribute>().Name;
+                var value = ConfigurationManager.AppSettings[name];
+                appSettingsProperty.SetValue(this, GetConvertedValue(value, appSettingsProperty.PropertyType));
+            }
 
-			if(configurationErrorMessages.Any())
-			{
-				var compositeMessage = string.Format("Missing Configuration Value(s): {0}", string.Join(", ", configurationErrorMessages));
-				throw new ConfigurationException(compositeMessage);
-			}
+            var connectionStringFields = this.GetType().GetFields().Where(f => f.GetCustomAttribute<ConnectionStringAttribute>() != null);
+            foreach (var connectionStringField in connectionStringFields)
+            {
+                var name = connectionStringField.GetCustomAttribute<ConnectionStringAttribute>().Name;
+                var value = ConfigurationManager.ConnectionStrings[name].ConnectionString;
+                connectionStringField.SetValue(this, GetConvertedValue(value, connectionStringField.FieldType));
+            }
+
+            var connectionStringProperties = this.GetType().GetProperties().Where(p => p.GetCustomAttribute<ConnectionStringAttribute>() != null);
+            foreach(var connectionStringProperty in connectionStringProperties)
+            {
+                var name = connectionStringProperty.GetCustomAttribute<ConnectionStringAttribute>().Name;
+                var value = ConfigurationManager.ConnectionStrings[name].ConnectionString;
+                connectionStringProperty.SetValue(this, GetConvertedValue(value, connectionStringProperty.PropertyType));
+            }
 		}
+
+        private object GetConvertedValue(string stringValue, Type type)
+        {
+            return Convert.ChangeType(stringValue, type);
+        }
 	}
 }
