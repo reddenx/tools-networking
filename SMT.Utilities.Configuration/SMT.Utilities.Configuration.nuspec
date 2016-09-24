@@ -9,6 +9,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple Configuration Utility</description>
     <releaseNotes>Initial Release</releaseNotes>
+	<frameworkAssemblies>
+		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net45" />
+	</frameworkAssemblies>
     <copyright>Copyright 2016</copyright>
     <tags>configurationmanager configuration simple utility config webconfig web.config appconfig app.cofnig</tags>
   </metadata>
