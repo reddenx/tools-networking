@@ -11,7 +11,7 @@ namespace App.TestingGrounds
     {
         public static void Run()
         {
-            var testconfig = new TestConfig();
+            var testconfig = new TestConfigClass();
 
             foreach (var field in testconfig.GetType().GetFields())
             {
@@ -27,30 +27,30 @@ namespace App.TestingGrounds
         }
     }
 
-    internal class TestConfig : ConfigurationBase
+    public class TestConfigClass : ConfigurationBase
     {
         [AppSettings("Test1")]
-        public readonly int Something;
+        public readonly int ATestIntegerField;
 
         [AppSettings("Test2")]
-        public readonly int SomethingElse;
+        public readonly bool ATestBooleanField;
 
         [AppSettings("Test3")]
-        public readonly string AnotherThing;
+        public readonly string ATestStringField;
 
-        [AppSettings("Test1")]
-        public int PropSomething { get; protected set; }
+        [AppSettings("Test4")]
+        public int TestIntegerProperty { get; protected set; }
 
-        [AppSettings("Test2")]
-        public bool PropSomethingElse { get; protected set; }
+        [AppSettings("Test5")]
+        public bool TestBooleanProperty { get; protected set; }
 
-        [AppSettings("Test3")]
-        public string PropAnotherThing { get; protected set; }
-
-        [ConnectionString("TestDataConnectionString")]
-        public readonly string ConnectionString;
+        [AppSettings("Test6")]
+        public string TestStringProperty { get; protected set; }
 
         [ConnectionString("TestDataConnectionString")]
-        public string PropConnectionString { get; protected set; }
+        public readonly string TestConnectionStringField;
+
+        [ConnectionString("TestDataConnectionString")]
+        public string TestConnectionStringProperty { get; protected set; }
     }
 }
