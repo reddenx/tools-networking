@@ -11,17 +11,26 @@ namespace App.TestingGrounds
     {
         public static void Run()
         {
-            var testconfig = new TestConfigClass();
+			try
+			{
+				var testconfig = new TestConfigClass();
 
-            foreach (var field in testconfig.GetType().GetFields())
-            {
-                Console.WriteLine("{0} = {1}", field.Name, field.GetValue(testconfig));
-            }
+				foreach (var field in testconfig.GetType().GetFields())
+				{
+					Console.WriteLine("{0} = {1}", field.Name, field.GetValue(testconfig));
+				}
 
-            foreach (var prop in testconfig.GetType().GetProperties())
-            {
-                Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(testconfig));
-            }
+				foreach (var prop in testconfig.GetType().GetProperties())
+				{
+					Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(testconfig));
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("TEST FAIL EXCEPTION: {0}", e.ToString());
+			}
+
+            
 
             Console.ReadLine();
         }
