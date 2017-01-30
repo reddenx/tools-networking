@@ -72,6 +72,7 @@
     <Compile Include="SpeechTests.cs" />
     <Compile Include="SqlTesting.cs" />
     <Compile Include="TcpDataConnectionTesting.cs" />
+    <Compile Include="TcpMessengerTesting.cs" />
     <Compile Include="TcpNetworkConnectionTests.cs" />
     <Compile Include="TcpSelfConnectionLifecycleTests.cs" />
     <Compile Include="TypeGenerationTesting.cs" />

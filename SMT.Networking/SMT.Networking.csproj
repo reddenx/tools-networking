@@ -41,10 +41,12 @@
   <ItemGroup>
     <Compile Include="CommonSerializers\AnonymousSerializer.cs" />
     <Compile Include="CommonSerializers\AsciiSerializer.cs" />
+    <Compile Include="EventExtensions.cs" />
     <Compile Include="EventUtils.cs" />
     <Compile Include="Interfaces\INetworkConnection.cs" />
     <Compile Include="Interfaces\INetworkConnectionListener.cs" />
     <Compile Include="Interfaces\INetworkConnectionSerializer.cs" />
+    <Compile Include="Messages\MessageBus.cs" />
     <Compile Include="NetworkConnectionFactory.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleDataSender.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleMessageHost.cs" />
@@ -56,6 +58,7 @@
     <Compile Include="Tcp\SimpleTcpDataSender.cs" />
     <Compile Include="Tcp\SimpleTcpMessageHost.cs" />
     <Compile Include="Tcp\SimpleTcpMessenger.cs" />
+    <Compile Include="Tcp\TcpMessenger.cs" />
     <Compile Include="Tcp\TcpNetworkConnection.cs" />
     <Compile Include="Tcp\TcpNetworkConnectionListener.cs" />
     <Compile Include="Udp\SimpleUdpMessageListener.cs" />
