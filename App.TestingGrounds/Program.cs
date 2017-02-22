@@ -8,9 +8,9 @@ namespace SMT.Utilities.Configuration
     {
         static void Main(string[] args)
         {
-            TcpMessengerTesting.RunMessageBus();
+            //TcpMessengerTesting.RunMessageBus();
             //TcpMessengerTesting.Run();
-            //ConfigurationTesting.Run();
+            ConfigurationTesting.Run();
             //SpeechTests.Test();
             //TcpNetworkConnectionTests.Run();
             //FogBugzProxyTesting.Start();
