@@ -78,7 +78,7 @@ namespace SMT.Utilities.FogBugz
             {
                 {"ixBug", caseId.ToString()},
                 {"ixPerson", "1"}
-			};
+            };
 
             return GetIntervals(arguments);
         }
