@@ -56,7 +56,6 @@
     <Compile Include="Json\ApiInterfaces\IFogbugzUserApi.cs" />
     <Compile Include="Json\ApiProxies\FogbugzApiProxy.cs" />
     <Compile Include="Json\FogbugzRequestor.cs" />
-    <Compile Include="Json\JsonRequester.cs" />
     <Compile Include="Json\ObjectInterfaces\FogbugzApiErrorCodes.cs" />
     <Compile Include="Json\ObjectInterfaces\FogbugzEventCodes.cs" />
     <Compile Include="Json\ObjectInterfaces\IFogbugzApiVersion.cs" />
