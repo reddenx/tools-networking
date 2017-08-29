@@ -23,17 +23,17 @@ namespace App.TestingGrounds
         public static void Run()
         {
             var networkFactory = new NetworkConnectionFactory();
-            INetworkConnectionListener<string> listener = networkFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
+            var listener = networkFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
             listener.Start(37123);
 
-            INetworkConnection<string> connectionA = networkFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
+            var connectionA = networkFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };
             connectionA.OnMessageReceived += (o, m) => { Console.WriteLine("AREC: " + m); };
             connectionA.OnMessageSent += (o, m) => { Console.WriteLine("ASEN: " + m); };
 
-            INetworkConnection<string> connectionB = null;
+            ITcpNetworkConnection<string> connectionB = null;
 
 
             DoCheapAsync(() =>

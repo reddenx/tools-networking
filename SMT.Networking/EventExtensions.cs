@@ -23,5 +23,21 @@ namespace SMT.Networking
                 handler(sender, args);
             }
         }
+
+        public static void RemoveAllListeners<T>(this EventHandler<T> handlerList)
+        {
+            if (handlerList != null)
+            {
+                handlerList.GetInvocationList().ToList().ForEach(item => handlerList -= (EventHandler<T>)item);
+            }
+        }
+
+        public static void RemoveAllListeners(this EventHandler handlerList)
+        {
+            if (handlerList != null)
+            {
+                handlerList.GetInvocationList().ToList().ForEach(item => handlerList -= (EventHandler)item);
+            }
+        }
     }
 }

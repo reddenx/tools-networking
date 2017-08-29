@@ -12,42 +12,50 @@ namespace SMT.Networking
 {
     public interface INetworkConnectionFactory
     {
-        INetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer);
-        INetworkConnectionListener<T> GetTcpNetworkConnectionListener<T>(INetworkConnectionSerializer<T> serializer);
-        INetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer);
+        ITcpNetworkConnectionListener<T> GetTcpNetworkConnectionListener<T>(INetworkConnectionSerializer<T> serializer);
+        ITcpNetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer);
+
+        IUdpNetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer);
     }
 
     //assembly component interface
     public class NetworkConnectionFactory : INetworkConnectionFactory
     {
-        public INetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
+        public ITcpNetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
         {
             return new TcpNetworkConnection<T>(serializer);
         }
 
-        public INetworkConnection<string> GetTcpNetworkConnection()
+        public ITcpNetworkConnection<T> GetTcpNetworkConnection<T>(Func<T, byte[]> serialize, Func<byte[], T> deserialize)
+        {
+            return new TcpNetworkConnection<T>(new AnonymousSerializer<T>(deserialize, serialize));
+        }
+
+        public ITcpNetworkConnection<string> GetTcpNetworkConnection()
         {
             return new TcpNetworkConnection<string>(new AsciiSerializer());
         }
 
-        public INetworkConnectionListener<T> GetTcpNetworkConnectionListener<T>(INetworkConnectionSerializer<T> serializer)
+        public ITcpNetworkConnectionListener<T> GetTcpNetworkConnectionListener<T>(INetworkConnectionSerializer<T> serializer)
         {
-            return new TcpNetworkConnectionListener<T>(serializer);
+            return new TcpTcpNetworkConnectionListener<T>(serializer);
         }
 
-        public INetworkConnectionListener<string> GetTcpNetworkConnectionListener()
+        public ITcpNetworkConnectionListener<string> GetTcpNetworkConnectionListener()
         {
-            return new TcpNetworkConnectionListener<string>(new AsciiSerializer());
+            return new TcpTcpNetworkConnectionListener<string>(new AsciiSerializer());
         }
 
         //unfinished component
-        public INetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
+        public IUdpNetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)
         {
+            throw new NotImplementedException("unfinished component");
             return new UdpNetworkConnection<T>(serializer);
         }
 
-        public INetworkConnection<string> GetUdpNetworkConnection()
+        public IUdpNetworkConnection<string> GetUdpNetworkConnection()
         {
+            throw new NotImplementedException("unfinished component");
             return new UdpNetworkConnection<string>(new AsciiSerializer());
         }
     }

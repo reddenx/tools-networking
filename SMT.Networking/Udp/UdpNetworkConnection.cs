@@ -10,7 +10,7 @@ using System.Net.Sockets;
 
 namespace SMT.Networking.Udp
 {
-    public class UdpNetworkConnection<T> : INetworkConnection<T>
+    public class UdpNetworkConnection<T> : IUdpNetworkConnection<T>
     {
         public event EventHandler<T> OnMessageReceived;
         public event EventHandler<IPEndPoint> OnConnected;
@@ -33,34 +33,13 @@ namespace SMT.Networking.Udp
             this.Serializer = serializer;
         }
 
-        //stop listening to incoming messages, unbind port
-        public void Disconnect()
-        {
-            //get client back to null by unbinding and throwing away any in process threads
-            throw new NotImplementedException();
-        }
-
-        //bind port, start listening to messages
-        public void Connect(string hostname, int port)
-        {
-            //cleanup current client if it's not null
-            throw new NotImplementedException();
-        }
-
-        //bind port, start listening to messages
-        public void Connect(string connectionString)
-        {
-            //parse connection string and call connect
-            throw new NotImplementedException();
-        }
-
-        //queue message
+        //send if targetted
         public void Send(T message)
         {
             throw new NotImplementedException();
         }
 
-        //disconnect, stop threads, kill event lists
+        //unbind port, stop threads, kill event lists
         public void Dispose()
         {
             throw new NotImplementedException();
@@ -90,28 +69,40 @@ namespace SMT.Networking.Udp
             }
         }
 
-        private Thread GetBackgroundThread(Action asyncAction)
+        //bind to local port
+        public bool StartListening(int port)
         {
-            var thread = new Thread(new ThreadStart(asyncAction));
-            thread.IsBackground = true;
-            thread.Start();
-
-            return thread;
+            throw new NotImplementedException();
         }
 
-        private void CleanUpCheapThread(Thread cleanup)
+        //unbind local port
+        public void StopListening()
         {
-            if (cleanup != null)
-            {
-                if (cleanup.IsAlive)
-                {
-                    if (!cleanup.Join(100))
-                    {
-                        cleanup.Abort();
-                    }
-                }
-                cleanup = null;
-            }
+            throw new NotImplementedException();
+        }
+
+        //direct output towards endpoint
+        public void Target(string hostname, int port)
+        {
+            throw new NotImplementedException();
+        }
+
+        //direct output towards endpoint
+        public void Target(string connectionString)
+        {
+            throw new NotImplementedException();
+        }
+
+        //direct output towards endpoint
+        public void Target(IPEndPoint remoteEndpoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        //stop listening to incoming messages, unbind port
+        public void Untarget()
+        {
+            throw new NotImplementedException();
         }
     }
 }

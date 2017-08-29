@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Interfaces
 {
-    public interface INetworkConnectionListener<T>
+    public interface ITcpNetworkConnectionListener<T>
     {
-        event EventHandler<INetworkConnection<T>> OnClientConnected;
+        event EventHandler<ITcpNetworkConnection<T>> OnClientConnected;
 
         void Start(int port);
         void Stop();

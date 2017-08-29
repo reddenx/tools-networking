@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
-    internal class TcpNetworkConnection<T> : INetworkConnection<T>
+    internal class TcpNetworkConnection<T> : ITcpNetworkConnection<T>
     {
         public event EventHandler<T> OnMessageReceived;
         public event EventHandler<IPEndPoint> OnConnected;
@@ -21,7 +21,7 @@ namespace SMT.Networking.Tcp
 
         public bool Connected
         {
-            get { return Client == null ? false : Client.Connected; }
+            get { return Client != null && Client.Connected; }
         }
         public string HostName
         {
@@ -39,8 +39,8 @@ namespace SMT.Networking.Tcp
         private Thread SendThread;
         private Thread ReceiveThread;
 
-        private Queue<T> Outbox;
-        private Queue<T> Inbox;
+        private readonly Queue<T> Outbox;
+        private readonly Queue<T> Inbox;
 
         public TcpNetworkConnection(INetworkConnectionSerializer<T> serializer)
         {
@@ -61,25 +61,25 @@ namespace SMT.Networking.Tcp
         {
             Disconnect();
 
-            DoCheapAsync(() =>
+            new Thread(() =>
             {
                 while (Connected) { Thread.Sleep(10); }
 
-                EventUtils.RemoveAllListeners(OnMessageReceived);
-                EventUtils.RemoveAllListeners(OnConnected);
-                EventUtils.RemoveAllListeners(OnMessageSent);
-                EventUtils.RemoveAllListeners(OnError);
-                EventUtils.RemoveAllListeners(OnDisconnected);
-            });
+                OnMessageReceived.RemoveAllListeners();
+                OnConnected.RemoveAllListeners();
+                OnMessageSent.RemoveAllListeners();
+                OnError.RemoveAllListeners();
+                OnDisconnected.RemoveAllListeners();
+            }).StartBackground();
         }
 
         public void Disconnect()
         {
-            DoCheapAsync(() =>
+            new Thread(() =>
             {
                 CleanupThreads();
                 CleanupClient();
-            });
+            }).StartBackground();
         }
 
         public void Connect(string hostname, int port)
@@ -93,8 +93,8 @@ namespace SMT.Networking.Tcp
 
         public void Connect(string connectionString)
         {
-            var pieces = connectionString.Split(':');
-            if (pieces.Length != 2)
+            var pieces = connectionString?.Split(':');
+            if (pieces?.Length != 2)
                 throw new ArgumentException("Improperly formatted string, expecting NAME:PORT e.g. www.oodlesofboodlesnoodles.com:9000");
 
             int port = -1;
@@ -104,9 +104,9 @@ namespace SMT.Networking.Tcp
             Connect(pieces[0], port);
         }
 
-        private void Connect(IPEndPoint endpoint)
+        public void Connect(IPEndPoint endpoint)
         {
-            DoCheapAsync(() =>
+            new Thread(() =>
             {
                 CleanupThreads();
                 CleanupClient();
@@ -115,15 +115,14 @@ namespace SMT.Networking.Tcp
                 {
                     StartThreads();
 
-                    if (OnConnected != null)
-                        OnConnected(this, Endpoint);
+                    OnConnected.SafeExecute(this, Endpoint);
                 }
                 else
                 {
                     CleanupThreads();
                     CleanupClient();
                 }
-            });
+            }).StartBackground();
         }
 
         public void Send(T message)
@@ -199,8 +198,7 @@ namespace SMT.Networking.Tcp
             catch (IOException e)
             {
                 CleanupClient();
-                if (OnError != null)
-                    OnError(this, e);
+                OnError.SafeExecute(this, e);
             }
             catch (ThreadAbortException) { }//expecting these on abort
         }
@@ -222,8 +220,7 @@ namespace SMT.Networking.Tcp
                         outStream.Write(sizeBytes, 0, 4);
                         outStream.Write(messageBytes, 0, messageBytes.Length);
 
-                        if (OnMessageSent != null)
-                            OnMessageSent(this, message);
+                        OnMessageSent.SafeExecute(this, message);
                     }
                     else
                     {
@@ -234,8 +231,7 @@ namespace SMT.Networking.Tcp
             catch (IOException e)
             {
                 CleanupClient();
-                if (OnError != null)
-                    OnError(this, e);
+                OnError.SafeExecute(this, e);
             }
             catch (ThreadAbortException) { }
         }
@@ -244,8 +240,7 @@ namespace SMT.Networking.Tcp
         {
             if (Client != null)
             {
-                if (OnDisconnected != null)
-                    OnDisconnected(this, null);
+                OnDisconnected.SafeExecute(this);
 
                 if (Client.Connected)
                 {
@@ -257,14 +252,16 @@ namespace SMT.Networking.Tcp
 
         private void CleanupThreads()
         {
-            CleanUpCheapThread(SendThread);
-            CleanUpCheapThread(ReceiveThread);
+            SendThread.DisposeOfThread();
+            ReceiveThread.DisposeOfThread();
         }
 
         private bool StartClient(IPEndPoint endpoint)
         {
-            Client = new TcpClient();
-            Client.NoDelay = true;
+            Client = new TcpClient
+            {
+                NoDelay = true,
+            };
 
             try
             {
@@ -274,8 +271,7 @@ namespace SMT.Networking.Tcp
             }
             catch (SocketException e)
             {
-                if (OnError != null)
-                    OnError(this, e);
+                OnError.SafeExecute(this, e);
                 return false;
             }
         }
@@ -285,33 +281,8 @@ namespace SMT.Networking.Tcp
             if (SendThread != null || ReceiveThread != null)
                 CleanupThreads();
 
-            SendThread = DoCheapAsync(SendLoop);
-            ReceiveThread = DoCheapAsync(ReceiveLoop);
-        }
-
-        //small lived operations flung into the background
-        private Thread DoCheapAsync(Action asyncAction)
-        {
-            var thread = new Thread(new ThreadStart(asyncAction));
-            thread.IsBackground = true;
-            thread.Start();
-
-            return thread;
-        }
-
-        private void CleanUpCheapThread(Thread cleanup)
-        {
-            if (cleanup != null)
-            {
-                if (cleanup.IsAlive)
-                {
-                    if (!cleanup.Join(100))
-                    {
-                        cleanup.Abort();
-                    }
-                }
-                cleanup = null;
-            }
+            SendThread = new Thread(SendLoop).StartBackground();
+            ReceiveThread = new Thread(ReceiveLoop).StartBackground();
         }
     }
 }
