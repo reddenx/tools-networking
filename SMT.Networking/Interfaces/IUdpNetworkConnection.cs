@@ -15,7 +15,6 @@ namespace SMT.Networking.Interfaces
 
         void Target(string hostname, int port);
         void Target(string connectionString);
-        void Target(IPEndPoint remoteEndpoint);
         void Untarget();
     }
 }

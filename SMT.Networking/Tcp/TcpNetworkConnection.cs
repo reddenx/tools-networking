@@ -40,14 +40,12 @@ namespace SMT.Networking.Tcp
         private Thread ReceiveThread;
 
         private readonly Queue<T> Outbox;
-        private readonly Queue<T> Inbox;
 
         public TcpNetworkConnection(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
 
             this.Outbox = new Queue<T>();
-            this.Inbox = new Queue<T>();
         }
 
         public TcpNetworkConnection(TcpClient client, INetworkConnectionSerializer<T> serializer)
@@ -125,20 +123,23 @@ namespace SMT.Networking.Tcp
             }).StartBackground();
         }
 
-        public void Send(T message)
+        public void Queue(T message)
         {
             Outbox.Enqueue(message);
         }
 
-        public T[] GetPendingMessages()
+        public void Send(T message)
         {
-            T[] messages;
-            lock (Inbox)
+            Outbox.Enqueue(message);
+            Send();
+        }
+
+        public void Send()
+        {
+            if (SendThread == null || !SendThread.IsAlive)
             {
-                messages = Inbox.ToArray();
-                Inbox.Clear();
+                SendThread = new Thread(SendLoop).StartBackground();
             }
-            return messages;
         }
 
         private void ReceiveLoop()
@@ -165,7 +166,7 @@ namespace SMT.Networking.Tcp
                         do
                         {
                             int messageBytesRead = instream.Read(messageBuffer, totalReadBytes, messageSize - totalReadBytes);
-                            if (bytesRead <= 0)
+                            if (messageBytesRead <= 0)
                             {
                                 CleanupClient();
                                 return; //stream has been closed
@@ -177,17 +178,7 @@ namespace SMT.Networking.Tcp
 
                         var message = Serializer.Deserialize(messageBuffer);
 
-                        if (OnMessageReceived != null)
-                        {
-                            OnMessageReceived(this, message);
-                        }
-                        else
-                        {
-                            lock (Inbox)
-                            {
-                                Inbox.Enqueue(message);
-                            }
-                        }
+                        OnMessageReceived.SafeExecute(this, message);
                     }
                     else
                     {
@@ -209,22 +200,28 @@ namespace SMT.Networking.Tcp
             {
                 var outStream = Client.GetStream();
 
-                while (Connected)
+                while (Outbox.Count > 0)
                 {
-                    if (Outbox.Count > 0)
-                    {
-                        var message = Outbox.Dequeue();
-                        var messageBytes = Serializer.Serialize(message);
-                        var sizeBytes = BitConverter.GetBytes(messageBytes.Length);//length of 4
+                    var message = Outbox.Dequeue();
 
-                        outStream.Write(sizeBytes, 0, 4);
-                        outStream.Write(messageBytes, 0, messageBytes.Length);
+                    byte[] buffer = null;
+                    try
+                    {
+                        buffer = Serializer.Serialize(message);
+                    }
+                    catch (Exception e)
+                    {
+                        OnError.SafeExecute(this, e);
+                    }
+
+                    if (buffer != null && Connected)
+                    {
+                        var sizeBytes = BitConverter.GetBytes((Int32)buffer.Length);//length of 4
+                        buffer = sizeBytes.Concat(buffer).ToArray();
+
+                        outStream.Write(buffer, 0, buffer.Length);
 
                         OnMessageSent.SafeExecute(this, message);
-                    }
-                    else
-                    {
-                        Thread.Sleep(10);//yield while waiting
                     }
                 }
             }
@@ -281,7 +278,6 @@ namespace SMT.Networking.Tcp
             if (SendThread != null || ReceiveThread != null)
                 CleanupThreads();
 
-            SendThread = new Thread(SendLoop).StartBackground();
             ReceiveThread = new Thread(ReceiveLoop).StartBackground();
         }
     }

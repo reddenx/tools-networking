@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SMT.Networking.Udp;
 
 namespace App.TestingGrounds
 {
@@ -22,6 +23,9 @@ namespace App.TestingGrounds
 
         public static void Run()
         {
+            RunUdp();
+            return;
+
             var networkFactory = new NetworkConnectionFactory();
             var listener = networkFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
             listener.Start(37123);
@@ -66,14 +70,12 @@ namespace App.TestingGrounds
             connectionA.Dispose();
             connectionB.Dispose();
             listener.Stop();
-            //listener.Dispose();
 
             Thread.Sleep(800);
 
             Console.WriteLine("test complete...");
             Console.ReadLine();
         }
-
 
         private static Thread DoCheapAsync(Action asyncAction)
         {
@@ -82,6 +84,42 @@ namespace App.TestingGrounds
             thread.Start();
 
             return thread;
+        }
+
+
+        public static void RunUdp()
+        {
+            var udpA = new UdpNetworkConnection<string>(new AsciiSerializer());
+            var udpB = new UdpNetworkConnection<string>(new AsciiSerializer());
+
+            udpA.OnError += (sender, exception) => Console.WriteLine("AERR: " + exception.Message);
+            udpB.OnError += (sender, exception) => Console.WriteLine("BERR: " + exception.Message);
+
+            udpA.OnMessageReceived += (sender, s) => Console.WriteLine("AREC: " + s);
+            udpB.OnMessageReceived += (sender, s) => Console.WriteLine("BREC: " + s);
+
+            udpA.OnMessageSent += (sender, s) => Console.WriteLine("ASEN: " + s);
+            udpB.OnMessageSent += (sender, s) => Console.WriteLine("BSEN: " + s);
+
+            udpA.Target("127.0.0.1", 37123);
+            udpA.Send("miss");
+
+            Thread.Sleep(200);
+
+            udpB.StartListening(37123);
+            udpA.Send("hit");
+
+            Thread.Sleep(200);
+
+            udpB.Target("127.0.0.1", 37123);
+            udpB.Send("echo");
+
+            Thread.Sleep(200);
+            
+            udpA.Dispose();
+            udpB.Dispose();
+
+            Console.ReadLine();
         }
 
     }
