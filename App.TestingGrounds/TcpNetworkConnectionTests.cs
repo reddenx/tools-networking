@@ -24,7 +24,7 @@ namespace App.TestingGrounds
         public static void Run()
         {
             RunUdp();
-            return;
+            //return;
 
             var networkFactory = new NetworkConnectionFactory();
             var listener = networkFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
