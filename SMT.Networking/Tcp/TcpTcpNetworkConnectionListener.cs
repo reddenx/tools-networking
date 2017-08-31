@@ -11,9 +11,9 @@ using SMT.Networking.Interfaces;
 namespace SMT.Networking.Tcp
 {
     //TODO implement disposable and clean up channels and threads
-    public class TcpNetworkConnectionListener<T> : INetworkConnectionListener<T>
+    public class TcpTcpNetworkConnectionListener<T> : ITcpNetworkConnectionListener<T>
     {
-        public event EventHandler<INetworkConnection<T>> OnClientConnected;
+        public event EventHandler<ITcpNetworkConnection<T>> OnClientConnected;
         public event EventHandler<Exception> OnError;
 
         private Thread ListenThread;
@@ -21,7 +21,7 @@ namespace SMT.Networking.Tcp
 
         private readonly INetworkConnectionSerializer<T> Serializer;
 
-        public TcpNetworkConnectionListener(INetworkConnectionSerializer<T> serializer)
+        public TcpTcpNetworkConnectionListener(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
         }
@@ -33,8 +33,8 @@ namespace SMT.Networking.Tcp
                 Listener = new TcpListener(new IPEndPoint(IPAddress.Any, port));
                 Listener.Start();
 
-                CleanUpCheapThread(ListenThread);
-                ListenThread = DoCheapAsync(ListenLoop);
+                ListenThread.DisposeOfThread();
+                ListenThread = new Thread(ListenLoop).StartBackground();
             }
         }
 
@@ -45,7 +45,7 @@ namespace SMT.Networking.Tcp
                 Listener.Stop();
                 Listener = null;
 
-                CleanUpCheapThread(ListenThread);
+                ListenThread.DisposeOfThread();
             }
         }
 
@@ -69,32 +69,8 @@ namespace SMT.Networking.Tcp
                 }
                 catch(Exception e)
                 {
-                    if (OnError != null) OnError(this, e);
+                    OnError.SafeExecute(this, e);
                 }
-            }
-        }
-
-        private Thread DoCheapAsync(Action asyncAction)
-        {
-            var thread = new Thread(new ThreadStart(asyncAction));
-            thread.IsBackground = true;
-            thread.Start();
-
-            return thread;
-        }
-
-        private void CleanUpCheapThread(Thread cleanup)
-        {
-            if (cleanup != null)
-            {
-                if (cleanup.IsAlive)
-                {
-                    if (!cleanup.Join(100))
-                    {
-                        cleanup.Abort();
-                    }
-                }
-                cleanup = null;
             }
         }
     }

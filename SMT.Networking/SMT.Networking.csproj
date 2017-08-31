@@ -30,22 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="CommonSerializers\AnonymousSerializer.cs" />
     <Compile Include="CommonSerializers\AsciiSerializer.cs" />
+    <Compile Include="CommonSerializers\Utf8Serializer.cs" />
     <Compile Include="EventExtensions.cs" />
-    <Compile Include="EventUtils.cs" />
     <Compile Include="Interfaces\INetworkConnection.cs" />
-    <Compile Include="Interfaces\INetworkConnectionListener.cs" />
+    <Compile Include="Interfaces\ITcpNetworkConnectionListener.cs" />
     <Compile Include="Interfaces\INetworkConnectionSerializer.cs" />
+    <Compile Include="Interfaces\ITcpNetworkConnection.cs" />
+    <Compile Include="Interfaces\IUdpNetworkConnection.cs" />
     <Compile Include="Messages\MessageBus.cs" />
     <Compile Include="NetworkConnectionFactory.cs" />
     <Compile Include="Interfaces\SimpleMessaging\ISimpleDataSender.cs" />
@@ -60,14 +53,23 @@
     <Compile Include="Tcp\SimpleTcpMessenger.cs" />
     <Compile Include="Tcp\TcpMessenger.cs" />
     <Compile Include="Tcp\TcpNetworkConnection.cs" />
-    <Compile Include="Tcp\TcpNetworkConnectionListener.cs" />
+    <Compile Include="Tcp\TcpTcpNetworkConnectionListener.cs" />
+    <Compile Include="ThreadExtensions.cs" />
     <Compile Include="Udp\SimpleUdpMessageListener.cs" />
     <Compile Include="Udp\SimpleUdpMessageSender.cs" />
     <Compile Include="Udp\SimpleUdpMessenger.cs" />
     <Compile Include="Udp\UdpDataConnection.cs" />
     <Compile Include="Udp\UdpNetworkConnection.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SMT.Networking.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

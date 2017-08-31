@@ -1,0 +1,1 @@
+nuget pack SMT.Networking.csproj -Prop Configuration=Release

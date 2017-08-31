@@ -10,9 +10,9 @@ namespace SMT.Utilities.Configuration
         {
             //TcpMessengerTesting.RunMessageBus();
             //TcpMessengerTesting.Run();
-            ConfigurationTesting.Run();
+            //ConfigurationTesting.Run();
             //SpeechTests.Test();
-            //TcpNetworkConnectionTests.Run();
+            TcpNetworkConnectionTests.Run();
             //FogBugzProxyTesting.Start();
             //SqlTesting.Run();
             //MouseInputTesting.Run();
