@@ -113,7 +113,7 @@ namespace SMT.Networking.Tcp
                 {
                     StartThreads();
 
-                    OnConnected.SafeExecute(this, Endpoint);
+                    OnConnected.SafeExecuteAsync(this, Endpoint);
                 }
                 else
                 {
@@ -178,7 +178,7 @@ namespace SMT.Networking.Tcp
 
                         var message = Serializer.Deserialize(messageBuffer);
 
-                        OnMessageReceived.SafeExecute(this, message);
+                        OnMessageReceived.SafeExecuteAsync(this, message);
                     }
                     else
                     {
@@ -189,7 +189,7 @@ namespace SMT.Networking.Tcp
             catch (IOException e)
             {
                 CleanupClient();
-                OnError.SafeExecute(this, e);
+                OnError.SafeExecuteAsync(this, e);
             }
             catch (ThreadAbortException) { }//expecting these on abort
         }
@@ -211,7 +211,7 @@ namespace SMT.Networking.Tcp
                     }
                     catch (Exception e)
                     {
-                        OnError.SafeExecute(this, e);
+                        OnError.SafeExecuteAsync(this, e);
                     }
 
                     if (buffer != null && Connected)
@@ -221,14 +221,14 @@ namespace SMT.Networking.Tcp
 
                         outStream.Write(buffer, 0, buffer.Length);
 
-                        OnMessageSent.SafeExecute(this, message);
+                        OnMessageSent.SafeExecuteAsync(this, message);
                     }
                 }
             }
             catch (IOException e)
             {
                 CleanupClient();
-                OnError.SafeExecute(this, e);
+                OnError.SafeExecuteAsync(this, e);
             }
             catch (ThreadAbortException) { }
         }
@@ -237,7 +237,7 @@ namespace SMT.Networking.Tcp
         {
             if (Client != null)
             {
-                OnDisconnected.SafeExecute(this);
+                OnDisconnected.SafeExecuteAsync(this);
 
                 if (Client.Connected)
                 {
@@ -268,7 +268,7 @@ namespace SMT.Networking.Tcp
             }
             catch (SocketException e)
             {
-                OnError.SafeExecute(this, e);
+                OnError.SafeExecuteAsync(this, e);
                 return false;
             }
         }

@@ -60,7 +60,7 @@ namespace SMT.Networking.Tcp
                     if (OnClientConnected != null)
                     {
                         var connection = new TcpNetworkConnection<T>(client, Serializer);
-                        OnClientConnected(this, connection);
+                        OnClientConnected.SafeExecuteAsync(this, connection);
                     }
                     else //no handler, close it
                     {
@@ -69,7 +69,7 @@ namespace SMT.Networking.Tcp
                 }
                 catch(Exception e)
                 {
-                    OnError.SafeExecute(this, e);
+                    OnError.SafeExecuteAsync(this, e);
                 }
             }
         }
