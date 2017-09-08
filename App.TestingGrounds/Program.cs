@@ -12,13 +12,14 @@ namespace SMT.Utilities.Configuration
             //TcpMessengerTesting.Run();
             //ConfigurationTesting.Run();
             //SpeechTests.Test();
-            TcpNetworkConnectionTests.Run();
+            //TcpNetworkConnectionTests.Run();
             //FogBugzProxyTesting.Start();
             //SqlTesting.Run();
             //MouseInputTesting.Run();
             //DynamicApiTesting.Run();
             //TypeGenerationTesting.Run();
             //ImageSizeTesting.Run();
+            IdeaDumpTest.Run();
         }
     }
 }
