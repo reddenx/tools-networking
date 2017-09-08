@@ -1,15 +1,15 @@
 ﻿using SMT.Utilities.Reflection;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
+using System.Reflection;
 
 namespace IdeaDump.DynamicApiTake2
 {
-    class ClientFactory
+    public static class ClientFactory
     {
-        internal static Contract BuildProxy<Contract>(string v)
+        public static Contract BuildProxy<Contract>(string baseUrl)
         {
             //do some validation
             var contractInterfaceType = typeof(Contract);
@@ -29,39 +29,97 @@ namespace IdeaDump.DynamicApiTake2
 
             if (contractInterfaceType.GetProperties().Any() || contractInterfaceType.GetFields().Any())
                 throw new ArgumentException("contract must be composed entirely of routed methods");
-            
+
 
 
             //no fields or properties, has all its methods routed and contains a base url
             var routedMethods = contractInterfaceType.GetMethods().Where(method => method.GetCustomAttributes(typeof(ContractRouteAttribute), false).Any());
 
-            var typeFactory = new TypeFactory($"DynamicContract_{contractInterfaceType.Name}_{Guid.NewGuid()}", typeof(BaseProxy), new[] { contractInterfaceType });
-
+            var generationResult = TypeInterceptor.BuildInterceptType<Contract>();
+            var proxyCaller = new BaseProxy(baseUrl, contractBaseRoute.Route);
 
             //build methods
             foreach (var method in routedMethods)
             {
                 var routeAttribute = method.GetCustomAttributes(typeof(ContractRouteAttribute), false).Single() as ContractRouteAttribute;
-
-                //typeFactory.AppendMethod
+                generationResult.Interceptor.SetImplementation(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray(),
+                    (inputs) =>
+                    {
+                        return proxyCaller.MakeCall(routeAttribute.Route, inputs, method.ReturnType);
+                    });
             }
 
-            var builtType = typeFactory.Generate();
-            return (Contract)Activator.CreateInstance(builtType);
+            return generationResult.InterceptedInstance;
         }
     }
 
-    class BaseProxy
+    internal class BaseProxy
     {
-        internal void DoStuff()
-        { }
+        private readonly string BaseUrl;
+        private readonly string TypeUrl;
+
+        public BaseProxy(string baseUrl, string typeUrl)
+        {
+            this.BaseUrl = baseUrl;
+            this.TypeUrl = typeUrl;
+        }
+
+        internal object MakeCall(string methodUrl, object[] inputs, Type returnType)
+        {
+            //build the request
+            var webRequest = HttpWebRequest.Create($"{BaseUrl.TrimEnd('/', '\\')}/{TypeUrl.Trim('/','\\')}/{methodUrl.TrimStart('/', '\\')}") as HttpWebRequest;
+            webRequest.ContentType = "application/json";
+            webRequest.Method = "POST";
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(inputs);
+
+            using (var writer = new StreamWriter(webRequest.GetRequestStream()))
+                writer.Write(json);
+
+            webRequest.Timeout = 1000;
+
+            try
+            {
+                //read the response
+                using (var response = webRequest.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                        throw new GeneratedProxyRequestException(response.StatusCode, response);
+
+                    var responseJson = string.Empty;
+                    using (var reader = new StreamReader(response.GetResponseStream()))
+                        responseJson = reader.ReadToEnd();
+
+                    var result = Newtonsoft.Json.JsonConvert.DeserializeObject(responseJson, returnType);
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
     }
 
-    class ContractRouteAttribute : Attribute
+    public class GeneratedProxyRequestException : Exception
+    {
+        public readonly HttpStatusCode ResponseCode;
+        public readonly HttpWebResponse RawResponse;
+
+        public GeneratedProxyRequestException(HttpStatusCode responseCode, HttpWebResponse rawResponse)
+        {
+            this.ResponseCode = responseCode;
+            this.RawResponse = rawResponse;
+        }
+    }
+
+    public class ContractRouteAttribute : Attribute
     {
         internal string Route;
 
         public ContractRouteAttribute(string route)
-        { }
+        {
+            Route = route;
+        }
     }
 }

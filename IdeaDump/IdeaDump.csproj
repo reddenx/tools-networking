@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,9 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicApiTake2\ClientFactory.cs" />
-    <Compile Include="DynamicApiTake2\Contract.cs" />
-    <Compile Include="DynamicApiTake2\ObjectThatWantsToUseApi.cs" />
-    <Compile Include="DynamicApiTake2\ObjectToBeTurnedIntoApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +52,9 @@
       <Project>{1f326986-a2a3-40ee-9376-832f05851c43}</Project>
       <Name>SMT.Utilities.Reflection</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
