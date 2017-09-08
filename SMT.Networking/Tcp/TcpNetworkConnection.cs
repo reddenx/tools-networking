@@ -11,22 +11,50 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
-    internal class TcpNetworkConnection<T> : ITcpNetworkConnection<T>
+    /// <summary>
+    /// Tcp connection, turns synchronous calls into events
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class TcpNetworkConnection<T> : ITcpNetworkConnection<T>
     {
+        /// <summary>
+        /// fired when a message is received, called on a non-network thread
+        /// </summary>
         public event EventHandler<T> OnMessageReceived;
+        /// <summary>
+        /// fired when this client has successfully connected to its endpoint
+        /// </summary>
         public event EventHandler<IPEndPoint> OnConnected;
+        /// <summary>
+        /// fired when a message is successfully sent to its endpoint
+        /// </summary>
         public event EventHandler<T> OnMessageSent;
+        /// <summary>
+        /// fired when an error occurrs
+        /// </summary>
         public event EventHandler<Exception> OnError;
+        /// <summary>
+        /// fired when this client has been disconnected
+        /// </summary>
         public event EventHandler OnDisconnected;
 
+        /// <summary>
+        /// the connection status for this client
+        /// </summary>
         public bool Connected
         {
             get { return Client != null && Client.Connected; }
         }
+        /// <summary>
+        /// the hostname of the endpoint this client is connected to
+        /// </summary>
         public string HostName
         {
             get { return Endpoint == null ? null : Endpoint.Address.ToString(); }
         }
+        /// <summary>
+        /// the port this client is using to communicate
+        /// </summary>
         public int Port
         {
             get { return Endpoint == null ? -1 : Endpoint.Port; }
@@ -41,6 +69,10 @@ namespace SMT.Networking.Tcp
 
         private readonly Queue<T> Outbox;
 
+        /// <summary>
+        /// constructs a tcp network connection client
+        /// </summary>
+        /// <param name="serializer">serializer to use for message sending</param>
         public TcpNetworkConnection(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
@@ -48,13 +80,16 @@ namespace SMT.Networking.Tcp
             this.Outbox = new Queue<T>();
         }
 
-        public TcpNetworkConnection(TcpClient client, INetworkConnectionSerializer<T> serializer)
+        internal TcpNetworkConnection(TcpClient client, INetworkConnectionSerializer<T> serializer)
             : this(serializer)
         {
             this.Client = client;
             StartThreads();
         }
 
+        /// <summary>
+        /// disconnects and cleans up client threading and event subscribers
+        /// </summary>
         public void Dispose()
         {
             Disconnect();
@@ -71,6 +106,9 @@ namespace SMT.Networking.Tcp
             }).StartBackground();
         }
 
+        /// <summary>
+        /// disconnects and cleans up threads
+        /// </summary>
         public void Disconnect()
         {
             new Thread(() =>
@@ -80,6 +118,11 @@ namespace SMT.Networking.Tcp
             }).StartBackground();
         }
 
+        /// <summary>
+        /// connects to a remote endpoint if not already connected
+        /// </summary>
+        /// <param name="hostname">name of the endpoint, either an IP or DNS resolvable name</param>
+        /// <param name="port">port number to communicate on</param>
         public void Connect(string hostname, int port)
         {
             var ips = Dns.GetHostAddresses(hostname);
@@ -89,6 +132,10 @@ namespace SMT.Networking.Tcp
             Connect(new IPEndPoint(ips[0], port));
         }
 
+        /// <summary>
+        /// connects to a remote endpoint if not already connected
+        /// </summary>
+        /// <param name="connectionString">connection string must follow the format "www.oodlesofboodlesnoodles.com:9000" or "192.168.10.100:9000"</param>
         public void Connect(string connectionString)
         {
             var pieces = connectionString?.Split(':');
@@ -102,6 +149,10 @@ namespace SMT.Networking.Tcp
             Connect(pieces[0], port);
         }
 
+        /// <summary>
+        /// connects to a remote endpoint if not already connected
+        /// </summary>
+        /// <param name="endpoint">endpoint to attempt a connection</param>
         public void Connect(IPEndPoint endpoint)
         {
             new Thread(() =>
@@ -123,17 +174,28 @@ namespace SMT.Networking.Tcp
             }).StartBackground();
         }
 
+        /// <summary>
+        /// Queues a message to be sent
+        /// </summary>
+        /// <param name="message">the message to send</param>
         public void Queue(T message)
         {
             Outbox.Enqueue(message);
         }
 
+        /// <summary>
+        /// Queues the message then sends all pending messages
+        /// </summary>
+        /// <param name="message">the message to queue and send</param>
         public void Send(T message)
         {
             Outbox.Enqueue(message);
             Send();
         }
 
+        /// <summary>
+        /// Sends all queued messages
+        /// </summary>
         public void Send()
         {
             if (SendThread == null || !SendThread.IsAlive)

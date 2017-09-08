@@ -18,7 +18,9 @@ namespace SMT.Networking
         IUdpNetworkConnection<T> GetUdpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer);
     }
 
-    //assembly component interface
+    /// <summary>
+    /// factory for building network connections
+    /// </summary>
     public class NetworkConnectionFactory : INetworkConnectionFactory
     {
         public ITcpNetworkConnection<T> GetTcpNetworkConnection<T>(INetworkConnectionSerializer<T> serializer)

@@ -10,7 +10,10 @@ using SMT.Networking.Interfaces;
 
 namespace SMT.Networking.Tcp
 {
-    //TODO implement disposable and clean up channels and threads
+    /// <summary>
+    /// listens for incoming tcp connections and produces network connection clients
+    /// </summary>
+    /// <typeparam name="T">type of message to expect</typeparam>
     public class TcpTcpNetworkConnectionListener<T> : ITcpNetworkConnectionListener<T>
     {
         public event EventHandler<ITcpNetworkConnection<T>> OnClientConnected;
@@ -21,11 +24,18 @@ namespace SMT.Networking.Tcp
 
         private readonly INetworkConnectionSerializer<T> Serializer;
 
+        /// <summary>
+        /// </summary>
+        /// <param name="serializer">serializer to be used in produced tcp clients</param>
         public TcpTcpNetworkConnectionListener(INetworkConnectionSerializer<T> serializer)
         {
             this.Serializer = serializer;
         }
 
+        /// <summary>
+        /// starts listening to the specified port for incoming tcp connections, this binds the port to this listener
+        /// </summary>
+        /// <param name="port">port to listen for tcp connections</param>
         public void Start(int port)
         {
             if (Listener == null)
@@ -38,6 +48,9 @@ namespace SMT.Networking.Tcp
             }
         }
 
+        /// <summary>
+        /// stops the listener from accepting incoming clients, this frees the bound port
+        /// </summary>
         public void Stop()
         {
             if (Listener != null)
@@ -47,6 +60,16 @@ namespace SMT.Networking.Tcp
 
                 ListenThread.DisposeOfThread();
             }
+        }
+
+        /// <summary>
+        /// stops the listener, cleans up threading and clears event subscribers
+        /// </summary>
+        public void Dispose()
+        {
+            Stop();
+            OnClientConnected.RemoveAllListeners();
+            OnError.RemoveAllListeners();
         }
 
         private void ListenLoop()
