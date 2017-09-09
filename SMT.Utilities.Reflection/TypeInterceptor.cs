@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -141,7 +142,7 @@ namespace SMT.Utilities.Reflection
 
             public void SetImplementation(string methodName, Type[] parameters, InterceptMethod methodBody)
             {
-                // I NEED SOME WAY TO IDENTIFY THE METHOD....
+                //search method
                 var targetMethod = TargetType.GetMethod(methodName, parameters);
                 if (targetMethod != null)
                 {
@@ -167,6 +168,16 @@ namespace SMT.Utilities.Reflection
                     throw new NotImplementedException($"could not find method {methodName} with inputs {string.Join(",", parameters.Select(t => t.Name))}");
                 }
             }
+
+            public void SetImplementation<T>(string methodName, T implementation)
+            {
+                var delgenate = implementation as Delegate;
+                if (delgenate == null)
+                    throw new ArgumentException("implementation must be a delegate");
+
+                var inputTypes = delgenate.Method.GetParameters().Select(p => p.ParameterType).ToArray();
+                this.SetImplementation(methodName, inputTypes, inputs => delgenate.DynamicInvoke(inputs));
+            }
         }
     }
 
@@ -189,5 +200,6 @@ namespace SMT.Utilities.Reflection
     public interface Interceptor
     {
         void SetImplementation(string methodName, Type[] parameters, InterceptMethod methodBody);
+        void SetImplementation<T>(string methodName, T implementation);
     }
 }

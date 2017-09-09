@@ -27,10 +27,16 @@ namespace App.TestingGrounds
 
 
             var testResult = TypeInterceptor.BuildInterceptType<IMethodBag>();
-            testResult.Interceptor.SetImplementation(nameof(MethodBag.MethodOne), new[] { typeof(string) }, (inputs) =>
+            //testResult.Interceptor.SetImplementation(nameof(MethodBag.MethodOne), new[] { typeof(string) }, (inputs) =>
+            //{
+            //    Console.WriteLine($"it was intercepted {inputs[0]}");
+            //    return null;
+            //});
+
+            testResult.Interceptor.SetImplementation<Action<string>>(nameof(MethodBag.MethodOne), 
+                s => 
             {
-                Console.WriteLine($"it was intercepted {inputs[0]}");
-                return null;
+                Console.WriteLine($"it was intercepted {s}");
             });
 
             testResult.InterceptedInstance.MethodOne("hello world");
