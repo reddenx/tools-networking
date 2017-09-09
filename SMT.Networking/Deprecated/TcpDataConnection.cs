@@ -11,7 +11,7 @@ using System.IO;
 namespace SMT.Networking.Tcp
 {
     [Obsolete("Use TcpNetworkConnection")]
-    public class TcpDataConnection<TMessageType>
+    internal class TcpDataConnection<TMessageType>
         where TMessageType : class
     {
         public event EventHandler<TMessageType> MessageReceived;

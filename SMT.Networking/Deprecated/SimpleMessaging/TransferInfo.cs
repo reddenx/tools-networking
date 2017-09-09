@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SMT.Networking.Interfaces.SimpleMessaging
 {
-    public class TransferInfo
+    internal class TransferInfo
     {
         public float Progress { get; private set; }
         public float BytesPerSecond { get; private set; }

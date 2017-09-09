@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Interfaces.SimpleMessaging
 {
-    interface ISimpleDataSender
+    internal interface ISimpleDataSender
     {
         TransferInfo CurrentTransferInfo { get; }
 

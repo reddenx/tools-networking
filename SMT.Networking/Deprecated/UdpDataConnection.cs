@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Udp
 {
-    public class UdpDataConnection<TMessageType>
+    internal class UdpDataConnection<TMessageType>
     {
         public event EventHandler<TMessageType> MessageReceived;
 

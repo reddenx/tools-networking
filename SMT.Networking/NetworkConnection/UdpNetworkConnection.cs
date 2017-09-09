@@ -1,25 +1,73 @@
-﻿using SMT.Networking.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 
-namespace SMT.Networking.Udp
+namespace SMT.Networking.NetworkConnection
 {
+    /// <summary>
+    /// UDP client, turns synchronous calls into events
+    /// </summary>
+    /// <typeparam name="T">Message Type</typeparam>
+    public interface IUdpNetworkConnection<T> : INetworkConnection<T>
+    {
+        /// <summary>
+        /// Binds and start listening to the specified port
+        /// </summary>
+        /// <param name="port">port to listen to</param>
+        /// <returns>true if it successfully binds and starts listening</returns>
+        bool StartListening(int port);
+        /// <summary>
+        /// Unbinds and stops listening
+        /// </summary>
+        void StopListening();
+        /// <summary>
+        /// Directs messages to the specified enpoint
+        /// </summary>
+        /// <param name="hostname">name of the endpoint, either an IP or DNS resolvable name</param>
+        /// <param name="port">port number to communicate on</param>
+        void Target(string hostname, int port);
+        /// <summary>
+        /// Directs messages to the specified enpoint
+        /// </summary>
+        /// <param name="connectionString">connection string must follow the format "www.oodlesofboodlesnoodles.com:9000" or "192.168.10.100:9000"</param>
+        void Target(string connectionString);
+        /// <summary>
+        /// Clears the target endpoint
+        /// </summary>
+        void Untarget();
+    }
+
+    /// <summary>
+    /// UDP client, turns synchronous calls into events
+    /// </summary>
+    /// <typeparam name="T">Message Type</typeparam>
     public class UdpNetworkConnection<T> : IUdpNetworkConnection<T>
     {
         private const int DEFAULT_PORT = -1;
 
+        /// <summary>
+        /// fired when a message is received from the remote host
+        /// </summary>
         public event EventHandler<T> OnMessageReceived;
+        /// <summary>
+        /// fired when a message is successfully sent to the remote host
+        /// </summary>
         public event EventHandler<T> OnMessageSent;
+        /// <summary>
+        /// fired when an error occurs, often resulting in a network cleanup
+        /// </summary>
         public event EventHandler<Exception> OnError;
 
+        /// <summary>
+        /// remote hostname
+        /// </summary>
         public string HostName { get; private set; }
+        /// <summary>
+        /// local bound port
+        /// </summary>
         public int Port { get; private set; }
 
         private bool IsListening;
@@ -47,20 +95,28 @@ namespace SMT.Networking.Udp
             Serializer = serializer;
         }
 
-        //queues message in send queue
+        /// <summary>
+        /// queue a message to be sent
+        /// </summary>
+        /// <param name="message"></param>
         public void Queue(T message)
         {
             OutBox.Enqueue(message);
         }
 
-        //sends the send queue
+        /// <summary>
+        /// send all messages queued
+        /// </summary>
         public void Send()
         {
             if (SendThread == null || !SendThread.IsAlive)
                 SendThread = new Thread(SendLoop).StartBackground();
         }
 
-        //queue then send all messages in queue
+        /// <summary>
+        /// queue and send all messages
+        /// </summary>
+        /// <param name="message"></param>
         public void Send(T message)
         {
             Queue(message);
@@ -153,7 +209,11 @@ namespace SMT.Networking.Udp
             catch (ThreadAbortException) { }//expecting these on abort
         }
 
-        //bind to local port
+        /// <summary>
+        /// Binds and start listening to the specified port
+        /// </summary>
+        /// <param name="port">port to listen to</param>
+        /// <returns>true if it successfully binds and starts listening</returns>
         public bool StartListening(int port)
         {
             if (IsListening)
@@ -183,7 +243,9 @@ namespace SMT.Networking.Udp
             }
         }
 
-        //unbind local port
+        /// <summary>
+        /// Unbinds and stops listening
+        /// </summary>
         public void StopListening()
         {
             if (!IsListening)
@@ -210,14 +272,21 @@ namespace SMT.Networking.Udp
             }
         }
 
-        //direct output towards endpoint
+        /// <summary>
+        /// Directs messages to the specified enpoint
+        /// </summary>
+        /// <param name="hostname">name of the endpoint, either an IP or DNS resolvable name</param>
+        /// <param name="port">port number to communicate on</param>
         public void Target(string hostname, int port)
         {
             HostName = hostname;
             Port = port;
         }
 
-        //direct output towards endpoint
+        /// <summary>
+        /// Directs messages to the specified enpoint
+        /// </summary>
+        /// <param name="connectionString">connection string must follow the format "www.oodlesofboodlesnoodles.com:9000" or "192.168.10.100:9000"</param>
         public void Target(string connectionString)
         {
             var pieces = connectionString?.Split(':');
@@ -232,7 +301,9 @@ namespace SMT.Networking.Udp
             HostName = pieces[0];
         }
 
-        //stop listening to incoming messages, unbind port
+        /// <summary>
+        /// Clears the target endpoint
+        /// </summary>
         public void Untarget()
         {
             HostName = null;

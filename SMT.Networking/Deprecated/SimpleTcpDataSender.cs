@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
-    public class SimpleTcpDataSender : ISimpleDataSender
+    internal class SimpleTcpDataSender : ISimpleDataSender
     {
         private const int MESSAGE_BLOCK_SIZE = 4096; //not sure if this is the most efficient or not?
 

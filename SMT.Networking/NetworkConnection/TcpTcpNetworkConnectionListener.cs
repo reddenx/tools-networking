@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using SMT.Networking.Interfaces;
 
-namespace SMT.Networking.Tcp
+namespace SMT.Networking.NetworkConnection
 {
+    public interface ITcpNetworkConnectionListener<T> : IDisposable
+    {
+        event EventHandler<ITcpNetworkConnection<T>> OnClientConnected;
+
+        void Start(int port);
+        void Stop();
+    }
+
     /// <summary>
     /// listens for incoming tcp connections and produces network connection clients
     /// </summary>

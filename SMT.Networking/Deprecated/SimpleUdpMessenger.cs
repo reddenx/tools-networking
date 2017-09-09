@@ -12,7 +12,7 @@ using System.IO;
 
 namespace SMT.Networking.Udp
 {
-    public class SimpleUdpMessenger<TMessage> : ISimpleMessenger<TMessage>
+    internal class SimpleUdpMessenger<TMessage> : ISimpleMessenger<TMessage>
         where TMessage : class
     {
         private SimpleUdpMessageListener<TMessage> Listener;

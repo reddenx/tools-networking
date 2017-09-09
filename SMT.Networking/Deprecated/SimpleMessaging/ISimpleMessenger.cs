@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SMT.Networking.Interfaces.SimpleMessaging
 {
     [Obsolete("Use TcpNetworkConnection")]
-    public interface ISimpleMessenger<TMessage>
+    internal interface ISimpleMessenger<TMessage>
         where TMessage : class
     {
         event EventHandler<TMessage> OnMessageReceived;

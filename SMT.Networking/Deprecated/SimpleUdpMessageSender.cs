@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Udp
 {
-    public class SimpleUdpMessageSender<TMessage>
+    internal class SimpleUdpMessageSender<TMessage>
     {
         private readonly UdpClient Client;
         private readonly BinaryFormatter Formatter;

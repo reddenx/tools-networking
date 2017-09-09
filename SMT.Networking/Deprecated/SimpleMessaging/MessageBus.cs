@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Messages
 {
-    public class MessageBus
+    internal class MessageBus
     {
         private readonly ITcpMessenger Output;
         private readonly Dictionary<int, List<byte[]>> PollQueue;

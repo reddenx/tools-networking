@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SMT.Networking.Interfaces;
+﻿using System.Text;
 
-namespace SMT.Networking.CommonSerializers
+namespace SMT.Networking.NetworkConnection
 {
     public class Utf8Serializer : INetworkConnectionSerializer<string>
     {

@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Tcp
 {
-    public enum TcpMessengerStates
+    internal enum TcpMessengerStates
     {
         Connected,
         Connecting,
         Disconnected,
     }
 
-    public interface ITcpMessenger
+    internal interface ITcpMessenger
     {
         event EventHandler OnDisconnected;
         event EventHandler OnConnected;
@@ -31,7 +31,7 @@ namespace SMT.Networking.Tcp
         void Disconnect();
     }
 
-    public class TcpMessenger : ITcpMessenger, IDisposable
+    internal class TcpMessenger : ITcpMessenger, IDisposable
     {
         public event EventHandler OnDisconnected;
         public event EventHandler OnConnected;

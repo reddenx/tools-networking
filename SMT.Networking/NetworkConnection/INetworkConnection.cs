@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SMT.Networking.Interfaces
+namespace SMT.Networking.NetworkConnection
 {
+    /// <summary>
+    /// base interface for a network connection client, agnostic to the underlying connection type
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface INetworkConnection<T> : IDisposable
     {
         /// <summary>

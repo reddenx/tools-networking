@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking
 {
-    public static class ThreadExtensions
+    internal static class ThreadExtensions
     {
         public static Thread StartBackground(this Thread thread)
         {

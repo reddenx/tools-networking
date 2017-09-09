@@ -1,20 +1,57 @@
-﻿using SMT.Networking.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace SMT.Networking.Tcp
+namespace SMT.Networking.NetworkConnection
 {
     /// <summary>
     /// Tcp connection, turns synchronous calls into events
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Message Type</typeparam>
+    public interface ITcpNetworkConnection<T> : INetworkConnection<T>
+    {
+        /// <summary>
+        /// fired when this client has successfully connected to its endpoint
+        /// </summary>
+        event EventHandler<IPEndPoint> OnConnected;
+        /// <summary>
+        /// fired when this client has been disconnected
+        /// </summary>
+        event EventHandler OnDisconnected;
+        /// <summary>
+        /// the connection status for this client
+        /// </summary>
+        bool Connected { get; }
+        /// <summary>
+        /// disconnects and cleans up threads
+        /// </summary>
+        void Disconnect();
+        /// <summary>
+        /// connects to a remote endpoint if not already connected
+        /// </summary>
+        /// <param name="hostname">name of the endpoint, either an IP or DNS resolvable name</param>
+        /// <param name="port">port number to communicate on</param>
+        void Connect(string hostname, int port);
+        /// <summary>
+        /// connects to a remote endpoint if not already connected
+        /// </summary>
+        /// <param name="connectionString">connection string must follow the format "www.oodlesofboodlesnoodles.com:9000" or "192.168.10.100:9000"</param>
+        void Connect(string connectionString);
+        /// <summary>
+        /// connects to a remote endpoint if not already connected
+        /// </summary>
+        /// <param name="endpoint">endpoint to attempt a connection</param>
+        void Connect(IPEndPoint remoteEndpoint);
+    }
+
+    /// <summary>
+    /// Tcp connection, turns synchronous calls into events
+    /// </summary>
+    /// <typeparam name="T">Message Type</typeparam>
     public class TcpNetworkConnection<T> : ITcpNetworkConnection<T>
     {
         /// <summary>

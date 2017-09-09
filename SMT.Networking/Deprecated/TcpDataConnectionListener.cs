@@ -1,5 +1,4 @@
-﻿using SMT.Networking.Interfaces;
-using SMT.Networking.Interfaces.SimpleMessaging;
+﻿using SMT.Networking.Interfaces.SimpleMessaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +11,24 @@ using System.Threading.Tasks;
 namespace SMT.Networking.Tcp
 {
     [Obsolete("Use TcpNetworkConnection")]
-    public class SimpleTcpMessageHost<TMessage> : ISimpleMessageHost<TMessage>
-        where TMessage : class
+    internal class TcpDataConnectionListener<TMessageType>
+        where TMessageType : class
     {
-        public event EventHandler<ISimpleMessenger<TMessage>> OnClientConnect;
+        public event EventHandler<TcpDataConnection<TMessageType>> OnClientConnect;
 
         private Thread ListenThread;
         private TcpListener Listener;
         private bool IsListening;
 
-        public SimpleTcpMessageHost()
+        private Func<byte[], TMessageType> FromBytes;
+        private Func<TMessageType, byte[]> ToBytes;
+
+        public TcpDataConnectionListener(Func<byte[], TMessageType> fromBytes, Func<TMessageType, byte[]> toBytes)
         {
             IsListening = false;
+
+            this.FromBytes = fromBytes;
+            this.ToBytes = toBytes;
         }
 
         public bool StartHosting(int port)
@@ -45,7 +50,7 @@ namespace SMT.Networking.Tcp
             Listener.Stop();
             Listener = null;
 
-            if (ListenThread.IsAlive)//really kill it if it's not dead
+            if (ListenThread.IsAlive)
             {
                 ListenThread.Abort();
             }
@@ -69,14 +74,15 @@ namespace SMT.Networking.Tcp
                     HandleClientConnection(Listener.AcceptTcpClient());
                 }
             }
-            catch { }//probably a better way to do this, gotta catch that broken block break exception
+            catch
+            { }
         }
 
         private void HandleClientConnection(TcpClient client)
         {
             if (OnClientConnect != null)
             {
-                OnClientConnect(this, new SimpleTcpMessenger<TMessage>(client));
+                OnClientConnect(this, new TcpDataConnection<TMessageType>(client, FromBytes, ToBytes));
             }
         }
     }

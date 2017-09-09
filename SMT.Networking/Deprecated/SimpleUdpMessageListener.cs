@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SMT.Networking.Udp
 {
-    public class SimpleUdpMessageListener<TMessage>
+    internal class SimpleUdpMessageListener<TMessage>
         where TMessage : class
     {
         public event EventHandler<TMessage> OnMessageReceived;
