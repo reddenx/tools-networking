@@ -17,11 +17,17 @@ namespace SMT.Utilities.Reflection
         //an interceptor interface to handle calls
         public static GeneratedTypeResult<MaskedType> BuildType<MaskedType>()
         {
+            //this method is intentionally left as a large procedural block
+
+
             var inputType = typeof(MaskedType);
 
             //inquiry revealed this as necessary for this implementation
             if (!inputType.IsInterface)
-                throw new NotImplementedException();
+                throw new NotImplementedException("only interfaces can be masked");
+
+            if (inputType.IsGenericType || inputType.GetMethods().Any(m => m.IsGenericMethod))
+                throw new NotImplementedException("no generics allowed... yet");
 
             //get and define a home for this new type
             var assemblyBuilder = Thread.GetDomain().DefineDynamicAssembly(

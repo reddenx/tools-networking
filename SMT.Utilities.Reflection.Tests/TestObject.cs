@@ -61,6 +61,16 @@ namespace SMT.Utilities.Reflection.Tests
         OutputClass MethodClassMixed2(int input1, InputClass input2, int input3);
     }
 
+    public interface IAmAGenericBastard<T>
+    {
+        T GetThings();
+    }
+
+    public interface IHaveAGenericBastard
+    {
+        T GetThings<T>();
+    }
+
     //public class TestClassImplementation : ITestInterface
     //{
     //    public OutputClass ComplexReadonly

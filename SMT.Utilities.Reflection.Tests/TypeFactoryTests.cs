@@ -8,6 +8,30 @@ namespace SMT.Utilities.Reflection.Tests
     public class TypeFactoryTests
     {
         [TestMethod]
+        public void SetImplementationParamterPrimitiveSet()
+        {
+            Assert.Inconclusive("masking parameters has not been implemented yet");
+        }
+
+        [TestMethod]
+        public void SetImplementationParamterPrimitiveGet()
+        {
+            Assert.Inconclusive("masking parameters has not been implemented yet");
+        }
+
+        [TestMethod]
+        public void SetImplementationParamterComplexSet()
+        {
+            Assert.Inconclusive("masking parameters has not been implemented yet");
+        }
+
+        [TestMethod]
+        public void SetImplementationParamterComplexGet()
+        {
+            Assert.Inconclusive("masking parameters has not been implemented yet");
+        }
+
+        [TestMethod]
         public void SetImplementationSignatureMismatch()
         {
             var generationResult = TypeFactory.BuildType<ITestInterface>();
@@ -83,6 +107,50 @@ namespace SMT.Utilities.Reflection.Tests
             }
         }
 
+        [TestMethod]
+        public void NoGenericTypesEnforced()
+        {
+            try
+            {
+                var result = TypeFactory.BuildType<IAmAGenericBastard<string>>();
+                Assert.Fail("should have preveneted the masking of generic types");
+            }
+            catch (NotImplementedException) { }
+            catch (Exception e)
+            {
+                Assert.Fail($"wrong type of exception thrown: {e.GetType()}");
+            }
+        }
+
+        [TestMethod]
+        public void NoGenericTypesEnforcedInMethods()
+        {
+            try
+            {
+                var result = TypeFactory.BuildType<IHaveAGenericBastard>();
+                Assert.Fail("should have preveneted the masking of generic types");
+            }
+            catch (NotImplementedException) { }
+            catch (Exception e)
+            {
+                Assert.Fail($"wrong type of exception thrown: {e.GetType()}");
+            }
+        }
+
+        [TestMethod]
+        public void OnlyConsumeInterfaceTypes()
+        {
+            try
+            {
+                var result = TypeFactory.BuildType<InputClass>();
+                Assert.Fail("should have prevented the masking of concrete types");
+            }
+            catch (NotImplementedException) { }
+            catch(Exception e)
+            {
+                Assert.Fail($"wrong type of exception thrown: {e.GetType()}");
+            }
+        }
 
         #region RepetativeMethodTesting
 
