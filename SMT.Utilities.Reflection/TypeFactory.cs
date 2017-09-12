@@ -12,10 +12,15 @@ namespace SMT.Utilities.Reflection
 {
     public static class TypeFactory
     {
+        public static GeneratedTypeResult<MaskedType> BuildType<MaskedType>() where MaskedType : class
+        {
+            return BuildType<MaskedType>(null);
+        }
+
         //what I want out of this
         //a masked type to hand out and
         //an interceptor interface to handle calls
-        public static GeneratedTypeResult<MaskedType> BuildType<MaskedType>()
+        public static GeneratedTypeResult<MaskedType> BuildType<MaskedType>(MaskedType instance) where MaskedType : class
         {
             //this method is intentionally left as a large procedural block
 
@@ -41,13 +46,14 @@ namespace SMT.Utilities.Reflection
             typeBuilder.AddInterfaceImplementation(inputType);
             typeBuilder.SetParent(baseType);
 
-            var constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new Type[] { typeof(Type) });
+            var constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, new Type[] { typeof(Type), typeof(object) });
             var ctorIlGen = constructorBuilder.GetILGenerator();
 
             //build constructor
             var baseConstructor = baseType.GetConstructors()[0];
             ctorIlGen.Emit(OpCodes.Ldarg, 0); //load this (this keyword is always arg0 in an instanced object)
             ctorIlGen.Emit(OpCodes.Ldarg, 1); //load argument 1 (Type targetType)
+            ctorIlGen.Emit(OpCodes.Ldarg, 2); //load argument 2 (instance)
             ctorIlGen.Emit(OpCodes.Call, baseConstructor); //make the call
             ctorIlGen.Emit(OpCodes.Ret); //return
 
@@ -115,13 +121,13 @@ namespace SMT.Utilities.Reflection
             }
 
             var generatedType = typeBuilder.CreateType();
-            var instance = Activator.CreateInstance(generatedType, inputType);
+            var newInstance = Activator.CreateInstance(generatedType, inputType, instance);
 
             return new GeneratedTypeResult<MaskedType>(
-                maskedType: (MaskedType)instance,
-                interceptor: (Interceptor)instance,
+                maskedType: (MaskedType)newInstance,
+                interceptor: (Interceptor)newInstance,
                 generatedType: generatedType);
-        }   
+        }
     }
 
     public delegate object InterceptMethod(object[] parameters);

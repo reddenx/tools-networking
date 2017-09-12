@@ -9,7 +9,7 @@ namespace IdeaDump.DynamicApiTake2
 {
     public static class ClientFactory
     {
-        public static Contract BuildProxy<Contract>(string baseUrl)
+        public static Contract BuildProxy<Contract>(string baseUrl) where Contract : class
         {
             //do some validation
             var contractInterfaceType = typeof(Contract);

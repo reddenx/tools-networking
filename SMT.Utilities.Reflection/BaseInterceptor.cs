@@ -10,11 +10,13 @@ namespace SMT.Utilities.Reflection
     {
         private readonly Dictionary<int, InterceptMethod> MethodImplementations;
         private readonly Type TargetType;
+        private readonly object Instance;
 
-        public BaseInterceptor(Type targetType)
+        public BaseInterceptor(Type targetType, object instance)
         {
             MethodImplementations = new Dictionary<int, InterceptMethod>();
             TargetType = targetType;
+            Instance = instance;
         }
 
         public void Action(object[] inputs, int methodIndex)
@@ -22,6 +24,12 @@ namespace SMT.Utilities.Reflection
             if (MethodImplementations.ContainsKey(methodIndex))
             {
                 var result = MethodImplementations[methodIndex](inputs);
+                //eat the result if there is one, we have...
+            }
+            else if (Instance != null && TargetType.GetMethods().Length > methodIndex)
+            {
+                var method = TargetType.GetMethods()[methodIndex];
+                var result = method.Invoke(Instance, inputs);
                 //eat the result if there is one, we have...
             }
             else
@@ -35,6 +43,12 @@ namespace SMT.Utilities.Reflection
             if (MethodImplementations.ContainsKey(methodIndex))
             {
                 var result = MethodImplementations[methodIndex](inputs);
+                return result;
+            }
+            else if (Instance != null && TargetType.GetMethods().Length > methodIndex)
+            {
+                var method = TargetType.GetMethods()[methodIndex];
+                var result = method.Invoke(Instance, inputs);
                 return result;
             }
             else
