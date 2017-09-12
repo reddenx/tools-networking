@@ -30,36 +30,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CommonSerializers\AnonymousSerializer.cs" />
-    <Compile Include="CommonSerializers\AsciiSerializer.cs" />
-    <Compile Include="CommonSerializers\Utf8Serializer.cs" />
+    <Compile Include="NetworkConnection\CommonSerializers\AnonymousSerializer.cs" />
+    <Compile Include="NetworkConnection\CommonSerializers\AsciiSerializer.cs" />
+    <Compile Include="NetworkConnection\CommonSerializers\Utf8Serializer.cs" />
     <Compile Include="EventExtensions.cs" />
-    <Compile Include="Interfaces\INetworkConnection.cs" />
-    <Compile Include="Interfaces\ITcpNetworkConnectionListener.cs" />
-    <Compile Include="Interfaces\INetworkConnectionSerializer.cs" />
-    <Compile Include="Interfaces\ITcpNetworkConnection.cs" />
-    <Compile Include="Interfaces\IUdpNetworkConnection.cs" />
-    <Compile Include="Messages\MessageBus.cs" />
-    <Compile Include="NetworkConnectionFactory.cs" />
-    <Compile Include="Interfaces\SimpleMessaging\ISimpleDataSender.cs" />
-    <Compile Include="Interfaces\SimpleMessaging\ISimpleMessageHost.cs" />
-    <Compile Include="Interfaces\SimpleMessaging\ISimpleMessenger.cs" />
-    <Compile Include="Interfaces\SimpleMessaging\TransferInfo.cs" />
+    <Compile Include="NetworkConnection\INetworkConnection.cs" />
+    <Compile Include="NetworkConnection\INetworkConnectionSerializer.cs" />
+    <Compile Include="Deprecated\SimpleMessaging\MessageBus.cs" />
+    <Compile Include="NetworkConnection\NetworkConnectionFactory.cs" />
+    <Compile Include="Deprecated\SimpleMessaging\ISimpleDataSender.cs" />
+    <Compile Include="Deprecated\SimpleMessaging\ISimpleMessageHost.cs" />
+    <Compile Include="Deprecated\SimpleMessaging\ISimpleMessenger.cs" />
+    <Compile Include="Deprecated\SimpleMessaging\TransferInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tcp\TcpDataConnection.cs" />
-    <Compile Include="Tcp\TcpDataConnectionListener.cs" />
-    <Compile Include="Tcp\SimpleTcpDataSender.cs" />
-    <Compile Include="Tcp\SimpleTcpMessageHost.cs" />
-    <Compile Include="Tcp\SimpleTcpMessenger.cs" />
-    <Compile Include="Tcp\TcpMessenger.cs" />
-    <Compile Include="Tcp\TcpNetworkConnection.cs" />
-    <Compile Include="Tcp\TcpTcpNetworkConnectionListener.cs" />
+    <Compile Include="Deprecated\TcpDataConnection.cs" />
+    <Compile Include="Deprecated\TcpDataConnectionListener.cs" />
+    <Compile Include="Deprecated\SimpleTcpDataSender.cs" />
+    <Compile Include="Deprecated\SimpleTcpMessageHost.cs" />
+    <Compile Include="Deprecated\SimpleTcpMessenger.cs" />
+    <Compile Include="Deprecated\TcpMessenger.cs" />
+    <Compile Include="NetworkConnection\TcpNetworkConnection.cs" />
+    <Compile Include="NetworkConnection\TcpTcpNetworkConnectionListener.cs" />
     <Compile Include="ThreadExtensions.cs" />
-    <Compile Include="Udp\SimpleUdpMessageListener.cs" />
-    <Compile Include="Udp\SimpleUdpMessageSender.cs" />
-    <Compile Include="Udp\SimpleUdpMessenger.cs" />
-    <Compile Include="Udp\UdpDataConnection.cs" />
-    <Compile Include="Udp\UdpNetworkConnection.cs" />
+    <Compile Include="Deprecated\SimpleUdpMessageListener.cs" />
+    <Compile Include="Deprecated\SimpleUdpMessageSender.cs" />
+    <Compile Include="Deprecated\SimpleUdpMessenger.cs" />
+    <Compile Include="Deprecated\UdpDataConnection.cs" />
+    <Compile Include="NetworkConnection\UdpNetworkConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
@@ -70,6 +67,7 @@
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

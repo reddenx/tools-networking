@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.Images", "SMT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdeaDump", "IdeaDump\IdeaDump.csproj", "{0A1EC1DE-E75F-47F6-936D-F724F930FD2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMT.Utilities.Reflection.Tests", "SMT.Utilities.Reflection.Tests\SMT.Utilities.Reflection.Tests.csproj", "{D7D98330-5416-4859-A428-6698ACE08AE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{0A1EC1DE-E75F-47F6-936D-F724F930FD2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A1EC1DE-E75F-47F6-936D-F724F930FD2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A1EC1DE-E75F-47F6-936D-F724F930FD2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7D98330-5416-4859-A428-6698ACE08AE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D98330-5416-4859-A428-6698ACE08AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D98330-5416-4859-A428-6698ACE08AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D98330-5416-4859-A428-6698ACE08AE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SMT.Networking.Udp;
+using SMT.Networking.NetworkConnection;
+using System.Reflection;
 
 namespace App.TestingGrounds
 {
@@ -26,11 +28,10 @@ namespace App.TestingGrounds
             RunUdp();
             //return;
 
-            var networkFactory = new NetworkConnectionFactory();
-            var listener = networkFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
+            var listener = NetworkConnectionFactory.GetTcpNetworkConnectionListener<string>(new AsciiSerializer());
             listener.Start(37123);
 
-            var connectionA = networkFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
+            var connectionA = NetworkConnectionFactory.GetTcpNetworkConnection<string>(new AsciiSerializer());
             connectionA.OnConnected += (o, ip) => { Console.WriteLine("ACON: " + ip.ToString()); };
             connectionA.OnDisconnected += (o, e) => { Console.WriteLine("ADIS:"); };
             connectionA.OnError += (o, e) => { Console.WriteLine("AERR: " + e.ToString()); };

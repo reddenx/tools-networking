@@ -35,7 +35,7 @@ namespace IdeaDump.DynamicApiTake2
             //no fields or properties, has all its methods routed and contains a base url
             var routedMethods = contractInterfaceType.GetMethods().Where(method => method.GetCustomAttributes(typeof(ContractRouteAttribute), false).Any());
 
-            var generationResult = TypeInterceptor.BuildInterceptType<Contract>();
+            var generationResult = TypeFactory.BuildType<Contract>();
             var proxyCaller = new BaseProxy(baseUrl, contractBaseRoute.Route);
 
             //build methods

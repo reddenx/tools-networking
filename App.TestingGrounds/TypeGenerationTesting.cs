@@ -26,7 +26,7 @@ namespace App.TestingGrounds
 
 
 
-            var testResult = TypeInterceptor.BuildInterceptType<IMethodBag>();
+            var testResult = TypeFactory.BuildType<IMethodBag>();
             //testResult.Interceptor.SetImplementation(nameof(MethodBag.MethodOne), new[] { typeof(string) }, (inputs) =>
             //{
             //    Console.WriteLine($"it was intercepted {inputs[0]}");
@@ -69,43 +69,43 @@ namespace App.TestingGrounds
             }
         }
 
-        public static void Run2()
-        {
-            //var factory = new TypeFactory("MyNewClass", typeof(TestClass), new[] { typeof(ITestInterface) });
-            //factory.AppendMethod<Action<string>>("GeneratedMethod", (input) => Console.WriteLine($"Generated method called with input {input}"));
+        //public static void Run2()
+        //{
+        //    //var factory = new TypeFactory("MyNewClass", typeof(TestClass), new[] { typeof(ITestInterface) });
+        //    //factory.AppendMethod<Action<string>>("GeneratedMethod", (input) => Console.WriteLine($"Generated method called with input {input}"));
 
-            //factory.OverrideMethod<Action>("SomeMethod", typeof(ITestInterface), "SomeMethod", () => StaticGrounder());
-            //var type = factory.Generate();
+        //    //factory.OverrideMethod<Action>("SomeMethod", typeof(ITestInterface), "SomeMethod", () => StaticGrounder());
+        //    //var type = factory.Generate();
 
-            //var instance = Activator.CreateInstance(type) as ITestInterface;
+        //    //var instance = Activator.CreateInstance(type) as ITestInterface;
 
-            //instance.SomeMethod();
-            //(instance as TestClass).SomeMethod();
-            //type.GetMethod("GeneratedMethod").Invoke(instance, new[] { "<test input>" });
+        //    //instance.SomeMethod();
+        //    //(instance as TestClass).SomeMethod();
+        //    //type.GetMethod("GeneratedMethod").Invoke(instance, new[] { "<test input>" });
 
-            //Console.ReadLine();
-
-
-
-            var typeFactory = new TypeFactory("SomeClassTest", typeof(TestClass), new[] { typeof(ITestInterface) });
-            typeFactory.AppendMethod<Func<string, string, string>>("Derp",
-                (s, s2) => s + " and " + s2
-            );
-
-            typeFactory.OverrideMethod<Action>("SomeMethod", typeof(ITestInterface), "SomeMethod",
-                () => Console.WriteLine("derp"));
-
-            var type = typeFactory.Generate();
-
-            var instance = Activator.CreateInstance(type);
-            var test = type.GetMethod("Derp").Invoke(instance, new object[] { "sdasd", "secods" });
-            Console.WriteLine(test);
+        //    //Console.ReadLine();
 
 
-            type.GetMethod("SomeMethod").Invoke(instance, new object[] { });
 
-            Console.ReadLine();
-        }
+        //    var typeFactory = new TypeFactory("SomeClassTest", typeof(TestClass), new[] { typeof(ITestInterface) });
+        //    typeFactory.AppendMethod<Func<string, string, string>>("Derp",
+        //        (s, s2) => s + " and " + s2
+        //    );
+
+        //    typeFactory.OverrideMethod<Action>("SomeMethod", typeof(ITestInterface), "SomeMethod",
+        //        () => Console.WriteLine("derp"));
+
+        //    var type = typeFactory.Generate();
+
+        //    var instance = Activator.CreateInstance(type);
+        //    var test = type.GetMethod("Derp").Invoke(instance, new object[] { "sdasd", "secods" });
+        //    Console.WriteLine(test);
+
+
+        //    type.GetMethod("SomeMethod").Invoke(instance, new object[] { });
+
+        //    Console.ReadLine();
+        //}
 
         static void StaticGrounder()
         {
