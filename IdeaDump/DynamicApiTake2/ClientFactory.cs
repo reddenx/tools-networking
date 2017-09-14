@@ -42,7 +42,7 @@ namespace IdeaDump.DynamicApiTake2
             foreach (var method in routedMethods)
             {
                 var routeAttribute = method.GetCustomAttributes(typeof(ContractRouteAttribute), false).Single() as ContractRouteAttribute;
-                generationResult.Interceptor.SetImplementation(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray(),
+                generationResult.Interceptor.SetMethodImplementation(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray(),
                     (inputs) =>
                     {
                         return proxyCaller.MakeCall(routeAttribute.Route, inputs, method.ReturnType);

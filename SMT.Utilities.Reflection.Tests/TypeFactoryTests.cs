@@ -8,37 +8,13 @@ namespace SMT.Utilities.Reflection.Tests
     public class TypeFactoryTests
     {
         [TestMethod]
-        public void SetImplementationParamterPrimitiveSet()
-        {
-            Assert.Inconclusive("masking parameters has not been implemented yet");
-        }
-
-        [TestMethod]
-        public void SetImplementationParamterPrimitiveGet()
-        {
-            Assert.Inconclusive("masking parameters has not been implemented yet");
-        }
-
-        [TestMethod]
-        public void SetImplementationParamterComplexSet()
-        {
-            Assert.Inconclusive("masking parameters has not been implemented yet");
-        }
-
-        [TestMethod]
-        public void SetImplementationParamterComplexGet()
-        {
-            Assert.Inconclusive("masking parameters has not been implemented yet");
-        }
-
-        [TestMethod]
         public void SetImplementationSignatureMismatch()
         {
             var generationResult = TypeFactory.BuildType<ITestInterface>();
 
             try
             {
-                generationResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidVoid), new[]
+                generationResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidVoid), new[]
                 {
                     typeof(int),
                 },
@@ -59,7 +35,7 @@ namespace SMT.Utilities.Reflection.Tests
 
             try
             {
-                generationResult.Interceptor.SetImplementation<Func<string, string, int, string>>(nameof(ITestInterface.MethodVoidSingleClass),
+                generationResult.Interceptor.SetMethodImplementation<Func<string, string, int, string>>(nameof(ITestInterface.MethodVoidSingleClass),
                 (s, s2, i) =>
                 {
                     return "null?";
@@ -146,7 +122,7 @@ namespace SMT.Utilities.Reflection.Tests
                 Assert.Fail("should have prevented the masking of concrete types");
             }
             catch (NotImplementedException) { }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Assert.Fail($"wrong type of exception thrown: {e.GetType()}");
             }
@@ -167,7 +143,7 @@ namespace SMT.Utilities.Reflection.Tests
             var generatedResult = TypeFactory.BuildType<ITestInterface>();
 
             var called = false;
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidVoid), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidVoid), new Type[]
             {
             },
             (o) =>
@@ -186,7 +162,7 @@ namespace SMT.Utilities.Reflection.Tests
 
             var input1 = RandInt();
             var called = false;
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidSinglePrimitive), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidSinglePrimitive), new Type[]
             {
                 typeof(int)
             },
@@ -209,7 +185,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input1 = RandInt();
             var input2 = RandInt();
             var input3 = RandFloat();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidManyPrimitive), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidManyPrimitive), new Type[]
             {
                 typeof(int),
                 typeof(int),
@@ -235,7 +211,7 @@ namespace SMT.Utilities.Reflection.Tests
 
             var called = false;
             var input1 = RandInputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidSingleClass), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidSingleClass), new Type[]
             {
                 typeof(InputClass)
             },
@@ -259,7 +235,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input1 = RandInputClass();
             var input2 = RandInputClass();
             var input3 = RandString();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidManyClass), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidManyClass), new Type[]
             {
                 typeof(InputClass),
                 typeof(InputClass),
@@ -285,7 +261,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input1 = RandInputClass();
             var input2 = RandInt();
             var input3 = RandInputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidMixed), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidMixed), new Type[]
             {
                 typeof(InputClass),
                 typeof(int),
@@ -312,7 +288,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input1 = RandInt();
             var input2 = RandInputClass();
             var input3 = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodVoidMixed2), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodVoidMixed2), new Type[]
             {
                 typeof(int),
                 typeof(InputClass),
@@ -337,7 +313,7 @@ namespace SMT.Utilities.Reflection.Tests
 
             var called = false;
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodPrimitiveVoid), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodPrimitiveVoid), new Type[]
             {
             },
             (o) =>
@@ -359,7 +335,7 @@ namespace SMT.Utilities.Reflection.Tests
             var called = false;
             var input1 = RandInt();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodPrimitiveSinglePrimitive), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodPrimitiveSinglePrimitive), new Type[]
             {
                 typeof(int)
             },
@@ -384,7 +360,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandInt();
             var input3 = RandFloat();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodPrimitiveManyPrimitive), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodPrimitiveManyPrimitive), new Type[]
             {
                 typeof(int),
                 typeof(int),
@@ -411,7 +387,7 @@ namespace SMT.Utilities.Reflection.Tests
             var called = false;
             var input1 = RandInputClass();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodPrimitiveSingleClass), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodPrimitiveSingleClass), new Type[]
             {
                 typeof(InputClass),
             },
@@ -436,7 +412,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandInputClass();
             var input3 = RandString();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodPrimitiveManyClass), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodPrimitiveManyClass), new Type[]
             {
                 typeof(InputClass),
                 typeof(InputClass),
@@ -465,7 +441,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandInt();
             var input3 = RandInputClass();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodPrimitiveMixed), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodPrimitiveMixed), new Type[]
             {
                 typeof(InputClass),
                 typeof(int),
@@ -495,7 +471,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = new InputClass(Guid.NewGuid().ToString());
             var input3 = RandInt();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodPrimitiveMixed2), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodPrimitiveMixed2), new Type[]
             {
                 typeof(int),
                 typeof(InputClass),
@@ -523,7 +499,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input1 = RandInputClass();
             var input2 = RandString();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodOverloadMethodTest), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodOverloadMethodTest), new Type[]
             {
                 typeof(InputClass),
                 typeof(string),
@@ -550,7 +526,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandString();
             var input3 = RandInt();
             var output = RandInt();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodOverloadMethodTest), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodOverloadMethodTest), new Type[]
             {
                 typeof(InputClass),
                 typeof(string),
@@ -577,7 +553,7 @@ namespace SMT.Utilities.Reflection.Tests
 
             var called = false;
             var output = RandOutputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodClassVoid), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodClassVoid), new Type[]
             {
             },
             (o) =>
@@ -598,7 +574,7 @@ namespace SMT.Utilities.Reflection.Tests
             var called = false;
             var input1 = RandInt();
             var output = RandOutputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodClassSinglePrimitive), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodClassSinglePrimitive), new Type[]
             {
                 typeof(int),
             },
@@ -623,7 +599,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandInt();
             var input3 = RandFloat();
             var output = RandOutputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodClassManyPrimitive), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodClassManyPrimitive), new Type[]
             {
                 typeof(int),
                 typeof(int),
@@ -650,7 +626,7 @@ namespace SMT.Utilities.Reflection.Tests
             var called = false;
             var input1 = RandInputClass();
             var output = RandOutputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodClassSingleClass), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodClassSingleClass), new Type[]
             {
                 typeof(InputClass),
             },
@@ -675,7 +651,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandInputClass();
             var input3 = RandString();
             var output = RandOutputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodClassManyClass), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodClassManyClass), new Type[]
             {
                 typeof(InputClass),
                 typeof(InputClass),
@@ -704,7 +680,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandInt();
             var input3 = RandInputClass();
             var output = RandOutputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodClassMixed), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodClassMixed), new Type[]
             {
                 typeof(InputClass),
                 typeof(int),
@@ -733,7 +709,7 @@ namespace SMT.Utilities.Reflection.Tests
             var input2 = RandInputClass();
             var input3 = RandInt();
             var output = RandOutputClass();
-            generatedResult.Interceptor.SetImplementation(nameof(ITestInterface.MethodClassMixed2), new Type[]
+            generatedResult.Interceptor.SetMethodImplementation(nameof(ITestInterface.MethodClassMixed2), new Type[]
             {
                 typeof(int),
                 typeof(InputClass),
@@ -753,6 +729,80 @@ namespace SMT.Utilities.Reflection.Tests
         }
 
         #endregion RepetativeMethodTesting
+
+        [TestMethod]
+        public void SetImplementationParamterPrimitiveSet()
+        {
+            var generatedResult = TypeFactory.BuildType<ITestInterface>();
+
+            var called = false;
+            var input1 = RandFloat();
+            generatedResult.Interceptor.SetSetPropertyImplementation(nameof(ITestInterface.PropertyPrimitiveReadWrite), (i) =>
+            {
+                called = true;
+                Assert.AreEqual(input1, i);
+            });
+
+            generatedResult.InterceptedInstance.PropertyPrimitiveReadWrite = input1;
+
+            Assert.IsTrue(called);
+        }
+
+        [TestMethod]
+        public void SetImplementationParamterPrimitiveGet()
+        {
+            var generatedResult = TypeFactory.BuildType<ITestInterface>();
+
+            var called = false;
+            var output1 = RandInt();
+            generatedResult.Interceptor.SetGetPropertyImplementation(nameof(ITestInterface.PropertyPrimitiveReadonly), () =>
+            {
+                called = true;
+                return output1;
+            });
+
+            var result = generatedResult.InterceptedInstance.PropertyPrimitiveReadonly;
+
+            Assert.AreEqual(output1, result);
+            Assert.IsTrue(called);
+        }
+
+        [TestMethod]
+        public void SetImplementationParamterComplexSet()
+        {
+            var generatedResult = TypeFactory.BuildType<ITestInterface>();
+
+            var called = false;
+            var input1 = RandOutputClass();
+            generatedResult.Interceptor.SetSetPropertyImplementation(nameof(ITestInterface.PropertyComplexReadWrite), (i) =>
+            {
+                called = true;
+                Assert.AreEqual(input1, i);
+            });
+
+            generatedResult.InterceptedInstance.PropertyComplexReadWrite = input1;
+
+            Assert.IsTrue(called);
+        }
+
+        [TestMethod]
+        public void SetImplementationParamterComplexGet()
+        {
+            var generatedResult = TypeFactory.BuildType<ITestInterface>();
+
+            var called = false;
+            var output1 = RandOutputClass();
+            generatedResult.Interceptor.SetGetPropertyImplementation(nameof(ITestInterface.PropertyComplexReadonly), () =>
+            {
+                called = true;
+                return output1;
+            });
+
+            var result = generatedResult.InterceptedInstance.PropertyComplexReadonly;
+
+            Assert.AreEqual(output1, result);
+            Assert.IsTrue(called);
+        }
 
         private int RandInt()
         {

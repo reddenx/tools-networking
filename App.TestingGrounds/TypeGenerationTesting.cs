@@ -33,7 +33,7 @@ namespace App.TestingGrounds
             //    return null;
             //});
 
-            testResult.Interceptor.SetImplementation<Action<string>>(nameof(MethodBag.MethodOne), 
+            testResult.Interceptor.SetMethodImplementation<Action<string>>(nameof(MethodBag.MethodOne), 
                 s => 
             {
                 Console.WriteLine($"it was intercepted {s}");
