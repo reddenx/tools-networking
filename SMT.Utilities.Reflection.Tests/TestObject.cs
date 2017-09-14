@@ -28,10 +28,10 @@ namespace SMT.Utilities.Reflection.Tests
 
     public interface ITestInterface
     {
-        int ParameterPrimitiveReadonly { get; }
-        float ParameterPrimitiveReadWrite { get; set; }
-        OutputClass ParameterComplexReadonly { get; }
-        OutputClass ParameterComplexReadWrite { get; set; }
+        int PropertyPrimitiveReadonly { get; }
+        float PropertyPrimitiveReadWrite { get; set; }
+        OutputClass PropertyComplexReadonly { get; }
+        OutputClass PropertyComplexReadWrite { get; set; }
 
         void MethodVoidVoid();
         void MethodVoidSinglePrimitive(int input);

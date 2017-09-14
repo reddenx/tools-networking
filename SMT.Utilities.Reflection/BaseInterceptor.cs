@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,7 +58,7 @@ namespace SMT.Utilities.Reflection
             }
         }
 
-        public void SetImplementation(string methodName, Type[] parameters, InterceptMethod methodBody)
+        public void SetMethodImplementation(string methodName, Type[] parameters, InterceptMethod methodBody)
         {
             //search method
             var targetMethod = TargetType.GetMethod(methodName, parameters);
@@ -86,14 +87,47 @@ namespace SMT.Utilities.Reflection
             }
         }
 
-        public void SetImplementation<T>(string methodName, T implementation)
+        public void SetMethodImplementation<T>(string methodName, T implementation)
         {
             var delgenate = implementation as Delegate;
             if (delgenate == null)
                 throw new ArgumentException("implementation must be a delegate");
 
             var inputTypes = delgenate.Method.GetParameters().Select(p => p.ParameterType).ToArray();
-            this.SetImplementation(methodName, inputTypes, inputs => delgenate.DynamicInvoke(inputs));
+            this.SetMethodImplementation(methodName, inputTypes, inputs => delgenate.DynamicInvoke(inputs));
+        }
+
+        public void SetSetPropertyImplementation(string propertyName, InterceptPropertySet setMethod)
+        {
+            var targetProperty = TargetType.GetProperty(propertyName);
+            SetMethodImplementation($"set_{propertyName}", new[] { targetProperty?.PropertyType },
+                (input) =>
+            {
+                setMethod(input[0]);
+                return null;
+            });
+        }
+
+        public void SetGetPropertyImplementation(string propertyName, InterceptPropertyGet getMethod)
+        {
+            SetMethodImplementation($"get_{propertyName}", new Type[] { },
+                (input) =>
+            {
+                return getMethod();
+            });
+        }
+
+        private int? GetPropertyIndex(PropertyInfo property)
+        {
+            var allProperties = TargetType.GetProperties();
+            for (int j = 0; j < allProperties.Length; ++j)
+            {
+                if (allProperties[j] == property)
+                {
+                    return j;
+                }
+            }
+            return null;
         }
     }
 }
