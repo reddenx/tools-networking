@@ -10,14 +10,14 @@ namespace SMT.Utilities.Configuration
         {
             //TcpMessengerTesting.RunMessageBus();
             //TcpMessengerTesting.Run();
-            //ConfigurationTesting.Run();
+            ConfigurationTesting.Run();
             //SpeechTests.Test();
             //TcpNetworkConnectionTests.Run();
             //FogBugzProxyTesting.Start();
             //SqlTesting.Run();
             //MouseInputTesting.Run();
             //DynamicApiTesting.Run();
-            TypeGenerationTesting.Run();
+            //TypeGenerationTesting.Run();
             //ImageSizeTesting.Run();
             //IdeaDumpTest.Run();
         }

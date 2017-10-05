@@ -7,10 +7,10 @@ using SMT.Utilities.Configuration;
 
 namespace App.TestingGrounds
 {
-    static class ConfigurationTesting
-    {
-        public static void Run()
-        {
+	static class ConfigurationTesting
+	{
+		public static void Run()
+		{
 			try
 			{
 				var testconfig = new TestConfigClass();
@@ -30,36 +30,43 @@ namespace App.TestingGrounds
 				Console.WriteLine("TEST FAIL EXCEPTION: {0}", e.ToString());
 			}
 
-            
 
-            Console.ReadLine();
-        }
-    }
 
-    public class TestConfigClass : ConfigurationBase
-    {
-        [AppSettings("Test1")]
-        public readonly int ATestIntegerField;
+			Console.ReadLine();
+		}
+	}
 
-        [AppSettings("Test2")]
-        public readonly bool ATestBooleanField;
+	public class TestConfigClass : ConfigurationBase
+	{
+		[AppSettings("Test1")]
+		public readonly int ATestIntegerField;
 
-        [AppSettings("Test3")]
-        public readonly string ATestStringField;
+		[AppSettings("Test2")]
+		public readonly bool ATestBooleanField;
 
-        [AppSettings("Test4")]
-        public int TestIntegerProperty { get; protected set; }
+		[AppSettings("Test2b")]
+		public decimal ATestDecimalField;
 
-        [AppSettings("Test5")]
-        public bool TestBooleanProperty { get; protected set; }
+		[AppSettings("Test3")]
+		public readonly string ATestStringField;
 
-        [AppSettings("Test6")]
-        public string TestStringProperty { get; protected set; }
+		[AppSettings("Test4")]
+		public int TestIntegerProperty { get; protected set; }
 
-        [ConnectionString("TestDataConnectionString")]
-        public readonly string TestConnectionStringField;
+		[AppSettings("Test5")]
+		public bool TestBooleanProperty { get; protected set; }
 
-        [ConnectionString("TestDataConnectionString")]
-        public string TestConnectionStringProperty { get; protected set; }
-    }
+		[AppSettings("Test5b")]
+		public decimal ATestDecimalProperty { get; protected set; }
+
+		[AppSettings("Test6")]
+		public string TestStringProperty { get; protected set; }
+
+		[ConnectionString("TestDataConnectionString")]
+		public readonly string TestConnectionStringField;
+
+		[ConnectionString("TestDataConnectionString")]
+		public string TestConnectionStringProperty { get; protected set; }
+
+	}
 }
