@@ -1,6 +1,8 @@
 ﻿using Microsoft.Owin;
 using Owin;
 using SMT.Utilities.Tracing.Core;
+using SMT.Utilities.Tracing.Core.HttpHeaderParsing;
+using SMT.Utilities.Tracing.Core.Recording;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,40 +13,32 @@ namespace SMT.Utilities.Tracing.OwinContext
 {
     public static class TraceMiddleware
     {
-        public static void Register(IAppBuilder app)
+        public static void Register(IAppBuilder app, string traceLoggingEndpointHostname, int traceLoggingEndpointPort)
         {
+            TraceUdpRecorder.TargetTraceLogger(traceLoggingEndpointHostname, traceLoggingEndpointPort);
+
             Tracer.RegisterContext(new OwinTraceContext());
             app.Use<TraceMiddlewareInternal>();
         }
     }
 
-    internal class TraceMiddlewareInternal : OwinMiddleware
+    public class TraceMiddlewareInternal : OwinMiddleware
     {
         public TraceMiddlewareInternal(OwinMiddleware next) : base(next)
         { }
 
         public override async Task Invoke(IOwinContext context)
         {
-            //if there's a tracing header, continue the trace
-            Span span= null;
-            if (context.Request.Headers.ContainsKey(HttpHeaderTracingConstants.TRACE_ID))
-            {
-                var traceId = context.Request.Headers.Get(HttpHeaderTracingConstants.TRACE_ID);
-                if (!string.IsNullOrWhiteSpace(traceId))
-                {
-                    span = new Span(traceId);
-                    Tracer.ContinueTrace(span);
-                }
-            }
+            var trace = HttpHeaderFactory.ContinueTraceFromHeaders(context.Request.Headers.Select(h => new KeyValuePair<string, string>(h.Key, h.Value.FirstOrDefault())));
 
-            //fallthrough, if there's no trace, start one
-            if (span == null)
-            {
-                Tracer.StartNewTrace();
-                span = Tracer.GetCurrentTrace();
-            }
+            if (trace == null)
+                Tracer.ClearCurrentTraceAndStartNewOne();
+
+            TraceUdpRecorder.ServerReceive();
 
             await Next.Invoke(context);
+
+            TraceUdpRecorder.ServerSend();
         }
     }
 }
