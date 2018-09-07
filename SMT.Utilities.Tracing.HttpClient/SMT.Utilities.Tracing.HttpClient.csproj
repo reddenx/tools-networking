@@ -31,16 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SMT.Utilities.Tracing.Core, Version=0.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PotatoSoft.SMT.Tracing.Core.0.0.3\lib\net45\SMT.Utilities.Tracing.Core.dll</HintPath>
+    <Reference Include="SMT.Utilities.Tracing.Core, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PotatoSoft.SMT.Tracing.Core.0.0.5\lib\net45\SMT.Utilities.Tracing.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpHeaderFactory.cs" />
-    <Compile Include="HttpHeaderTracingConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

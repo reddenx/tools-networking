@@ -4,14 +4,15 @@ namespace SMT.Utilities.Tracing.Core
 {
     public class Span
     {
-        public readonly string TraceId;
+        public readonly Guid TraceId;
+        public readonly Guid SpanId;
+        public readonly Guid? ParentSpanId;
 
-        public Span(string traceId)
+        internal Span(Guid traceId, Guid spanId, Guid? parentSpanId = null)
         {
-            TraceId = traceId;
+            this.TraceId = traceId;
+            this.SpanId = spanId;
+            this.ParentSpanId = parentSpanId;
         }
-
-        //TODO span from a span
-        //TODO annotate a span or trace
     }
 }

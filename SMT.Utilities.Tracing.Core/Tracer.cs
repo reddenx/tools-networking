@@ -11,20 +11,31 @@ namespace SMT.Utilities.Tracing.Core
             TraceContext = traceContext;
         }
 
+        public static Span SplitOffChildTrace()
+        {
+            var trace = GetCurrentTrace();
+            if (trace == null)
+                return null;
+
+            return new Span(trace.TraceId, Guid.NewGuid(), trace.SpanId);
+        }
+
         public static Span GetCurrentTrace()
         {
-            return TraceContext.GetCurrentTraceFromContext();
+            return TraceContext?.GetCurrentTraceFromContext();
         }
 
-        public static void StartNewTrace()
+        public static Span ClearCurrentTraceAndStartNewOne()
         {
-            var newTrace = new Span(Guid.NewGuid().ToString("N"));
-            TraceContext.SetCurrentTraceToContext(newTrace);
+            var newTrace = new Span(Guid.NewGuid(), Guid.NewGuid(), null);
+            TraceContext?.SetCurrentTraceToContext(newTrace);
+            return GetCurrentTrace();
         }
 
-        public static void ContinueTrace(Span trace)
+        public static Span ContinueTrace(Guid traceId, Guid spanId, Guid? parentSpanId)
         {
-            TraceContext.SetCurrentTraceToContext(trace);
+            TraceContext?.SetCurrentTraceToContext(new Span(traceId, spanId, parentSpanId));
+            return GetCurrentTrace();
         }
     }
 }
