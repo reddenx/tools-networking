@@ -11,40 +11,7 @@ namespace SMT.Networking.NetworkConnection
     /// UDP client, turns synchronous calls into events
     /// </summary>
     /// <typeparam name="T">Message Type</typeparam>
-    public interface IUdpNetworkConnection<T> : INetworkConnection<T>
-    {
-        /// <summary>
-        /// Binds and start listening to the specified port
-        /// </summary>
-        /// <param name="port">port to listen to</param>
-        /// <returns>true if it successfully binds and starts listening</returns>
-        bool StartListening(int port);
-        /// <summary>
-        /// Unbinds and stops listening
-        /// </summary>
-        void StopListening();
-        /// <summary>
-        /// Directs messages to the specified enpoint
-        /// </summary>
-        /// <param name="hostname">name of the endpoint, either an IP or DNS resolvable name</param>
-        /// <param name="port">port number to communicate on</param>
-        void Target(string hostname, int port);
-        /// <summary>
-        /// Directs messages to the specified enpoint
-        /// </summary>
-        /// <param name="connectionString">connection string must follow the format "www.oodlesofboodlesnoodles.com:9000" or "192.168.10.100:9000"</param>
-        void Target(string connectionString);
-        /// <summary>
-        /// Clears the target endpoint
-        /// </summary>
-        void Untarget();
-    }
-
-    /// <summary>
-    /// UDP client, turns synchronous calls into events
-    /// </summary>
-    /// <typeparam name="T">Message Type</typeparam>
-    public class UdpNetworkConnection<T> : IUdpNetworkConnection<T>
+    public class UdpNetworkConnection<T>
     {
         private const int DEFAULT_PORT = -1;
 
@@ -128,8 +95,8 @@ namespace SMT.Networking.NetworkConnection
         {
             new Thread(() =>
             {
-                ReceiveThread.DisposeOfThread();
-                SendThread.DisposeOfThread();
+                ReceiveThread.DisposeOfThread(100);
+                SendThread.DisposeOfThread(100);
 
                 OnError.RemoveAllListeners();
                 OnMessageReceived.RemoveAllListeners();
@@ -160,19 +127,19 @@ namespace SMT.Networking.NetworkConnection
                     }
                     catch (Exception e)
                     {
-                        OnError.SafeExecute(this, e);
+                        OnError?.Invoke(this, e);
                     }
 
                     if (buffer != null && !string.IsNullOrWhiteSpace(HostName) && Port > 0)
                     {
                         SendClient.Send(buffer, buffer.Length, HostName, Port);
-                        OnMessageSent.SafeExecute(this, message);
+                        OnMessageSent?.Invoke(this, message);
                     }
                 }
             }
             catch (IOException e)
             {
-                OnError.SafeExecute(this, e);
+                OnError?.Invoke(this, e);
             }
             catch (ThreadAbortException aborted) { } //expected abort procedure given blocking call
             finally
@@ -193,18 +160,18 @@ namespace SMT.Networking.NetworkConnection
                     try
                     {
                         var message = Serializer.Deserialize(data);
-                        OnMessageReceived.SafeExecute(this, message);
+                        OnMessageReceived?.Invoke(this, message);
                     }
                     catch (Exception e)
                     {
-                        OnError.SafeExecute(this, e);
+                        OnError?.Invoke(this, e);
                     }
                 }
             }
             catch (IOException e)
             {
                 StopListening();
-                OnError.SafeExecute(this, e);
+                OnError?.Invoke(this, e);
             }
             catch (ThreadAbortException) { }//expecting these on abort
         }
@@ -218,13 +185,13 @@ namespace SMT.Networking.NetworkConnection
         {
             if (IsListening)
             {
-                OnError.SafeExecute(this, new IOException("udp networkconnection is already listening"));
+                OnError?.Invoke(this, new IOException("udp networkconnection is already listening"));
                 return false;
             }
 
             IsListening = true;
             CleanupListener();
-            ReceiveThread.DisposeOfThread();
+            ReceiveThread.DisposeOfThread(100);
 
             try
             {
@@ -236,7 +203,7 @@ namespace SMT.Networking.NetworkConnection
             }
             catch (IOException e)
             {
-                OnError.SafeExecute(this, e);
+                OnError?.Invoke(this, e);
                 CleanupListener();
                 StopListening();
                 return false;
@@ -252,7 +219,7 @@ namespace SMT.Networking.NetworkConnection
                 return;
 
             IsListening = false;
-            ReceiveThread.DisposeOfThread();
+            ReceiveThread.DisposeOfThread(100);
             CleanupListener();
         }
 
@@ -266,7 +233,7 @@ namespace SMT.Networking.NetworkConnection
                 }
                 catch (IOException e)
                 {
-                    OnError.SafeExecute(this, e);
+                    OnError?.Invoke(this, e);
                 }
                 ReceiveClient = null;
             }

@@ -23,13 +23,13 @@ namespace SMT.Networking
             return thread;
         }
 
-        public static void DisposeOfThread(this Thread thread)
+        public static void DisposeOfThread(this Thread thread, int timeoutMilli)
         {
             //give it every chance to cleanly terminate, then abort
 
             if (thread == null) return;
             if (!thread.IsAlive) return;
-            if (thread.Join(100)) return;
+            if (thread.Join(timeoutMilli)) return;
 
             thread.Abort();
         }

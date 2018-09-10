@@ -9,22 +9,6 @@ namespace SMT.Networking
 {
     internal static class EventExtensions
     {
-        public static void SafeExecute(this EventHandler handler, object sender)
-        {
-            if (handler != null)
-            {
-                handler(sender, EventArgs.Empty);
-            }
-        }
-
-        public static void SafeExecute<T>(this EventHandler<T> handler, object sender, T args)
-        {
-            if (handler != null)
-            {
-                handler(sender, args);
-            }
-        }
-
         public static void SafeExecuteAsync<T>(this EventHandler<T> handler, object sender, T args)
         {
             if (handler != null)
@@ -58,10 +42,6 @@ namespace SMT.Networking
             }
             catch { }
         }
-
-
-
-
 
         public static void RemoveAllListeners<T>(this EventHandler<T> handlerList)
         {

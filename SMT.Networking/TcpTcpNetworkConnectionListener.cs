@@ -5,21 +5,13 @@ using System.Threading;
 
 namespace SMT.Networking.NetworkConnection
 {
-    public interface ITcpNetworkConnectionListener<T> : IDisposable
-    {
-        event EventHandler<ITcpNetworkConnection<T>> OnClientConnected;
-
-        void Start(int port);
-        void Stop();
-    }
-
     /// <summary>
     /// listens for incoming tcp connections and produces network connection clients
     /// </summary>
     /// <typeparam name="T">type of message to expect</typeparam>
-    public class TcpTcpNetworkConnectionListener<T> : ITcpNetworkConnectionListener<T>
+    public class TcpTcpNetworkConnectionListener<T>
     {
-        public event EventHandler<ITcpNetworkConnection<T>> OnClientConnected;
+        public event EventHandler<TcpNetworkConnection<T>> OnClientConnected;
         public event EventHandler<Exception> OnError;
 
         private Thread ListenThread;
@@ -46,7 +38,7 @@ namespace SMT.Networking.NetworkConnection
                 Listener = new TcpListener(new IPEndPoint(IPAddress.Any, port));
                 Listener.Start();
 
-                ListenThread.DisposeOfThread();
+                ListenThread.DisposeOfThread(100);
                 ListenThread = new Thread(ListenLoop).StartBackground();
             }
         }
@@ -61,7 +53,7 @@ namespace SMT.Networking.NetworkConnection
                 Listener.Stop();
                 Listener = null;
 
-                ListenThread.DisposeOfThread();
+                ListenThread.DisposeOfThread(100);
             }
         }
 
@@ -93,7 +85,7 @@ namespace SMT.Networking.NetworkConnection
                         client.Close();
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     OnError.SafeExecuteAsync(this, e);
                 }

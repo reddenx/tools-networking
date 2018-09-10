@@ -30,33 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="NetworkConnection\CommonSerializers\AnonymousSerializer.cs" />
-    <Compile Include="NetworkConnection\CommonSerializers\AsciiSerializer.cs" />
-    <Compile Include="NetworkConnection\CommonSerializers\Utf8Serializer.cs" />
-    <Compile Include="EventExtensions.cs" />
-    <Compile Include="NetworkConnection\INetworkConnection.cs" />
-    <Compile Include="NetworkConnection\INetworkConnectionSerializer.cs" />
-    <Compile Include="Deprecated\SimpleMessaging\MessageBus.cs" />
-    <Compile Include="NetworkConnection\NetworkConnectionFactory.cs" />
-    <Compile Include="Deprecated\SimpleMessaging\ISimpleDataSender.cs" />
-    <Compile Include="Deprecated\SimpleMessaging\ISimpleMessageHost.cs" />
-    <Compile Include="Deprecated\SimpleMessaging\ISimpleMessenger.cs" />
-    <Compile Include="Deprecated\SimpleMessaging\TransferInfo.cs" />
+    <Compile Include="Serialization\AnonymousSerializer.cs" />
+    <Compile Include="Serialization\AsciiSerializer.cs" />
+    <Compile Include="Serialization\Utf8Serializer.cs" />
+    <Compile Include="TcpTcpNetworkConnectionListener.cs" />
+    <Compile Include="Utility\EventExtensions.cs" />
+    <Compile Include="INetworkConnectionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Deprecated\TcpDataConnection.cs" />
-    <Compile Include="Deprecated\TcpDataConnectionListener.cs" />
-    <Compile Include="Deprecated\SimpleTcpDataSender.cs" />
-    <Compile Include="Deprecated\SimpleTcpMessageHost.cs" />
-    <Compile Include="Deprecated\SimpleTcpMessenger.cs" />
-    <Compile Include="Deprecated\TcpMessenger.cs" />
-    <Compile Include="NetworkConnection\TcpNetworkConnection.cs" />
-    <Compile Include="NetworkConnection\TcpTcpNetworkConnectionListener.cs" />
-    <Compile Include="ThreadExtensions.cs" />
-    <Compile Include="Deprecated\SimpleUdpMessageListener.cs" />
-    <Compile Include="Deprecated\SimpleUdpMessageSender.cs" />
-    <Compile Include="Deprecated\SimpleUdpMessenger.cs" />
-    <Compile Include="Deprecated\UdpDataConnection.cs" />
-    <Compile Include="NetworkConnection\UdpNetworkConnection.cs" />
+    <Compile Include="TcpNetworkConnection.cs" />
+    <Compile Include="Utility\ThreadExtensions.cs" />
+    <Compile Include="UdpNetworkConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
