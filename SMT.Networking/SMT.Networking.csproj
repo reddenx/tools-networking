@@ -42,9 +42,6 @@
     <Compile Include="UdpNetworkConnection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="SMT.Networking.nuspec" />
   </ItemGroup>
   <ItemGroup>
