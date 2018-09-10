@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SMT.Networking.Utility;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace SMT.Networking.NetworkConnection
+namespace SMT.Networking
 {
     /// <summary>
     /// Tcp connection, turns synchronous calls into events

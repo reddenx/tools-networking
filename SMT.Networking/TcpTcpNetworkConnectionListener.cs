@@ -1,9 +1,10 @@
-﻿using System;
+﻿using SMT.Networking.Utility;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace SMT.Networking.NetworkConnection
+namespace SMT.Networking
 {
     /// <summary>
     /// listens for incoming tcp connections and produces network connection clients

@@ -5,7 +5,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SMT.Networking
+namespace SMT.Networking.Utility
 {
     internal static class EventExtensions
     {

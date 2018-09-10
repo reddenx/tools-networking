@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace SMT.Networking.NetworkConnection
+namespace SMT.Networking.Serialization
 {
     public class Utf8Serializer : INetworkConnectionSerializer<string>
     {

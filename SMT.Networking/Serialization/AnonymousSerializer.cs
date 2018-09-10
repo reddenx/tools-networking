@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SMT.Networking.NetworkConnection
+namespace SMT.Networking.Serialization
 {
     public class AnonymousSerializer<T> : INetworkConnectionSerializer<T>
     {

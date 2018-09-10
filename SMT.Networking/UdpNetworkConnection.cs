@@ -4,8 +4,9 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Net.Sockets;
+using SMT.Networking.Utility;
 
-namespace SMT.Networking.NetworkConnection
+namespace SMT.Networking
 {
     /// <summary>
     /// UDP client, turns synchronous calls into events

@@ -1,6 +1,6 @@
 ﻿
 
-namespace SMT.Networking.NetworkConnection
+namespace SMT.Networking
 {
     /// <summary>
     /// this interface is used by the network enterpret and write data to their underlying connections

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SMT.Networking
+namespace SMT.Networking.Utility
 {
     internal static class ThreadExtensions
     {
