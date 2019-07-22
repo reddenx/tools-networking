@@ -11,6 +11,7 @@ namespace SMT.Utilities.Configuration
             //TcpMessengerTesting.RunMessageBus();
             //TcpMessengerTesting.Run();
             ConfigurationTesting.Run();
+            //PerformanceTest.Run();
             //SpeechTests.Test();
             //TcpNetworkConnectionTests.Run();
             //FogBugzProxyTesting.Start();
@@ -20,6 +21,7 @@ namespace SMT.Utilities.Configuration
             //TypeGenerationTesting.Run();
             //ImageSizeTesting.Run();
             //IdeaDumpTest.Run();
+
         }
     }
 }
