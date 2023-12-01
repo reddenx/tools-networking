@@ -5,6 +5,13 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>SMT.Utilities.Logging</RootNamespace>
+    <!-- package stuff -->
+    <PackageId>SMT.Utilities.Logging</PackageId>
+    <Authors>Sean</Authors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
 </Project>
