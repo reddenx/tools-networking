@@ -6,7 +6,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>SMT.Utilities.Logging</RootNamespace>
     <!-- package stuff -->
-    <PackageId>SMT.Utilities.Logging</PackageId>
+    <PackageId>PotatoSoft.SMT.Logging</PackageId>
     <Authors>Sean</Authors>
   </PropertyGroup>
 
